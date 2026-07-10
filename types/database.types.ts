@@ -323,6 +323,146 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["shipment_status_events"]["Insert"]>;
         Relationships: [];
       };
+      transporter_profiles: {
+        Row: {
+          profile_id: string;
+          business_name: string;
+          bio: string;
+          base_city: string;
+          base_country: string;
+          max_weight_kg: number;
+          status: Database["public"]["Enums"]["transporter_status"];
+          rating: number;
+          completed_missions: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          profile_id: string;
+          business_name: string;
+          bio: string;
+          base_city: string;
+          base_country: string;
+          max_weight_kg: number;
+          status?: Database["public"]["Enums"]["transporter_status"];
+          rating?: number;
+          completed_missions?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["transporter_profiles"]["Insert"]>;
+        Relationships: [];
+      };
+      transporter_vehicles: {
+        Row: {
+          id: string;
+          profile_id: string;
+          type: Database["public"]["Enums"]["vehicle_type"];
+          label: string;
+          plate_number: string | null;
+          capacity_kg: number;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          profile_id: string;
+          type: Database["public"]["Enums"]["vehicle_type"];
+          label: string;
+          plate_number?: string | null;
+          capacity_kg: number;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["transporter_vehicles"]["Insert"]>;
+        Relationships: [];
+      };
+      transporter_zones: {
+        Row: {
+          id: string;
+          profile_id: string;
+          city: string;
+          country: string;
+          radius_km: number;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          profile_id: string;
+          city: string;
+          country: string;
+          radius_km: number;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["transporter_zones"]["Insert"]>;
+        Relationships: [];
+      };
+      transporter_availability: {
+        Row: {
+          id: string;
+          profile_id: string;
+          available_on: string;
+          starts_at: string;
+          ends_at: string;
+          status: Database["public"]["Enums"]["transporter_availability_status"];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          profile_id: string;
+          available_on: string;
+          starts_at: string;
+          ends_at: string;
+          status?: Database["public"]["Enums"]["transporter_availability_status"];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["transporter_availability"]["Insert"]
+        >;
+        Relationships: [];
+      };
+      local_delivery_missions: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          transporter_id: string;
+          status: Database["public"]["Enums"]["local_delivery_mission_status"];
+          score: number;
+          reason: string[];
+          offered_at: string | null;
+          accepted_at: string | null;
+          picked_up_at: string | null;
+          delivered_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          transporter_id: string;
+          status?: Database["public"]["Enums"]["local_delivery_mission_status"];
+          score?: number;
+          reason?: string[];
+          offered_at?: string | null;
+          accepted_at?: string | null;
+          picked_up_at?: string | null;
+          delivered_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["local_delivery_missions"]["Insert"]
+        >;
+        Relationships: [];
+      };
       parcel_requests: {
         Row: {
           id: string;
@@ -463,9 +603,25 @@ export type Database = {
         };
         Returns: { id: string; tracking_code: string }[];
       };
+      create_local_delivery_mission: {
+        Args: {
+          p_shipment_id: string;
+          p_transporter_id: string;
+        };
+        Returns: string;
+      };
       current_user_has_role: {
         Args: { required_roles: string[] };
         Returns: boolean;
+      };
+      find_local_transporter_matches: {
+        Args: { p_shipment_id: string };
+        Returns: {
+          business_name: string;
+          reason: string[];
+          score: number;
+          transporter_id: string;
+        }[];
       };
     };
     Enums: {
@@ -517,6 +673,16 @@ export type Database = {
         | "food_dry"
         | "cosmetics"
         | "other";
+      transporter_status: "pending" | "active" | "suspended";
+      vehicle_type: "bike" | "scooter" | "car" | "van" | "truck";
+      transporter_availability_status: "available" | "booked" | "offline";
+      local_delivery_mission_status:
+        | "suggested"
+        | "offered"
+        | "accepted"
+        | "picked_up"
+        | "delivered"
+        | "cancelled";
       parcel_status: "draft" | "open" | "matched" | "in_transit" | "delivered" | "cancelled";
       trip_status: "planned" | "boarding" | "arrived" | "cancelled";
       offer_status: "pending" | "accepted" | "declined" | "cancelled";

@@ -32,6 +32,8 @@ Le projet livre maintenant un noyau produit viable :
 - code de suivi `YBL-XXXXXXXX` genere en base ;
 - digital parcel twin stocke en `jsonb` ;
 - publication de trajet voyageur ;
+- profil transporteur local avec vehicules, zones et disponibilites ;
+- matching deterministe pour missions nationales ;
 - dashboard utilisateur ;
 - migration SQL initiale avec Row Level Security ;
 - documentation ;
@@ -58,8 +60,9 @@ Le projet livre maintenant un noyau produit viable :
 ## Parcours transport
 
 1. Un voyageur publie un trajet.
-2. Les futures phases matcheront les expeditions compatibles.
-3. Les evenements de suivi alimenteront le dashboard et les notifications.
+2. Un transporteur local declare son profil, ses vehicules, ses zones et ses disponibilites.
+3. Les expeditions nationales peuvent etre comparees aux transporteurs compatibles.
+4. Les futures phases brancheront les batches voyageurs et les notifications.
 
 ## Contraintes non negociables
 

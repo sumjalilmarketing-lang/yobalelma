@@ -19,7 +19,7 @@ docs/                 Documentation produit et technique
 - `app/layout.tsx` fournit le shell global et les metadata.
 - `app/page.tsx` contient la landing page de phase 1.
 - `app/envoyer/page.tsx` cree une expedition avec revue et confirmation.
-- `app/livreur/page.tsx` cree ou met a jour le profil.
+- `app/livreur/page.tsx` cree le profil public et les donnees operationnelles transporteur.
 - `app/voyager/page.tsx` publie un trajet.
 - `app/dashboard/page.tsx` affiche les donnees utilisateur.
 - `app/dashboard/client/page.tsx`, `app/dashboard/transporter/page.tsx` et `app/dashboard/traveler/page.tsx` exposent les espaces par role.
@@ -48,6 +48,11 @@ Les routes API ecrivent dans Supabase :
 - `POST /api/auth/sign-out`
 - `POST /api/kyc`
 - `POST /api/shipments`
+- `PUT /api/transporters/profile`
+- `POST /api/transporters/vehicles`
+- `POST /api/transporters/zones`
+- `POST /api/transporters/availability`
+- `GET /api/transporters/matches`
 - `PUT /api/profile`
 - `POST /api/parcel-requests`
 - `POST /api/trips`
@@ -55,6 +60,8 @@ Les routes API ecrivent dans Supabase :
 Les routes serveur et API lisent les cookies Supabase avec `@supabase/ssr`. Sans cle locale, les pages publiques restent executables et les surfaces donnees affichent un etat de configuration.
 
 Le calcul expedition vit dans `lib/shipments/estimation.ts` afin que la revue client et l'API serveur utilisent les memes regles de base. La creation persistante passe par la fonction Supabase `create_shipment`, qui insere l'expedition, les adresses, le colis et le premier evenement de suivi dans une transaction.
+
+Les transporteurs locaux sont modelises par profil, vehicules, zones et disponibilites. La fonction Supabase `find_local_transporter_matches` calcule un score deterministe pour les expeditions nationales avant creation de missions locales.
 
 ## Tests
 

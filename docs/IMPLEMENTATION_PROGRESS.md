@@ -135,3 +135,61 @@ Statut : terminee localement le 2026-07-10.
 ### Phase suivante
 
 - Phase metier 3 : transporteurs locaux, disponibilites, zones, vehicules et missions compatibles.
+
+## Phase metier 3 - Transporteurs locaux
+
+Statut : terminee localement le 2026-07-10.
+
+### Fonctionnalites terminees
+
+- Profil transporteur local.
+- Vehicules avec type et capacite.
+- Zones de livraison par ville, pays et rayon.
+- Disponibilites datees avec plage horaire.
+- Missions locales reliees aux expeditions.
+- Matching deterministe pour expeditions nationales.
+- API transporteurs : profil, vehicules, zones, disponibilites et matches.
+- Interface `/livreur` enrichie avec les controles operationnels.
+- RLS sur profils transporteurs, vehicules, zones, disponibilites et missions.
+
+### Fichiers modifies
+
+- `app/api/transporters/availability/route.ts`
+- `app/api/transporters/matches/route.ts`
+- `app/api/transporters/profile/route.ts`
+- `app/api/transporters/vehicles/route.ts`
+- `app/api/transporters/zones/route.ts`
+- `app/livreur/page.tsx`
+- `components/forms/transporter-operations-form.tsx`
+- `docs/ARCHITECTURE.md`
+- `docs/DATABASE.md`
+- `docs/IMPLEMENTATION_PROGRESS.md`
+- `docs/PRODUCT_SPEC.md`
+- `lib/validation/transporter.ts`
+- `supabase/migrations/20260710170000_local_transporters.sql`
+- `tests/transporter.test.ts`
+- `types/database.types.ts`
+
+### Migrations appliquees
+
+- Aucune migration distante appliquee : acces Supabase distant non disponible dans cet environnement.
+- Migration locale preparee : `20260710170000_local_transporters.sql`.
+
+### Tests executes
+
+- `npm run lint` : succes.
+- `npm run typecheck` : succes.
+- `npm run test` : succes, 5 fichiers et 22 tests.
+- `npm run build` : succes, 28 routes generees.
+- `npm audit --audit-level=moderate` : 0 vulnerabilite.
+- Recherche locale de secrets : aucune cle reelle detectee ; uniquement des mentions documentaires ou references a GitHub Secrets.
+
+### Limites
+
+- L'activation transporteur est ouverte pour rendre le MVP testable ; la phase back-office devra lier activation a KYC/revue interne.
+- Les paiements, preuves de remise et notifications restent hors de cette phase.
+- Les missions internationales via voyageurs et hubs restent a livrer.
+
+### Phase suivante
+
+- Phase metier 4 : relais, points de depot, inventaire, scans et tournees de collecte.

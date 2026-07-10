@@ -1,4 +1,5 @@
 import { ProfileForm } from "@/components/forms/profile-form";
+import { TransporterOperationsForm } from "@/components/forms/transporter-operations-form";
 import { PageShell } from "@/components/layout/page-shell";
 
 export const metadata = {
@@ -25,6 +26,9 @@ export default function LivreurPage() {
           </p>
         </aside>
       </div>
+      <section className="mt-10 rounded-lg border border-black/10 bg-white p-6 shadow-sm">
+        <TransporterOperationsForm />
+      </section>
     </PageShell>
   );
 }
