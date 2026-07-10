@@ -21,7 +21,7 @@ https://rgcgtcycbiuhcaoaadbh.supabase.co
 
 `lib/env.ts` valide cette URL pour eviter l'usage accidentel d'une base externe.
 
-La connexion utilisateur utilise les liens magiques Supabase. Le callback d'authentification n'accepte que les redirections relatives internes afin d'eviter les redirections ouvertes.
+La connexion utilisateur utilise Supabase Auth avec liens magiques et email/mot de passe. Le callback d'authentification n'accepte que les redirections relatives internes afin d'eviter les redirections ouvertes.
 
 ## Client navigateur
 
@@ -30,7 +30,7 @@ Les cles privilegiees doivent rester cote serveur et ne sont pas configurees dan
 
 ## Donnees
 
-Quand les tables seront creees :
+Pour les tables metier :
 
 - activer Row Level Security ;
 - definir les policies avant d'exposer une route ;
@@ -39,7 +39,10 @@ Quand les tables seront creees :
 
 Etat actuel :
 
-- RLS activee dans la migration initiale.
+- RLS activee dans les migrations.
 - Routes API protegees par l'utilisateur Supabase courant.
+- Roles publics limites a `client`, `local_transporter` et `traveler`.
+- Roles internes reserves aux policies et affectations controlees.
+- KYC stocke via tables dediees et bucket prive `kyc-documents`.
 - Aucune cle de service dans le code.
 - `.env` et `.env*.local` ignores par Git.

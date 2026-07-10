@@ -19,7 +19,8 @@ export function ProfileForm() {
       phone: "",
       city: "",
       country: "",
-      role: "both",
+      address: "",
+      role: "client",
       preferredLanguage: "fr",
     },
   });
@@ -49,14 +50,17 @@ export function ProfileForm() {
         <Field label="Pays" error={form.formState.errors.country?.message}>
           <Input placeholder="Senegal" {...form.register("country")} />
         </Field>
+        <Field label="Adresse" error={form.formState.errors.address?.message}>
+          <Input placeholder="Rue, quartier, immeuble" {...form.register("address")} />
+        </Field>
         <Field label="Role principal" error={form.formState.errors.role?.message}>
           <select
             className="h-10 rounded-md border border-input bg-white px-3 text-sm"
             {...form.register("role")}
           >
-            <option value="sender">Expediteur</option>
-            <option value="traveler">Voyageur livreur</option>
-            <option value="both">Les deux</option>
+            <option value="client">Client</option>
+            <option value="local_transporter">Livreur local</option>
+            <option value="traveler">Voyageur</option>
           </select>
         </Field>
         <Field

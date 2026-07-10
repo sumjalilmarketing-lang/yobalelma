@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { getSafeAuthRedirect } from "@/lib/auth/redirect";
 import { parcelRequestSchema } from "@/lib/validation/parcel-request";
-import { profileSchema } from "@/lib/validation/profile";
+import {
+  identityVerificationSchema,
+  profileSchema,
+} from "@/lib/validation/profile";
 import { tripSchema } from "@/lib/validation/trip";
 
 describe("product validation", () => {
@@ -43,10 +46,37 @@ describe("product validation", () => {
         phone: "+221770000000",
         city: "Dakar",
         country: "Senegal",
-        role: "both",
+        address: "Plateau, Dakar",
+        role: "traveler",
         preferredLanguage: "fr",
       }).role,
-    ).toBe("both");
+    ).toBe("traveler");
+  });
+
+  it("rejects internal roles in public profile updates", () => {
+    expect(() =>
+      profileSchema.parse({
+        fullName: "Awa Diop",
+        phone: "+221770000000",
+        city: "Dakar",
+        country: "Senegal",
+        address: "Plateau, Dakar",
+        role: "admin",
+        preferredLanguage: "fr",
+      }),
+    ).toThrow();
+  });
+
+  it("accepts a KYC identity verification draft", () => {
+    const result = identityVerificationSchema.parse({
+      documentType: "passport",
+      documentNumber: "A123456",
+      issuingCountry: "Senegal",
+      expiresOn: "2030-01-01",
+      passportFilePath: "user-id/passport.pdf",
+    });
+
+    expect(result.documentType).toBe("passport");
   });
 
   it("accepts a valid trip", () => {

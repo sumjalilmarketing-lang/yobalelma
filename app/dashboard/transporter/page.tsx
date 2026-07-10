@@ -1,0 +1,54 @@
+import { RoleDashboard } from "@/components/dashboard/role-dashboard";
+import { PageShell } from "@/components/layout/page-shell";
+import { requireRole } from "@/lib/auth/server";
+
+export const dynamic = "force-dynamic";
+
+export const metadata = {
+  title: "Espace livreur | Yobalelma",
+};
+
+export default async function TransporterDashboardPage() {
+  const state = await requireRole(["local_transporter"], "/dashboard/transporter");
+
+  return (
+    <PageShell
+      eyebrow="Livreur"
+      title="Espace livreur local"
+      description="Prepare les collectes, les remises et les controles necessaires avant de transporter."
+    >
+      {state.status === "ready" ? (
+        <RoleDashboard
+          email={state.email}
+          roleLabel="Compte livreur"
+          title="Operations locales"
+          description="Cet espace servira de base aux missions de collecte, depot relais et livraison finale."
+          actions={[
+            { href: "/livreur", label: "Mettre a jour mon profil" },
+            { href: "/dashboard/kyc", label: "Verification KYC", variant: "secondary" },
+            { href: "/dashboard", label: "Vue globale", variant: "secondary" },
+          ]}
+          checkpoints={[
+            "Role livreur local isole des roles internes d'administration.",
+            "KYC obligatoire avant activation operationnelle.",
+            "Flux de collecte et remise prevus pour les prochaines phases.",
+          ]}
+        />
+      ) : (
+        <ConfigurationNotice />
+      )}
+    </PageShell>
+  );
+}
+
+function ConfigurationNotice() {
+  return (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
+      <h2 className="text-2xl font-black">Configuration Supabase requise</h2>
+      <p className="mt-3 max-w-2xl leading-7 text-black/65">
+        Ajoute les variables publiques Yobalelma dans l&apos;environnement pour activer
+        l&apos;espace livreur.
+      </p>
+    </div>
+  );
+}

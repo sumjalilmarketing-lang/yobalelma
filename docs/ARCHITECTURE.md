@@ -22,7 +22,10 @@ docs/                 Documentation produit et technique
 - `app/livreur/page.tsx` cree ou met a jour le profil.
 - `app/voyager/page.tsx` publie un trajet.
 - `app/dashboard/page.tsx` affiche les donnees utilisateur.
-- `app/auth/sign-in/page.tsx` lance la connexion magic-link.
+- `app/dashboard/client/page.tsx`, `app/dashboard/transporter/page.tsx` et `app/dashboard/traveler/page.tsx` exposent les espaces par role.
+- `app/dashboard/kyc/page.tsx` soumet les informations KYC.
+- `app/auth/sign-in/page.tsx` propose connexion mot de passe et magic-link.
+- `app/auth/sign-up/page.tsx`, `app/auth/forgot-password/page.tsx` et `app/auth/reset-password/page.tsx` couvrent le cycle compte public.
 - `components/ui/` suit les conventions shadcn/ui.
 - Tailwind CSS porte les couleurs de marque : noir, orange, blanc.
 
@@ -38,7 +41,12 @@ La validation d'environnement vit dans `lib/env.ts` et refuse toute URL Supabase
 Les routes API ecrivent dans Supabase :
 
 - `POST /api/auth/sign-in`
+- `POST /api/auth/sign-up`
+- `POST /api/auth/password-sign-in`
+- `POST /api/auth/forgot-password`
+- `POST /api/auth/reset-password`
 - `POST /api/auth/sign-out`
+- `POST /api/kyc`
 - `PUT /api/profile`
 - `POST /api/parcel-requests`
 - `POST /api/trips`

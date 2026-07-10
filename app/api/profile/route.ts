@@ -30,6 +30,8 @@ export async function PUT(request: Request) {
     phone: parsed.data.phone,
     city: parsed.data.city,
     country: parsed.data.country,
+    address_line1: parsed.data.address,
+    primary_role: parsed.data.role,
     role: parsed.data.role,
     preferred_language: parsed.data.preferredLanguage,
   });
