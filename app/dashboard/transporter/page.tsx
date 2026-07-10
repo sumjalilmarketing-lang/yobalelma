@@ -24,9 +24,11 @@ export default async function TransporterDashboardPage() {
           title="Operations locales"
           description="Cet espace servira de base aux missions de collecte, depot relais et livraison finale."
           actions={[
-            { href: "/livreur", label: "Mettre a jour mon profil" },
+            { href: "/dashboard/transporter/missions", label: "Mes missions" },
+            { href: "/dashboard/transporter/vehicle", label: "Vehicule", variant: "secondary" },
+            { href: "/dashboard/transporter/zones", label: "Zones", variant: "secondary" },
+            { href: "/dashboard/transporter/availability", label: "Disponibilite", variant: "secondary" },
             { href: "/dashboard/kyc", label: "Verification KYC", variant: "secondary" },
-            { href: "/dashboard", label: "Vue globale", variant: "secondary" },
           ]}
           checkpoints={[
             "Role livreur local isole des roles internes d'administration.",

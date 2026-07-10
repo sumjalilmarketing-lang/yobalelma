@@ -47,6 +47,8 @@ export const shipmentSchema = z
     declaredValueCents: z.coerce.number().int().min(0).max(10_000_000).default(0),
     fragile: z.coerce.boolean().default(false),
     serviceLevel: z.enum(["standard", "express"]).default("standard"),
+    fulfillmentMethod: z.enum(["pickup", "relay_dropoff"]).default("pickup"),
+    packagePhotoPath: z.string().trim().max(500).optional().or(z.literal("")),
     preferredPickupDate: dateSchema,
     latestDeliveryDate: dateSchema,
     prohibitedItemsConfirmed: z

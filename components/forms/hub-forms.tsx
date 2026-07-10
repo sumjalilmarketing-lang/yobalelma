@@ -37,6 +37,8 @@ function HubBatchForm() {
       destinationHub: "",
       flightNumber: "",
       originHub: "",
+      travelerId: "",
+      tripId: "",
     },
   });
 
@@ -58,6 +60,12 @@ function HubBatchForm() {
       </Field>
       <Field label="Vol" error={form.formState.errors.flightNumber?.message}>
         <Input {...form.register("flightNumber")} />
+      </Field>
+      <Field label="ID trajet voyageur" error={form.formState.errors.tripId?.message}>
+        <Input {...form.register("tripId")} />
+      </Field>
+      <Field label="ID voyageur" error={form.formState.errors.travelerId?.message}>
+        <Input {...form.register("travelerId")} />
       </Field>
       <Field label="Date depart" error={form.formState.errors.departureDate?.message}>
         <Input type="date" {...form.register("departureDate")} />

@@ -1,6 +1,7 @@
 import { fail, ok, validationFail } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { travelDocumentSchema } from "@/lib/validation/hub";
+import type { Json } from "@/types/database.types";
 
 export async function POST(request: Request) {
   const parsed = travelDocumentSchema.safeParse(await request.json());
@@ -30,7 +31,10 @@ export async function POST(request: Request) {
     departure_date: parsed.data.departureDate,
     document_number: parsed.data.documentNumber,
     file_path: parsed.data.filePath,
+    confidence_score: parsed.data.confidenceScore ?? null,
+    extracted_payload: (parsed.data.extractionPayload ?? {}) as Json,
     issuing_country: parsed.data.issuingCountry,
+    manual_review_required: true,
     status: "submitted",
     traveler_id: user.id,
     traveler_name: parsed.data.travelerName,

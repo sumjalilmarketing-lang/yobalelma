@@ -1,5 +1,8 @@
+import Link from "next/link";
 import { HubForms } from "@/components/forms/hub-forms";
 import { PageShell } from "@/components/layout/page-shell";
+import { ConfigurationNotice } from "@/components/operations/status-panels";
+import { Button } from "@/components/ui/button";
 import { requireRole } from "@/lib/auth/server";
 
 export const dynamic = "force-dynamic";
@@ -21,14 +24,25 @@ export default async function HubDashboardPage() {
       description="Cree des batches hub, reserve la capacite et prepare les consolidations voyageur."
     >
       {state.status === "ready" ? (
-        <HubForms />
-      ) : (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
-          <h2 className="text-2xl font-black">Configuration Supabase requise</h2>
-          <p className="mt-3 max-w-2xl leading-7 text-black/65">
-            Ajoute les variables publiques Yobalelma pour activer les operations hub.
-          </p>
+        <div className="grid gap-6">
+          <div className="flex flex-wrap gap-3">
+            <Button asChild>
+              <Link href="/dashboard/hub/batches">Batches</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/hub/inbound">Reception</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/hub/handover">QR handover</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/hub/inventory">Inventaire</Link>
+            </Button>
+          </div>
+          <HubForms />
         </div>
+      ) : (
+        <ConfigurationNotice />
       )}
     </PageShell>
   );

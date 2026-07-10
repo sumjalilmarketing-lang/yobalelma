@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
+    exclude: ["**/node_modules/**", "**/dist/**", "tests/e2e/**"],
     globals: false,
     setupFiles: ["./tests/setup.ts"],
   },
@@ -15,4 +16,3 @@ export default defineConfig({
     },
   },
 });
-

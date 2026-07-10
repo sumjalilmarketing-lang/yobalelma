@@ -24,9 +24,10 @@ export default async function TravelerDashboardPage() {
           title="Voyages et colis compatibles"
           description="Ton espace voyageur structure les trajets disponibles avant le moteur de matching complet."
           actions={[
-            { href: "/voyager", label: "Publier un trajet" },
+            { href: "/dashboard/traveler/trips/new", label: "Ajouter un voyage" },
+            { href: "/dashboard/traveler/trips", label: "Mes voyages", variant: "secondary" },
+            { href: "/dashboard/traveler/qr-codes", label: "QR lots", variant: "secondary" },
             { href: "/dashboard/kyc", label: "Verification KYC", variant: "secondary" },
-            { href: "/dashboard", label: "Vue globale", variant: "secondary" },
           ]}
           checkpoints={[
             "Trajets relies au compte voyageur authentifie.",

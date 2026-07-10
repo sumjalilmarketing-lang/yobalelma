@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
   const estimate = estimateShipment(parsed.data);
   const digitalTwin = buildDigitalParcelTwin(parsed.data, estimate);
-  const { data, error } = await supabase.rpc("create_shipment", {
+  const { data, error } = await supabase.rpc("create_operational_shipment", {
     p_currency: estimate.currency,
     p_delivery_address: {
       address_line1: parsed.data.deliveryAddressLine1,
@@ -63,6 +63,8 @@ export async function POST(request: Request) {
       weight_kg: parsed.data.weightKg,
       width_cm: parsed.data.widthCm,
     },
+    p_fulfillment_method: parsed.data.fulfillmentMethod,
+    p_package_photo_path: parsed.data.packagePhotoPath || null,
     p_pickup_address: {
       address_line1: parsed.data.pickupAddressLine1,
       address_line2: parsed.data.pickupAddressLine2 || null,
@@ -90,6 +92,7 @@ export async function POST(request: Request) {
   }
 
   return ok("Expedition creee et confirmee.", {
+    deliveryOtpCode: shipment.delivery_otp_code,
     estimate,
     shipmentId: shipment.id,
     trackingCode: shipment.tracking_code,

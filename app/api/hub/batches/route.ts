@@ -32,6 +32,8 @@ export async function POST(request: Request) {
     flight_number: parsed.data.flightNumber || null,
     origin_hub: parsed.data.originHub,
     status: "open",
+    traveler_id: parsed.data.travelerId || null,
+    trip_id: parsed.data.tripId || null,
   });
 
   if (error) {

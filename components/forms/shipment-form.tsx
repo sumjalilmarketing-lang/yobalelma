@@ -65,6 +65,8 @@ export function ShipmentForm() {
       declaredValueCents: 0,
       fragile: false,
       serviceLevel: "standard",
+      fulfillmentMethod: "pickup",
+      packagePhotoPath: "",
       preferredPickupDate: "",
       latestDeliveryDate: "",
       prohibitedItemsConfirmed: false,
@@ -224,6 +226,18 @@ export function ShipmentForm() {
             </select>
           </Field>
           <Field
+            label="Mode de depart"
+            error={form.formState.errors.fulfillmentMethod?.message}
+          >
+            <select
+              className="h-10 rounded-md border border-input bg-white px-3 text-sm"
+              {...form.register("fulfillmentMethod")}
+            >
+              <option value="pickup">Enlevement a domicile</option>
+              <option value="relay_dropoff">Depot en point relais</option>
+            </select>
+          </Field>
+          <Field
             label="Date d'enlevement souhaitee"
             error={form.formState.errors.preferredPickupDate?.message}
           >
@@ -240,6 +254,15 @@ export function ShipmentForm() {
           <Textarea
             placeholder="Contenu, emballage, fragilite, consignes importantes..."
             {...form.register("packageDescription")}
+          />
+        </Field>
+        <Field
+          label="Photo du colis (chemin Storage signe)"
+          error={form.formState.errors.packagePhotoPath?.message}
+        >
+          <Input
+            placeholder="shipment-images/user-id/photo.webp"
+            {...form.register("packagePhotoPath")}
           />
         </Field>
         <label className="flex items-start gap-3 text-sm font-semibold">
@@ -305,6 +328,14 @@ function ReviewPanel({ review }: { review: ReviewState }) {
         <Summary
           label="Type"
           value={review.estimate.scope === "national" ? "National" : "International"}
+        />
+        <Summary
+          label="Depart"
+          value={
+            review.values.fulfillmentMethod === "pickup"
+              ? "Enlevement a domicile"
+              : "Depot relais"
+          }
         />
         <Summary label="Prix estime" value={formatMoney(review.estimate.priceCents)} />
         <Summary

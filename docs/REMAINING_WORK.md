@@ -4,41 +4,35 @@ Date : 2026-07-10
 
 ## Critique
 
-- Configurer `.env.local` avec l'URL Supabase Yobalelma et la cle publique anon, sans jamais committer de secret.
-- Appliquer les migrations au projet Supabase Yobalelma et verifier chaque migration.
-- Creer une procedure d'initialisation super admin sans exposer de service key.
-- Verifier toutes les policies RLS sur le projet distant avec comptes reels : client, voyageur, transporteur, relay agent, hub agent, support, admin.
-- Implementer les parcours E2E manquants : inscription, expedition nationale, mission livreur, scan, livraison, expedition internationale, relais, hub, batch.
-- Ajouter une suite Playwright ou equivalente pour tester les parcours critiques dans un navigateur.
+- Fournir `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `NEXT_PUBLIC_APP_URL` dans l'environnement securise.
+- Executer `npm install` dans un environnement ou `npm` est disponible afin de regenerer `package-lock.json` avec `@playwright/test`.
+- Appliquer toutes les migrations au Supabase Yobalelma et verifier les 37 tables, 7 buckets, policies RLS et RPC.
+- Creer comptes de test par role : client, local_transporter, traveler, relay_agent, collection_driver, hub_agent, operations_manager, admin.
+- Executer les parcours nationaux et internationaux reels avec donnees seed controlees.
+- Corriger toute erreur RLS observee sur la base distante.
 
 ## Haute
 
-- Ajouter le choix explicite depot relais ou enlevement dans le flux expedition.
-- Creer les APIs et UI pour proposer, accepter, refuser et terminer une mission d'enlevement.
-- Creer les actions pickup, in transit, delivered et preuve de remise.
-- Ajouter une page tracking publique ou authentifiee par code `YBL-XXXXXXXX`.
-- Implementer l'upload reel vers Storage pour KYC, billet/document voyage et preuves de livraison.
-- Verifier et creer les buckets Storage necessaires au-dela de `kyc-documents`.
-- Generer de vrais QR codes de retrait et depot destination, puis ajouter les scanners correspondants.
-- Creer l'interface back-office de gestion des roles internes et des validations KYC.
-- Ajouter les notifications email/SMS/in-app pour auth, tracking, scans, support et paiement.
+- Ajouter rendu QR image imprimable/exportable autour des tokens opaques.
+- Ajouter page tracking publique par code `YBL-XXXXXXXX`.
+- Finaliser validation back-office KYC et billet voyage.
+- Ajouter upload direct UX vers Storage avec URL signee, preview et preuve de livraison.
+- Ajouter notifications email/SMS/in-app pour auth, mission, tracking, QR et support.
+- Brancher paiement reel ou definir explicitement un pilote sans paiement reel.
+- Ajouter seed non sensible et script de reset environnement test.
 
 ## Moyenne
 
-- Ajouter les vues liste/detail pour expeditions, missions, batches, relais, tickets et paiements.
-- Ajouter les dashboards analytics reels depuis `platform_metrics_daily`.
-- Ajouter une procedure de seed non sensible pour donnees de demonstration.
-- Ajouter des tests SQL/RLS si l'outillage Supabase CLI est disponible.
-- Ajouter des tests composants pour les formulaires principaux.
-- Ameliorer les erreurs UI quand Supabase n'est pas configure.
-- Ajouter une politique de retention et purge des documents KYC.
-- Ajouter l'historique complet d'audit dans le dashboard admin.
+- Ajouter filtres/recherche sur listes expeditions, missions, relais, hub, support.
+- Ajouter dashboards analytics depuis `platform_metrics_daily`.
+- Ajouter tests RLS SQL si Supabase CLI et credentials sont disponibles.
+- Ajouter tests composants React pour les formulaires principaux.
+- Ajouter gestion avancee des incidents et litiges.
 
 ## Faible
 
-- Ajouter QR visuel imprime/exportable pour lots.
-- Ajouter filtres et recherche dans support/admin.
-- Ajouter etiquettes colis et documents PDF.
 - Ajouter i18n complet fr/en.
-- Ajouter skeleton loading et etats vides plus riches.
-- Ajouter guide operateur pour relais/hub/livreur.
+- Ajouter etiquettes colis PDF.
+- Ajouter guide operateur relais/hub/collecte.
+- Ajouter skeleton loading et exports CSV.
+

@@ -204,6 +204,13 @@ export type Database = {
           eta_min_days: number;
           eta_max_days: number;
           digital_twin: Json;
+          fulfillment_method: Database["public"]["Enums"]["shipment_fulfillment_method"];
+          package_photo_path: string | null;
+          delivery_otp_code: string | null;
+          delivery_otp_confirmed_at: string | null;
+          proof_of_delivery_path: string | null;
+          payout_eligible_for_release: boolean;
+          payout_blocked_reason: string | null;
           confirmation_accepted_at: string;
           created_at: string;
           updated_at: string;
@@ -226,6 +233,13 @@ export type Database = {
           eta_min_days: number;
           eta_max_days: number;
           digital_twin: Json;
+          fulfillment_method?: Database["public"]["Enums"]["shipment_fulfillment_method"];
+          package_photo_path?: string | null;
+          delivery_otp_code?: string | null;
+          delivery_otp_confirmed_at?: string | null;
+          proof_of_delivery_path?: string | null;
+          payout_eligible_for_release?: boolean;
+          payout_blocked_reason?: string | null;
           confirmation_accepted_at?: string;
           created_at?: string;
           updated_at?: string;
@@ -612,6 +626,9 @@ export type Database = {
           departure_date: string;
           arrival_date: string;
           file_path: string;
+          extracted_payload: Json;
+          confidence_score: number | null;
+          manual_review_required: boolean;
           status: Database["public"]["Enums"]["travel_document_status"];
           reviewed_by: string | null;
           reviewed_at: string | null;
@@ -631,6 +648,9 @@ export type Database = {
           departure_date: string;
           arrival_date: string;
           file_path: string;
+          extracted_payload?: Json;
+          confidence_score?: number | null;
+          manual_review_required?: boolean;
           status?: Database["public"]["Enums"]["travel_document_status"];
           reviewed_by?: string | null;
           reviewed_at?: string | null;
@@ -652,6 +672,8 @@ export type Database = {
           capacity_kg: number;
           reserved_weight_kg: number;
           status: Database["public"]["Enums"]["hub_batch_status"];
+          trip_id: string | null;
+          traveler_id: string | null;
           qr_payload: Json;
           created_by: string | null;
           sealed_by: string | null;
@@ -669,6 +691,8 @@ export type Database = {
           capacity_kg: number;
           reserved_weight_kg?: number;
           status?: Database["public"]["Enums"]["hub_batch_status"];
+          trip_id?: string | null;
+          traveler_id?: string | null;
           qr_payload?: Json;
           created_by?: string | null;
           sealed_by?: string | null;
@@ -971,6 +995,162 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["tracking_events"]["Insert"]>;
         Relationships: [];
       };
+      pickup_requests: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          requester_id: string;
+          requested_for: string;
+          status: Database["public"]["Enums"]["pickup_request_status"];
+          assigned_transporter_id: string | null;
+          mission_id: string | null;
+          address_snapshot: Json;
+          note: string | null;
+          requested_at: string;
+          dispatched_at: string | null;
+          accepted_at: string | null;
+          arrived_at: string | null;
+          picked_up_at: string | null;
+          cancelled_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          requester_id: string;
+          requested_for: string;
+          status?: Database["public"]["Enums"]["pickup_request_status"];
+          assigned_transporter_id?: string | null;
+          mission_id?: string | null;
+          address_snapshot: Json;
+          note?: string | null;
+          requested_at?: string;
+          dispatched_at?: string | null;
+          accepted_at?: string | null;
+          arrived_at?: string | null;
+          picked_up_at?: string | null;
+          cancelled_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["pickup_requests"]["Insert"]>;
+        Relationships: [];
+      };
+      handover_qr_tokens: {
+        Row: {
+          id: string;
+          token_hash: string;
+          token_type: Database["public"]["Enums"]["handover_qr_token_type"];
+          status: Database["public"]["Enums"]["handover_qr_token_status"];
+          batch_id: string;
+          trip_id: string | null;
+          traveler_id: string | null;
+          created_by: string | null;
+          used_by: string | null;
+          expires_at: string;
+          used_at: string | null;
+          revoked_at: string | null;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          token_hash: string;
+          token_type: Database["public"]["Enums"]["handover_qr_token_type"];
+          status?: Database["public"]["Enums"]["handover_qr_token_status"];
+          batch_id: string;
+          trip_id?: string | null;
+          traveler_id?: string | null;
+          created_by?: string | null;
+          used_by?: string | null;
+          expires_at: string;
+          used_at?: string | null;
+          revoked_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["handover_qr_tokens"]["Insert"]>;
+        Relationships: [];
+      };
+      collection_manifests: {
+        Row: {
+          id: string;
+          route_id: string;
+          code: string;
+          sealed_by: string | null;
+          sealed_at: string | null;
+          delivered_to_hub_at: string | null;
+          incident_note: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          route_id: string;
+          code: string;
+          sealed_by?: string | null;
+          sealed_at?: string | null;
+          delivered_to_hub_at?: string | null;
+          incident_note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["collection_manifests"]["Insert"]>;
+        Relationships: [];
+      };
+      collection_manifest_items: {
+        Row: {
+          id: string;
+          manifest_id: string;
+          shipment_id: string;
+          scanned_at: string;
+          incident_note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          manifest_id: string;
+          shipment_id: string;
+          scanned_at?: string;
+          incident_note?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["collection_manifest_items"]["Insert"]
+        >;
+        Relationships: [];
+      };
+      hub_package_inspections: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          batch_id: string | null;
+          inspector_id: string | null;
+          decision: Database["public"]["Enums"]["hub_inspection_decision"];
+          measured_weight_kg: number | null;
+          storage_location: string | null;
+          photo_path: string | null;
+          note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          batch_id?: string | null;
+          inspector_id?: string | null;
+          decision: Database["public"]["Enums"]["hub_inspection_decision"];
+          measured_weight_kg?: number | null;
+          storage_location?: string | null;
+          photo_path?: string | null;
+          note?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["hub_package_inspections"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -1001,6 +1181,61 @@ export type Database = {
           p_transporter_id: string;
         };
         Returns: string;
+      };
+      accept_local_delivery_mission: {
+        Args: { p_mission_id: string };
+        Returns: string;
+      };
+      create_handover_qr_token: {
+        Args: {
+          p_batch_id: string;
+          p_expires_in_minutes?: number;
+          p_token_type: Database["public"]["Enums"]["handover_qr_token_type"];
+        };
+        Returns: {
+          expires_at: string;
+          token: string;
+          token_id: string;
+        }[];
+      };
+      create_operational_shipment: {
+        Args: {
+          p_currency: string;
+          p_delivery_address: Json;
+          p_destination_city: string;
+          p_destination_country: string;
+          p_digital_twin: Json;
+          p_estimated_price_cents: number;
+          p_eta_max_days: number;
+          p_eta_min_days: number;
+          p_fulfillment_method?: Database["public"]["Enums"]["shipment_fulfillment_method"];
+          p_latest_delivery_date: string;
+          p_origin_city: string;
+          p_origin_country: string;
+          p_package: Json;
+          p_package_photo_path?: string | null;
+          p_pickup_address: Json;
+          p_preferred_pickup_date: string;
+          p_scope: Database["public"]["Enums"]["shipment_scope"];
+          p_service_level: Database["public"]["Enums"]["shipment_service_level"];
+        };
+        Returns: {
+          delivery_otp_code: string;
+          id: string;
+          scope: Database["public"]["Enums"]["shipment_scope"];
+          tracking_code: string;
+        }[];
+      };
+      dispatch_local_delivery_missions: {
+        Args: {
+          p_candidate_limit?: number;
+          p_shipment_id: string;
+        };
+        Returns: {
+          mission_id: string;
+          score: number;
+          transporter_id: string;
+        }[];
       };
       create_sandbox_payment_intent: {
         Args: {
@@ -1042,6 +1277,15 @@ export type Database = {
         };
         Returns: string;
       };
+      progress_local_delivery_mission: {
+        Args: {
+          p_action: string;
+          p_delivery_otp?: string | null;
+          p_mission_id: string;
+          p_proof_path?: string | null;
+        };
+        Returns: string;
+      };
       reserve_batch_capacity: {
         Args: {
           p_batch_id: string;
@@ -1049,6 +1293,19 @@ export type Database = {
           p_shipment_id: string;
         };
         Returns: string;
+      };
+      scan_handover_qr_token: {
+        Args: {
+          p_expected_token_type: Database["public"]["Enums"]["handover_qr_token_type"];
+          p_incident_type?: string | null;
+          p_note?: string | null;
+          p_token: string;
+        };
+        Returns: {
+          batch_id: string;
+          next_token: string | null;
+          next_token_expires_at: string | null;
+        }[];
       };
     };
     Enums: {
@@ -1092,6 +1349,7 @@ export type Database = {
         | "delivered"
         | "cancelled";
       shipment_service_level: "standard" | "express";
+      shipment_fulfillment_method: "pickup" | "relay_dropoff";
       shipment_address_type: "pickup" | "delivery";
       package_category:
         | "documents"
@@ -1115,6 +1373,16 @@ export type Database = {
       relay_inventory_status: "stored" | "released" | "exception";
       collection_route_status: "planned" | "in_progress" | "completed" | "cancelled";
       collection_stop_status: "pending" | "arrived" | "completed" | "skipped";
+      pickup_request_status:
+        | "requested"
+        | "dispatched"
+        | "accepted"
+        | "arrived"
+        | "picked_up"
+        | "cancelled";
+      handover_qr_token_type: "origin_pickup" | "destination_dropoff";
+      handover_qr_token_status: "active" | "used" | "revoked" | "expired";
+      hub_inspection_decision: "accepted" | "damaged" | "missing" | "rejected";
       travel_document_status: "submitted" | "approved" | "rejected";
       hub_batch_status:
         | "open"

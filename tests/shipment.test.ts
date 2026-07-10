@@ -35,6 +35,8 @@ const validShipment: ShipmentInput = {
   declaredValueCents: 0,
   fragile: false,
   serviceLevel: "standard",
+  fulfillmentMethod: "pickup",
+  packagePhotoPath: "",
   preferredPickupDate: "2026-08-01",
   latestDeliveryDate: "2026-08-10",
   prohibitedItemsConfirmed: true,
