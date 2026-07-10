@@ -305,3 +305,63 @@ Statut : terminee localement le 2026-07-10.
 ### Phase suivante
 
 - Phase metier 6 : paiements sandbox, support, back-office, analytics et audit.
+
+## Phase metier 6 - Paiements, support et back-office
+
+Statut : terminee localement le 2026-07-10.
+
+### Fonctionnalites terminees
+
+- Intentions de paiement sandbox.
+- Payouts modelises.
+- Tickets support et messages.
+- Page support utilisateur `/support`.
+- Dashboard support interne `/dashboard/support`.
+- Dashboard admin `/dashboard/admin`.
+- Journal d'audit.
+- Metriques quotidiennes.
+- Fonctions RPC auditees pour paiement sandbox et creation de ticket support.
+- RLS sur paiements, payouts, support, audit et metriques.
+
+### Fichiers modifies
+
+- `app/api/payments/intents/route.ts`
+- `app/api/support/messages/route.ts`
+- `app/api/support/tickets/route.ts`
+- `app/dashboard/admin/page.tsx`
+- `app/dashboard/client/page.tsx`
+- `app/dashboard/support/page.tsx`
+- `app/support/page.tsx`
+- `components/forms/operations-forms.tsx`
+- `docs/ARCHITECTURE.md`
+- `docs/DATABASE.md`
+- `docs/IMPLEMENTATION_PROGRESS.md`
+- `docs/PRODUCT_SPEC.md`
+- `lib/validation/operations.ts`
+- `supabase/migrations/20260710200000_payments_support_admin.sql`
+- `tests/operations.test.ts`
+- `types/database.types.ts`
+
+### Migrations appliquees
+
+- Aucune migration distante appliquee : acces Supabase distant non disponible dans cet environnement.
+- Migration locale preparee : `20260710200000_payments_support_admin.sql`.
+
+### Tests executes
+
+- `npm run lint` : succes apres correction d'une apostrophe JSX non echappee.
+- `npm run typecheck` : succes.
+- `npm run test` : succes, 8 fichiers et 33 tests.
+- `npm run build` : succes, 37 routes generees.
+- `npm audit --audit-level=moderate` : 0 vulnerabilite.
+- Recherche locale de secrets : aucune cle reelle detectee ; uniquement des mentions documentaires ou references a GitHub Secrets.
+
+### Limites
+
+- Les paiements utilisent un provider `sandbox` ; aucun provider reel n'est configure sans contrat et secrets securises.
+- Les vues analytics avancees restent a enrichir avec des graphes et agregations serveur.
+- Les migrations doivent etre appliquees au projet Supabase distant avec les secrets securises.
+
+### Phase suivante
+
+- Stabilisation produit : appliquer les migrations Supabase, essais end-to-end avec comptes reels et durcissement back-office.

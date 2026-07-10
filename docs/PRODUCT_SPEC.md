@@ -37,6 +37,7 @@ Le projet livre maintenant un noyau produit viable :
 - points relais, inventaire et scans colis ;
 - tournees de collecte modelisees ;
 - documents voyageurs, batches hub, reservations de capacite et payload QR ;
+- paiements sandbox, payouts, support, audit et metriques ;
 - dashboard utilisateur ;
 - migration SQL initiale avec Row Level Security ;
 - documentation ;
@@ -68,7 +69,7 @@ Le projet livre maintenant un noyau produit viable :
 4. Un agent relais scanne les colis avec le code de suivi.
 5. Les scans alimentent l'inventaire et les statuts d'expedition.
 6. Un agent hub cree un batch et reserve la capacite d'expeditions compatibles.
-7. Les futures phases brancheront paiements, notifications et back-office complet.
+7. Le support ouvre des tickets, le back-office trace les actions et les paiements sandbox preparent l'integration provider.
 
 ## Contraintes non negociables
 

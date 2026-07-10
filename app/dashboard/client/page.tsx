@@ -26,7 +26,7 @@ export default async function ClientDashboardPage() {
           actions={[
             { href: "/envoyer", label: "Envoyer un colis" },
             { href: "/dashboard/kyc", label: "Verification KYC", variant: "secondary" },
-            { href: "/dashboard", label: "Vue globale", variant: "secondary" },
+            { href: "/support", label: "Support", variant: "secondary" },
           ]}
           checkpoints={[
             "Profil client rattache au projet Supabase Yobalelma.",

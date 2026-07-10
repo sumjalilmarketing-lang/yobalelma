@@ -705,6 +705,156 @@ export type Database = {
         >;
         Relationships: [];
       };
+      payment_intents: {
+        Row: {
+          id: string;
+          provider: string;
+          provider_reference: string;
+          shipment_id: string;
+          payer_id: string;
+          amount_cents: number;
+          currency: string;
+          status: Database["public"]["Enums"]["payment_status"];
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider?: string;
+          provider_reference: string;
+          shipment_id: string;
+          payer_id: string;
+          amount_cents: number;
+          currency?: string;
+          status?: Database["public"]["Enums"]["payment_status"];
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["payment_intents"]["Insert"]>;
+        Relationships: [];
+      };
+      payouts: {
+        Row: {
+          id: string;
+          beneficiary_id: string;
+          shipment_id: string | null;
+          amount_cents: number;
+          currency: string;
+          status: Database["public"]["Enums"]["payout_status"];
+          scheduled_for: string | null;
+          paid_at: string | null;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          beneficiary_id: string;
+          shipment_id?: string | null;
+          amount_cents: number;
+          currency?: string;
+          status?: Database["public"]["Enums"]["payout_status"];
+          scheduled_for?: string | null;
+          paid_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["payouts"]["Insert"]>;
+        Relationships: [];
+      };
+      support_tickets: {
+        Row: {
+          id: string;
+          requester_id: string;
+          shipment_id: string | null;
+          category: Database["public"]["Enums"]["support_category"];
+          priority: Database["public"]["Enums"]["support_priority"];
+          status: Database["public"]["Enums"]["support_ticket_status"];
+          subject: string;
+          assigned_to: string | null;
+          created_at: string;
+          updated_at: string;
+          resolved_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          requester_id: string;
+          shipment_id?: string | null;
+          category: Database["public"]["Enums"]["support_category"];
+          priority?: Database["public"]["Enums"]["support_priority"];
+          status?: Database["public"]["Enums"]["support_ticket_status"];
+          subject: string;
+          assigned_to?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          resolved_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["support_tickets"]["Insert"]>;
+        Relationships: [];
+      };
+      support_messages: {
+        Row: {
+          id: string;
+          ticket_id: string;
+          author_id: string;
+          body: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          ticket_id: string;
+          author_id: string;
+          body: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["support_messages"]["Insert"]>;
+        Relationships: [];
+      };
+      audit_log_events: {
+        Row: {
+          id: string;
+          actor_id: string | null;
+          action: string;
+          entity_type: string;
+          entity_id: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          actor_id?: string | null;
+          action: string;
+          entity_type: string;
+          entity_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["audit_log_events"]["Insert"]>;
+        Relationships: [];
+      };
+      platform_metrics_daily: {
+        Row: {
+          metric_date: string;
+          shipments_created: number;
+          payments_succeeded: number;
+          support_tickets_opened: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          metric_date: string;
+          shipments_created?: number;
+          payments_succeeded?: number;
+          support_tickets_opened?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["platform_metrics_daily"]["Insert"]>;
+        Relationships: [];
+      };
       parcel_requests: {
         Row: {
           id: string;
@@ -852,6 +1002,24 @@ export type Database = {
         };
         Returns: string;
       };
+      create_sandbox_payment_intent: {
+        Args: {
+          p_amount_cents: number;
+          p_currency: string;
+          p_shipment_id: string;
+        };
+        Returns: string;
+      };
+      create_support_ticket: {
+        Args: {
+          p_category: Database["public"]["Enums"]["support_category"];
+          p_initial_message: string;
+          p_priority: Database["public"]["Enums"]["support_priority"];
+          p_shipment_id?: string | null;
+          p_subject: string;
+        };
+        Returns: string;
+      };
       current_user_has_role: {
         Args: { required_roles: string[] };
         Returns: boolean;
@@ -956,6 +1124,16 @@ export type Database = {
         | "closed"
         | "cancelled";
       capacity_reservation_status: "reserved" | "loaded" | "released" | "cancelled";
+      payment_status:
+        | "requires_payment_method"
+        | "requires_confirmation"
+        | "succeeded"
+        | "cancelled"
+        | "refunded";
+      payout_status: "pending" | "paid" | "failed" | "cancelled";
+      support_ticket_status: "open" | "pending" | "resolved" | "closed";
+      support_priority: "low" | "normal" | "high" | "urgent";
+      support_category: "shipment" | "payment" | "kyc" | "damage" | "delay" | "other";
       parcel_status: "draft" | "open" | "matched" | "in_transit" | "delivered" | "cancelled";
       trip_status: "planned" | "boarding" | "arrived" | "cancelled";
       offer_status: "pending" | "accepted" | "declined" | "cancelled";

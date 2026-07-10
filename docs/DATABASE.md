@@ -19,6 +19,7 @@ Migrations locales :
 - `supabase/migrations/20260710170000_local_transporters.sql`
 - `supabase/migrations/20260710180000_relay_collection.sql`
 - `supabase/migrations/20260710190000_traveler_hub_batches.sql`
+- `supabase/migrations/20260710200000_payments_support_admin.sql`
 
 Tables :
 
@@ -44,6 +45,12 @@ Tables :
 - `traveler_documents`
 - `hub_batches`
 - `capacity_reservations`
+- `payment_intents`
+- `payouts`
+- `support_tickets`
+- `support_messages`
+- `audit_log_events`
+- `platform_metrics_daily`
 - `parcel_requests`
 - `trips`
 - `offers`
@@ -74,6 +81,11 @@ Enums :
 - `travel_document_status`
 - `hub_batch_status`
 - `capacity_reservation_status`
+- `payment_status`
+- `payout_status`
+- `support_ticket_status`
+- `support_priority`
+- `support_category`
 - `parcel_status`
 - `trip_status`
 - `offer_status`
@@ -109,6 +121,9 @@ Les migrations activent Row Level Security sur toutes les tables metier sensible
 - Les tournees de collecte sont visibles par leur chauffeur et les roles internes autorises.
 - Les documents voyageurs sont visibles par le voyageur et les roles hub autorises.
 - Les batches hub et reservations de capacite sont reserves aux roles hub et operations.
+- Les paiements sandbox sont visibles par le payeur et les roles internes autorises.
+- Les tickets support sont visibles par le demandeur, l'agent assigne et les roles support autorises.
+- Les journaux d'audit et metriques sont reserves aux roles operations et administration.
 - Une demande de colis est modifiable par son expediteur.
 - Un trajet est modifiable par son voyageur.
 - Les offres sont visibles par le voyageur et l'expediteur concerne.
