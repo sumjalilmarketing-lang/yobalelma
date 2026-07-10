@@ -1,11 +1,12 @@
 # Remaining Work
 
-Date : 2026-07-10
+Date : 2026-07-11
 
 ## Critique
 
 - Fournir `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `NEXT_PUBLIC_APP_URL` dans l'environnement securise.
-- Executer `npm install` dans un environnement ou `npm` est disponible afin de regenerer `package-lock.json` avec `@playwright/test`.
+- Injecter `SUPABASE_ACCESS_TOKEN` dans l'environnement securise ou connecter le dashboard Supabase/GitHub.
+- Fournir le mot de passe Postgres ou un `--db-url` securise pour `supabase db push`.
 - Appliquer toutes les migrations au Supabase Yobalelma et verifier les 37 tables, 7 buckets, policies RLS et RPC.
 - Creer comptes de test par role : client, local_transporter, traveler, relay_agent, collection_driver, hub_agent, operations_manager, admin.
 - Executer les parcours nationaux et internationaux reels avec donnees seed controlees.
@@ -35,4 +36,3 @@ Date : 2026-07-10
 - Ajouter etiquettes colis PDF.
 - Ajouter guide operateur relais/hub/collecte.
 - Ajouter skeleton loading et exports CSV.
-

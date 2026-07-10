@@ -24,10 +24,13 @@ Le projet est pret pour demonstration technique locale et pour une premiere inte
 - Tests unitaires : 33/33 reussis.
 - E2E : 5 tests HTTP reussis, 5 parcours reels sautes faute de secrets Supabase.
 - Build : reussi, 45 pages generees.
-- Commandes `npm ...` : toutes bloquees car `npm` n'est pas disponible dans le shell local.
+- `npm install` : reussi avec Node.js 22 LTS temporaire, 0 vulnerabilite.
+- Commandes `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build` : reussies.
+- Commande `npm run test:e2e` : 5 tests reussis, 5 parcours reels sautes faute d'environnement Supabase authentifie.
 - Connectivite Supabase : URL projet joignable, reponse non authentifiee `401 UNAUTHORIZED_MISSING_API_KEY`.
 - Dashboard Supabase : acces bloque sur connexion GitHub/Supabase dans le navigateur integre.
 - Validation Supabase automatisee : script `npm run validate:supabase` ajoute, execution bloquee tant que les variables ne sont pas injectees.
+- Supabase CLI : `v2.109.1` telechargee temporairement, `supabase init` execute, `supabase/config.toml` ajoute.
 
 ## Blocages de production
 
@@ -36,7 +39,6 @@ Le projet est pret pour demonstration technique locale et pour une premiere inte
 - Migrations non appliquees/verifiees sur Supabase distant.
 - Buckets Storage non verifies distantement.
 - Connexion dashboard Supabase requiert une intervention humaine GitHub/Supabase.
-- `npm` absent dans ce shell local ; `npm install` n'a pas pu etre execute litteralement.
-- `supabase` CLI absent dans ce shell local ; application automatique des migrations non possible sans outil/DB URL.
-- `package-lock.json` doit etre regenere dans un environnement npm apres ajout de Playwright.
+- Token Supabase fourni dans le chat mais non utilisable en ligne de commande sans exposition process/logs ; il doit etre injecte sous `SUPABASE_ACCESS_TOKEN`.
+- Mot de passe Postgres ou `--db-url` requis pour appliquer les migrations via `supabase db push`.
 - Paiement et notifications restent sandbox/non branches.

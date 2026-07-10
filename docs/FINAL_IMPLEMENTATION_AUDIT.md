@@ -10,18 +10,18 @@ Le depot contient maintenant une plateforme Next.js executable avec 84 fichiers 
 
 Validation locale executee :
 
-- `npm install`, `npm run lint`, `npm run typecheck`, `npm run test` et `npm run build` ont ete tentes litteralement, mais `npm` est absent du shell local ;
-- lint : reussi hors sandbox ;
-- typecheck : reussi hors sandbox ;
-- tests unitaires : 8 fichiers, 33 tests reussis ;
-- build : reussi, 45 pages generees ;
-- E2E Playwright HTTP : 5 tests reussis, 5 parcours reels sautes faute de variables Supabase securisees.
+- `npm install` : reussi avec Node.js 22 LTS temporaire, 0 vulnerabilite ;
+- `npm run lint` : reussi ;
+- `npm run typecheck` : reussi ;
+- `npm run test` : 8 fichiers, 33 tests reussis ;
+- `npm run build` : reussi, 45 pages generees ;
+- `npm run test:e2e` : 5 tests reussis, 5 parcours reels sautes faute de variables Supabase securisees.
 
 Blocage majeur confirme le 2026-07-11 : les variables reelles `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `NEXT_PUBLIC_APP_URL` ne sont pas presentes dans l'environnement shell Codex. Les migrations sont presentes dans le depot mais non prouvees appliquees au projet Supabase distant. Les parcours sont connectes par code aux RPC/tables Supabase, mais non valides sur la base distante.
 
 Important securite : des cles Supabase ont ete collees dans la conversation utilisateur. Elles n'ont pas ete ecrites dans le depot, ni affichees dans les commandes finales, ni commitees. Elles doivent etre considerees exposees et remplacees cote Supabase.
 
-Important dependances : `package.json` declare `@playwright/test`, mais `package-lock.json` n'a pas pu etre regenere car `npm` est indisponible dans ce shell. Le lockfile doit etre remis en coherence dans un environnement npm avant pilote.
+Important dependances : `package-lock.json` a ete regenere par `npm install`. Le projet cible maintenant Node.js `>=22.0.0`, coherent avec les versions Supabase resolues.
 
 ## Fonctionnalites
 

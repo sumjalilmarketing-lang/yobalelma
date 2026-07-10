@@ -12,7 +12,7 @@ Projet attendu : `https://rgcgtcycbiuhcaoaadbh.supabase.co`
 | URL projet verifiee depuis env | Non |
 | Requete reelle Supabase | Oui, non authentifiee : `401 UNAUTHORIZED_MISSING_API_KEY` |
 | Dashboard Supabase | Ouvert, mais redirige vers connexion GitHub/Supabase |
-| Supabase CLI disponible | Non |
+| Supabase CLI disponible | Oui en temporaire : `v2.109.1` telechargee depuis GitHub Releases |
 | `psql` disponible | Non |
 | Token Management API fourni dans le chat | Recu mais non utilise en ligne de commande pour eviter l'exposition process/logs |
 | Migrations appliquees | Non |
@@ -70,10 +70,10 @@ npm run test:e2e
 
 ## Migrations attendues
 
-Les migrations a appliquer sont dans `supabase/migrations/`. L'application automatique n'a pas ete tentee car ni `supabase` CLI ni URL Postgres securisee ne sont disponibles dans le shell.
+Les migrations a appliquer sont dans `supabase/migrations/`. Une configuration locale `supabase/config.toml` a ete initialisee sans secret. L'application automatique n'a pas ete executee car aucun `SUPABASE_ACCESS_TOKEN` n'est injecte dans l'environnement securise, et `supabase db push` exige ensuite un projet lie avec mot de passe Postgres ou un `--db-url`.
 
 ## Acces requis pour appliquer les migrations
 
-D'apres la documentation officielle Supabase CLI, `supabase login` requiert un personal access token, et `supabase link` / `supabase db push` peuvent aussi requérir le mot de passe Postgres du projet. Ces valeurs ne sont pas presentes dans l'environnement local Codex.
+D'apres la documentation officielle Supabase CLI, `supabase login` requiert un personal access token, et `supabase link` / `supabase db push` peuvent aussi requerir le mot de passe Postgres du projet. Ces valeurs ne sont pas presentes dans l'environnement local Codex.
 
 Le token Management API ne doit pas etre passe en argument de commande. Il doit etre injecte par le gestionnaire d'environnement securise sous le nom `SUPABASE_ACCESS_TOKEN`.
