@@ -1,0 +1,38 @@
+import { fail, ok, validationFail } from "@/lib/api/responses";
+import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
+import { relayScanSchema } from "@/lib/validation/relay";
+
+export async function POST(request: Request) {
+  const parsed = relayScanSchema.safeParse(await request.json());
+
+  if (!parsed.success) {
+    return validationFail(parsed.error);
+  }
+
+  const supabase = await tryCreateSupabaseServerClient();
+
+  if (!supabase) {
+    return fail("Supabase n'est pas encore configure dans l'environnement local.", 503);
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return fail("Connecte-toi pour scanner un colis.", 401);
+  }
+
+  const { data, error } = await supabase.rpc("record_relay_scan", {
+    p_note: parsed.data.note || null,
+    p_relay_point_id: parsed.data.relayPointId,
+    p_scan_type: parsed.data.scanType,
+    p_tracking_code: parsed.data.trackingCode,
+  });
+
+  if (error) {
+    return fail(error.message, 400);
+  }
+
+  return ok("Scan relais enregistre.", { scanId: data });
+}

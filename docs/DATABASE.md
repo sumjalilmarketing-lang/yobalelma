@@ -17,6 +17,7 @@ Migrations locales :
 - `supabase/migrations/20260710152100_normalize_public_roles.sql`
 - `supabase/migrations/20260710160000_shipments.sql`
 - `supabase/migrations/20260710170000_local_transporters.sql`
+- `supabase/migrations/20260710180000_relay_collection.sql`
 
 Tables :
 
@@ -34,6 +35,11 @@ Tables :
 - `transporter_zones`
 - `transporter_availability`
 - `local_delivery_missions`
+- `relay_points`
+- `relay_inventory`
+- `relay_scan_events`
+- `collection_routes`
+- `collection_route_stops`
 - `parcel_requests`
 - `trips`
 - `offers`
@@ -56,6 +62,11 @@ Enums :
 - `vehicle_type`
 - `transporter_availability_status`
 - `local_delivery_mission_status`
+- `relay_point_status`
+- `relay_scan_type`
+- `relay_inventory_status`
+- `collection_route_status`
+- `collection_stop_status`
 - `parcel_status`
 - `trip_status`
 - `offer_status`
@@ -86,6 +97,9 @@ Les migrations activent Row Level Security sur toutes les tables metier sensible
 - Les profils transporteurs actifs sont consultables pour le matching local.
 - Les vehicules, zones et disponibilites sont modifiables par leur proprietaire.
 - Les missions locales sont visibles par l'expediteur, le transporteur et les roles internes autorises.
+- Les points relais actifs sont visibles ; leur creation et leur mise a jour sont reservees aux roles operationnels.
+- Les scans relais alimentent l'inventaire, les evenements de suivi et le statut d'expedition.
+- Les tournees de collecte sont visibles par leur chauffeur et les roles internes autorises.
 - Une demande de colis est modifiable par son expediteur.
 - Un trajet est modifiable par son voyageur.
 - Les offres sont visibles par le voyageur et l'expediteur concerne.

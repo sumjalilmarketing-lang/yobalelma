@@ -193,3 +193,58 @@ Statut : terminee localement le 2026-07-10.
 ### Phase suivante
 
 - Phase metier 4 : relais, points de depot, inventaire, scans et tournees de collecte.
+
+## Phase metier 4 - Relais et collecte
+
+Statut : terminee localement le 2026-07-10.
+
+### Fonctionnalites terminees
+
+- Points relais avec capacite et contact.
+- Inventaire relais par expedition.
+- Scans colis par code de suivi `YBL-XXXXXXXX`.
+- Mise a jour du statut expedition depuis un scan relais.
+- Evenements de suivi generes par les scans.
+- Tournees de collecte et stops modelises.
+- API relais : creation de point relais et enregistrement de scan.
+- Dashboard `/dashboard/relay` pour roles operationnels.
+- RLS sur relais, inventaire, scans et tournees.
+
+### Fichiers modifies
+
+- `app/api/relay/points/route.ts`
+- `app/api/relay/scans/route.ts`
+- `app/dashboard/relay/page.tsx`
+- `components/forms/relay-forms.tsx`
+- `docs/ARCHITECTURE.md`
+- `docs/DATABASE.md`
+- `docs/IMPLEMENTATION_PROGRESS.md`
+- `docs/PRODUCT_SPEC.md`
+- `lib/validation/relay.ts`
+- `supabase/migrations/20260710180000_relay_collection.sql`
+- `tests/relay.test.ts`
+- `types/database.types.ts`
+
+### Migrations appliquees
+
+- Aucune migration distante appliquee : acces Supabase distant non disponible dans cet environnement.
+- Migration locale preparee : `20260710180000_relay_collection.sql`.
+
+### Tests executes
+
+- `npm run lint` : succes.
+- `npm run typecheck` : succes.
+- `npm run test` : succes, 6 fichiers et 25 tests.
+- `npm run build` : succes, 30 routes generees.
+- `npm audit --audit-level=moderate` : 0 vulnerabilite.
+- Recherche locale de secrets : aucune cle reelle detectee ; uniquement des mentions documentaires ou references a GitHub Secrets.
+
+### Limites
+
+- Les routes API de creation de tournees de collecte ne sont pas encore exposees en UI.
+- Les notifications client lors d'un scan restent a livrer.
+- Les migrations doivent etre appliquees au projet Supabase distant avec les secrets securises.
+
+### Phase suivante
+
+- Phase metier 5 : voyageur, hub, capacite, batches, QR et validation de voyage.

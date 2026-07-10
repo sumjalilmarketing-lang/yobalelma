@@ -24,6 +24,7 @@ docs/                 Documentation produit et technique
 - `app/dashboard/page.tsx` affiche les donnees utilisateur.
 - `app/dashboard/client/page.tsx`, `app/dashboard/transporter/page.tsx` et `app/dashboard/traveler/page.tsx` exposent les espaces par role.
 - `app/dashboard/kyc/page.tsx` soumet les informations KYC.
+- `app/dashboard/relay/page.tsx` gere les points relais et les scans colis.
 - `app/auth/sign-in/page.tsx` propose connexion mot de passe et magic-link.
 - `app/auth/sign-up/page.tsx`, `app/auth/forgot-password/page.tsx` et `app/auth/reset-password/page.tsx` couvrent le cycle compte public.
 - `components/ui/` suit les conventions shadcn/ui.
@@ -53,6 +54,8 @@ Les routes API ecrivent dans Supabase :
 - `POST /api/transporters/zones`
 - `POST /api/transporters/availability`
 - `GET /api/transporters/matches`
+- `POST /api/relay/points`
+- `POST /api/relay/scans`
 - `PUT /api/profile`
 - `POST /api/parcel-requests`
 - `POST /api/trips`
@@ -62,6 +65,8 @@ Les routes serveur et API lisent les cookies Supabase avec `@supabase/ssr`. Sans
 Le calcul expedition vit dans `lib/shipments/estimation.ts` afin que la revue client et l'API serveur utilisent les memes regles de base. La creation persistante passe par la fonction Supabase `create_shipment`, qui insere l'expedition, les adresses, le colis et le premier evenement de suivi dans une transaction.
 
 Les transporteurs locaux sont modelises par profil, vehicules, zones et disponibilites. La fonction Supabase `find_local_transporter_matches` calcule un score deterministe pour les expeditions nationales avant creation de missions locales.
+
+Les relais disposent de tables dediees pour points relais, inventaire, scans et tournees de collecte. La fonction `record_relay_scan` met a jour l'inventaire et le statut d'expedition a partir du code `YBL-XXXXXXXX`.
 
 ## Tests
 

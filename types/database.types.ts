@@ -463,6 +463,142 @@ export type Database = {
         >;
         Relationships: [];
       };
+      relay_points: {
+        Row: {
+          id: string;
+          name: string;
+          contact_name: string;
+          contact_phone: string;
+          address_line1: string;
+          city: string;
+          country: string;
+          postal_code: string | null;
+          capacity_slots: number;
+          status: Database["public"]["Enums"]["relay_point_status"];
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          contact_name: string;
+          contact_phone: string;
+          address_line1: string;
+          city: string;
+          country: string;
+          postal_code?: string | null;
+          capacity_slots: number;
+          status?: Database["public"]["Enums"]["relay_point_status"];
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["relay_points"]["Insert"]>;
+        Relationships: [];
+      };
+      relay_inventory: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          current_relay_point_id: string;
+          status: Database["public"]["Enums"]["relay_inventory_status"];
+          checked_in_at: string;
+          checked_out_at: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          current_relay_point_id: string;
+          status?: Database["public"]["Enums"]["relay_inventory_status"];
+          checked_in_at?: string;
+          checked_out_at?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["relay_inventory"]["Insert"]>;
+        Relationships: [];
+      };
+      relay_scan_events: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          relay_point_id: string;
+          actor_id: string;
+          scan_type: Database["public"]["Enums"]["relay_scan_type"];
+          note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          relay_point_id: string;
+          actor_id: string;
+          scan_type: Database["public"]["Enums"]["relay_scan_type"];
+          note?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["relay_scan_events"]["Insert"]>;
+        Relationships: [];
+      };
+      collection_routes: {
+        Row: {
+          id: string;
+          driver_id: string | null;
+          name: string;
+          route_date: string;
+          status: Database["public"]["Enums"]["collection_route_status"];
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          driver_id?: string | null;
+          name: string;
+          route_date: string;
+          status?: Database["public"]["Enums"]["collection_route_status"];
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["collection_routes"]["Insert"]>;
+        Relationships: [];
+      };
+      collection_route_stops: {
+        Row: {
+          id: string;
+          route_id: string;
+          relay_point_id: string;
+          stop_order: number;
+          status: Database["public"]["Enums"]["collection_stop_status"];
+          arrived_at: string | null;
+          completed_at: string | null;
+          note: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          route_id: string;
+          relay_point_id: string;
+          stop_order: number;
+          status?: Database["public"]["Enums"]["collection_stop_status"];
+          arrived_at?: string | null;
+          completed_at?: string | null;
+          note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["collection_route_stops"]["Insert"]
+        >;
+        Relationships: [];
+      };
       parcel_requests: {
         Row: {
           id: string;
@@ -623,6 +759,15 @@ export type Database = {
           transporter_id: string;
         }[];
       };
+      record_relay_scan: {
+        Args: {
+          p_note?: string | null;
+          p_relay_point_id: string;
+          p_scan_type: Database["public"]["Enums"]["relay_scan_type"];
+          p_tracking_code: string;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       user_role:
@@ -683,6 +828,11 @@ export type Database = {
         | "picked_up"
         | "delivered"
         | "cancelled";
+      relay_point_status: "active" | "inactive" | "suspended";
+      relay_scan_type: "check_in" | "check_out" | "handover" | "exception";
+      relay_inventory_status: "stored" | "released" | "exception";
+      collection_route_status: "planned" | "in_progress" | "completed" | "cancelled";
+      collection_stop_status: "pending" | "arrived" | "completed" | "skipped";
       parcel_status: "draft" | "open" | "matched" | "in_transit" | "delivered" | "cancelled";
       trip_status: "planned" | "boarding" | "arrived" | "cancelled";
       offer_status: "pending" | "accepted" | "declined" | "cancelled";
