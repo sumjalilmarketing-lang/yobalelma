@@ -10,7 +10,23 @@ Toute autre URL Supabase doit etre consideree comme une erreur de configuration.
 
 ## Etat actuel
 
-Aucune table metier definitive n'est creee dans cette phase. Le dossier `supabase/migrations/` est reserve aux futures migrations SQL Yobalelma.
+La migration initiale est `supabase/migrations/20260710140000_initial_yobalelma.sql`.
+
+Tables :
+
+- `profiles`
+- `parcel_requests`
+- `trips`
+- `offers`
+- `tracking_events`
+
+Enums :
+
+- `user_role`
+- `parcel_status`
+- `trip_status`
+- `offer_status`
+- `tracking_event_type`
 
 ## Principes
 
@@ -19,15 +35,19 @@ Aucune table metier definitive n'est creee dans cette phase. Le dossier `supabas
 - Les types TypeScript Supabase devront etre regeneres apres creation du schema.
 - Les cles de service ne doivent jamais etre exposees au navigateur.
 
-## Prochain schema probable
+## RLS
 
-Les prochaines phases pourront introduire :
+La migration active Row Level Security sur toutes les tables metier.
 
-- profils utilisateurs ;
-- trajets voyageurs ;
-- demandes d'envoi ;
-- colis ;
-- offres de transport ;
-- statuts et audit minimal ;
-- pieces jointes si necessaire.
+- Un profil est visible et modifiable uniquement par son proprietaire.
+- Une demande de colis est modifiable par son expediteur.
+- Un trajet est modifiable par son voyageur.
+- Les offres sont visibles par le voyageur et l'expediteur concerne.
+- Les evenements de suivi sont visibles par les participants.
 
+## Prochaines evolutions schema
+
+- Pieces jointes et preuves de remise.
+- Verification d'identite.
+- Conversations et notifications.
+- Paiements et sequestre si le modele economique le demande.

@@ -16,6 +16,16 @@ Slogan : **Chaque voyage devient une livraison**.
 - Vitest
 - GitHub Actions
 
+## Produit inclus
+
+- Landing page Yobalelma.
+- Connexion Supabase par lien magique.
+- Creation de profil expediteur/voyageur.
+- Publication de demandes d'envoi de colis.
+- Publication de trajets voyageurs.
+- Dashboard utilisateur.
+- Migration Supabase initiale avec RLS.
+
 ## Supabase
 
 Le projet Supabase Yobalelma utilise exclusivement cette URL :
@@ -30,6 +40,7 @@ Les clés Supabase doivent rester dans les variables d'environnement sécurisée
 
 ```bash
 npm install
+npm ci
 npm run lint
 npm run typecheck
 npm run test
@@ -50,4 +61,3 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - Ce dépôt est exclusivement réservé à Yobalelma.
 - Aucun code, composant métier, schéma ou dépendance spécifique à AfriCRM Shop ne doit y être ajouté.
 - Aucun secret ne doit être committé.
-

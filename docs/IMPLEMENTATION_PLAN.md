@@ -11,32 +11,33 @@
 - Ajouter les tests, le lint, le typecheck et le build.
 - Creer le workflow GitHub Actions.
 
-## Phase 2 - Parcours d'inscription
+## Phase 2 - MVP produit
 
 - Authentification Supabase.
 - Profils utilisateur.
 - Parcours "Envoyer un colis".
 - Parcours "Devenir livreur".
 - Parcours "Voyager avec Yobalelma".
+- Dashboard utilisateur.
+- Migration Supabase initiale avec RLS.
 
-## Phase 3 - Donnees metier
+## Phase 3 - Matching
 
-- Schema Supabase versionne.
-- RLS.
-- Types Supabase generes.
-- Tests d'integration.
+- Liste de colis compatibles avec un trajet.
+- Creation d'offres de transport.
+- Acceptation ou refus d'offre.
+- Evenements de suivi colis.
 
-## Phase 4 - Matching et suivi
+## Phase 4 - Confiance et operations
 
-- Publication de trajets.
-- Publication de demandes d'envoi.
-- Matching initial.
-- Statuts colis.
+- Verification d'identite.
+- Gestion de documents et preuves.
+- Moderation et back-office minimal.
+- Journal d'audit.
 
-## Phase 5 - Operations
+## Phase 5 - Revenus et croissance
 
-- Back-office minimal.
-- Audit.
+- Paiement.
+- Sequestre ou commissions.
 - Notifications.
 - Observabilite.
-

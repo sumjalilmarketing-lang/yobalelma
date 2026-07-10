@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, PackageCheck, Plane, Route, ShieldCheck } from "lucide-react";
 import { YobalelmaLogo } from "@/components/brand/yobalelma-logo";
 import { Button } from "@/components/ui/button";
@@ -6,17 +7,17 @@ import { Button } from "@/components/ui/button";
 const actions = [
   {
     label: "Envoyer un colis",
-    href: "#envoyer",
+    href: "/envoyer",
     variant: "default" as const,
   },
   {
     label: "Devenir livreur",
-    href: "#livreur",
+    href: "/livreur",
     variant: "secondary" as const,
   },
   {
     label: "Voyager avec Yobalelma",
-    href: "#voyager",
+    href: "/voyager",
     variant: "outline" as const,
   },
 ];
@@ -66,10 +67,10 @@ export default function Home() {
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 {actions.map((action) => (
                   <Button key={action.label} asChild size="lg" variant={action.variant}>
-                    <a href={action.href}>
+                    <Link href={action.href}>
                       {action.label}
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </a>
+                    </Link>
                   </Button>
                 ))}
               </div>
@@ -132,9 +133,8 @@ export default function Home() {
         aria-label="Accès rapides Yobalelma"
       >
         {actions.map((action) => (
-          <a
+          <Link
             key={action.href}
-            id={action.href.slice(1)}
             href={action.href}
             className="group flex min-h-36 flex-col justify-between rounded-lg border border-black/10 bg-white p-5 transition hover:border-primary hover:shadow-crisp"
           >
@@ -146,7 +146,7 @@ export default function Home() {
                 aria-hidden="true"
               />
             </span>
-          </a>
+          </Link>
         ))}
       </section>
     </main>
