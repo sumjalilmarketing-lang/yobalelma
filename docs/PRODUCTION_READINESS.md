@@ -1,6 +1,6 @@
 # Production Readiness
 
-Date : 2026-07-10
+Date : 2026-07-11
 
 ## Verdict
 
@@ -23,14 +23,16 @@ Le projet est pret pour demonstration technique locale et pour une premiere inte
 - Typecheck : reussi hors sandbox.
 - Tests unitaires : 33/33 reussis.
 - E2E : 5 tests HTTP reussis, 5 parcours reels sautes faute de secrets Supabase.
-- Build : reussi, 45 pages generees, warning Edge Runtime Supabase dans middleware.
+- Build : reussi, 45 pages generees.
+- Commandes `npm ...` : toutes bloquees car `npm` n'est pas disponible dans le shell local.
 
 ## Blocages de production
 
 - Variables Supabase reelles absentes dans Codex.
+- Cles collees dans la conversation utilisateur : rotation recommandee avant tout pilote.
 - Migrations non appliquees/verifiees sur Supabase distant.
 - Buckets Storage non verifies distantement.
 - `npm` absent dans ce shell local ; `npm install` n'a pas pu etre execute litteralement.
+- `supabase` CLI absent dans ce shell local ; application automatique des migrations non possible sans outil/DB URL.
 - `package-lock.json` doit etre regenere dans un environnement npm apres ajout de Playwright.
 - Paiement et notifications restent sandbox/non branches.
-
