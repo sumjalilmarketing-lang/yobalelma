@@ -22,9 +22,9 @@ const actions = [
 ];
 
 const trustSignals = [
-  { label: "Trajets verifies", icon: Route },
+  { label: "Trajets vérifiés", icon: Route },
   { label: "Colis suivis", icon: PackageCheck },
-  { label: "Identites controlees", icon: ShieldCheck },
+  { label: "Identités contrôlées", icon: ShieldCheck },
 ];
 
 export default function Home() {
@@ -59,7 +59,7 @@ export default function Home() {
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-white/76 sm:text-xl">
                 Yobalelma connecte les personnes qui voyagent avec celles qui
-                veulent envoyer un colis, dans un cadre simple, controle et
+                veulent envoyer un colis, dans un cadre simple, contrôlé et
                 transparent.
               </p>
 
@@ -80,7 +80,7 @@ export default function Home() {
                 <div className="flex items-center justify-between border-b border-black/10 pb-4">
                   <YobalelmaLogo compact />
                   <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-white">
-                    Pret
+                    Prêt
                   </span>
                 </div>
                 <div className="mt-8 space-y-6">
@@ -92,7 +92,7 @@ export default function Home() {
                       <span className="h-3 w-3 rounded-full bg-primary" />
                       <div>
                         <p className="text-xl font-black">Paris</p>
-                        <p className="text-sm text-black/54">Depart voyageur</p>
+                        <p className="text-sm text-black/54">Départ voyageur</p>
                       </div>
                     </div>
                     <div className="ml-1.5 h-10 w-px bg-black/12" />
@@ -128,13 +128,13 @@ export default function Home() {
       </section>
 
       <section
-        id="envoyer"
         className="container grid gap-7 py-12 md:grid-cols-3 md:py-16"
-        aria-label="Acces rapides Yobalelma"
+        aria-label="Accès rapides Yobalelma"
       >
         {actions.map((action) => (
           <a
             key={action.href}
+            id={action.href.slice(1)}
             href={action.href}
             className="group flex min-h-36 flex-col justify-between rounded-lg border border-black/10 bg-white p-5 transition hover:border-primary hover:shadow-crisp"
           >
@@ -152,4 +152,3 @@ export default function Home() {
     </main>
   );
 }
-
