@@ -25,6 +25,7 @@ docs/                 Documentation produit et technique
 - `app/dashboard/client/page.tsx`, `app/dashboard/transporter/page.tsx` et `app/dashboard/traveler/page.tsx` exposent les espaces par role.
 - `app/dashboard/kyc/page.tsx` soumet les informations KYC.
 - `app/dashboard/relay/page.tsx` gere les points relais et les scans colis.
+- `app/dashboard/hub/page.tsx` gere les batches et reservations de capacite.
 - `app/auth/sign-in/page.tsx` propose connexion mot de passe et magic-link.
 - `app/auth/sign-up/page.tsx`, `app/auth/forgot-password/page.tsx` et `app/auth/reset-password/page.tsx` couvrent le cycle compte public.
 - `components/ui/` suit les conventions shadcn/ui.
@@ -56,6 +57,9 @@ Les routes API ecrivent dans Supabase :
 - `GET /api/transporters/matches`
 - `POST /api/relay/points`
 - `POST /api/relay/scans`
+- `POST /api/travel-documents`
+- `POST /api/hub/batches`
+- `POST /api/hub/assignments`
 - `PUT /api/profile`
 - `POST /api/parcel-requests`
 - `POST /api/trips`
@@ -67,6 +71,8 @@ Le calcul expedition vit dans `lib/shipments/estimation.ts` afin que la revue cl
 Les transporteurs locaux sont modelises par profil, vehicules, zones et disponibilites. La fonction Supabase `find_local_transporter_matches` calcule un score deterministe pour les expeditions nationales avant creation de missions locales.
 
 Les relais disposent de tables dediees pour points relais, inventaire, scans et tournees de collecte. La fonction `record_relay_scan` met a jour l'inventaire et le statut d'expedition a partir du code `YBL-XXXXXXXX`.
+
+Le hub gere les documents voyageurs, les batches, la charge reservee et le payload QR. La fonction `reserve_batch_capacity` controle la capacite disponible avant d'associer une expedition au batch.
 
 ## Tests
 

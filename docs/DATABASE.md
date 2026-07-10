@@ -18,6 +18,7 @@ Migrations locales :
 - `supabase/migrations/20260710160000_shipments.sql`
 - `supabase/migrations/20260710170000_local_transporters.sql`
 - `supabase/migrations/20260710180000_relay_collection.sql`
+- `supabase/migrations/20260710190000_traveler_hub_batches.sql`
 
 Tables :
 
@@ -40,6 +41,9 @@ Tables :
 - `relay_scan_events`
 - `collection_routes`
 - `collection_route_stops`
+- `traveler_documents`
+- `hub_batches`
+- `capacity_reservations`
 - `parcel_requests`
 - `trips`
 - `offers`
@@ -67,6 +71,9 @@ Enums :
 - `relay_inventory_status`
 - `collection_route_status`
 - `collection_stop_status`
+- `travel_document_status`
+- `hub_batch_status`
+- `capacity_reservation_status`
 - `parcel_status`
 - `trip_status`
 - `offer_status`
@@ -100,6 +107,8 @@ Les migrations activent Row Level Security sur toutes les tables metier sensible
 - Les points relais actifs sont visibles ; leur creation et leur mise a jour sont reservees aux roles operationnels.
 - Les scans relais alimentent l'inventaire, les evenements de suivi et le statut d'expedition.
 - Les tournees de collecte sont visibles par leur chauffeur et les roles internes autorises.
+- Les documents voyageurs sont visibles par le voyageur et les roles hub autorises.
+- Les batches hub et reservations de capacite sont reserves aux roles hub et operations.
 - Une demande de colis est modifiable par son expediteur.
 - Un trajet est modifiable par son voyageur.
 - Les offres sont visibles par le voyageur et l'expediteur concerne.

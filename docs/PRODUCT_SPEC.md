@@ -36,6 +36,7 @@ Le projet livre maintenant un noyau produit viable :
 - matching deterministe pour missions nationales ;
 - points relais, inventaire et scans colis ;
 - tournees de collecte modelisees ;
+- documents voyageurs, batches hub, reservations de capacite et payload QR ;
 - dashboard utilisateur ;
 - migration SQL initiale avec Row Level Security ;
 - documentation ;
@@ -66,7 +67,8 @@ Le projet livre maintenant un noyau produit viable :
 3. Les expeditions nationales peuvent etre comparees aux transporteurs compatibles.
 4. Un agent relais scanne les colis avec le code de suivi.
 5. Les scans alimentent l'inventaire et les statuts d'expedition.
-6. Les futures phases brancheront les batches voyageurs et les notifications.
+6. Un agent hub cree un batch et reserve la capacite d'expeditions compatibles.
+7. Les futures phases brancheront paiements, notifications et back-office complet.
 
 ## Contraintes non negociables
 

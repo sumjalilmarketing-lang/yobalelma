@@ -599,6 +599,112 @@ export type Database = {
         >;
         Relationships: [];
       };
+      traveler_documents: {
+        Row: {
+          id: string;
+          trip_id: string;
+          traveler_id: string;
+          traveler_name: string;
+          document_number: string;
+          issuing_country: string;
+          departure_airport: string;
+          arrival_airport: string;
+          departure_date: string;
+          arrival_date: string;
+          file_path: string;
+          status: Database["public"]["Enums"]["travel_document_status"];
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+          rejection_reason: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          trip_id: string;
+          traveler_id: string;
+          traveler_name: string;
+          document_number: string;
+          issuing_country: string;
+          departure_airport: string;
+          arrival_airport: string;
+          departure_date: string;
+          arrival_date: string;
+          file_path: string;
+          status?: Database["public"]["Enums"]["travel_document_status"];
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          rejection_reason?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["traveler_documents"]["Insert"]>;
+        Relationships: [];
+      };
+      hub_batches: {
+        Row: {
+          id: string;
+          code: string;
+          origin_hub: string;
+          destination_hub: string;
+          flight_number: string | null;
+          departure_date: string;
+          capacity_kg: number;
+          reserved_weight_kg: number;
+          status: Database["public"]["Enums"]["hub_batch_status"];
+          qr_payload: Json;
+          created_by: string | null;
+          sealed_by: string | null;
+          sealed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          origin_hub: string;
+          destination_hub: string;
+          flight_number?: string | null;
+          departure_date: string;
+          capacity_kg: number;
+          reserved_weight_kg?: number;
+          status?: Database["public"]["Enums"]["hub_batch_status"];
+          qr_payload?: Json;
+          created_by?: string | null;
+          sealed_by?: string | null;
+          sealed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["hub_batches"]["Insert"]>;
+        Relationships: [];
+      };
+      capacity_reservations: {
+        Row: {
+          id: string;
+          batch_id: string;
+          shipment_id: string;
+          reserved_weight_kg: number;
+          status: Database["public"]["Enums"]["capacity_reservation_status"];
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          batch_id: string;
+          shipment_id: string;
+          reserved_weight_kg: number;
+          status?: Database["public"]["Enums"]["capacity_reservation_status"];
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["capacity_reservations"]["Insert"]
+        >;
+        Relationships: [];
+      };
       parcel_requests: {
         Row: {
           id: string;
@@ -768,6 +874,14 @@ export type Database = {
         };
         Returns: string;
       };
+      reserve_batch_capacity: {
+        Args: {
+          p_batch_id: string;
+          p_reserved_weight_kg: number;
+          p_shipment_id: string;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       user_role:
@@ -833,6 +947,15 @@ export type Database = {
       relay_inventory_status: "stored" | "released" | "exception";
       collection_route_status: "planned" | "in_progress" | "completed" | "cancelled";
       collection_stop_status: "pending" | "arrived" | "completed" | "skipped";
+      travel_document_status: "submitted" | "approved" | "rejected";
+      hub_batch_status:
+        | "open"
+        | "sealed"
+        | "in_transit"
+        | "arrived"
+        | "closed"
+        | "cancelled";
+      capacity_reservation_status: "reserved" | "loaded" | "released" | "cancelled";
       parcel_status: "draft" | "open" | "matched" | "in_transit" | "delivered" | "cancelled";
       trip_status: "planned" | "boarding" | "arrived" | "cancelled";
       offer_status: "pending" | "accepted" | "declined" | "cancelled";

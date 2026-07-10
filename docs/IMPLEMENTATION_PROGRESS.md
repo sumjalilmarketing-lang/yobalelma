@@ -248,3 +248,60 @@ Statut : terminee localement le 2026-07-10.
 ### Phase suivante
 
 - Phase metier 5 : voyageur, hub, capacite, batches, QR et validation de voyage.
+
+## Phase metier 5 - Voyageur, hub et batches
+
+Statut : terminee localement le 2026-07-10.
+
+### Fonctionnalites terminees
+
+- Documents voyageurs rattaches aux trajets.
+- Soumission document voyage depuis `/voyager`.
+- Batches hub avec code `HUB-...`, capacite et payload QR.
+- Reservations de capacite par expedition.
+- Controle de capacite dans la fonction `reserve_batch_capacity`.
+- Statut expedition alimente par la reservation hub.
+- Dashboard `/dashboard/hub` pour roles hub et operations.
+- RLS sur documents voyageurs, batches et reservations.
+
+### Fichiers modifies
+
+- `app/api/hub/assignments/route.ts`
+- `app/api/hub/batches/route.ts`
+- `app/api/travel-documents/route.ts`
+- `app/dashboard/hub/page.tsx`
+- `app/voyager/page.tsx`
+- `components/forms/hub-forms.tsx`
+- `components/forms/travel-document-form.tsx`
+- `docs/ARCHITECTURE.md`
+- `docs/DATABASE.md`
+- `docs/IMPLEMENTATION_PROGRESS.md`
+- `docs/PRODUCT_SPEC.md`
+- `lib/validation/hub.ts`
+- `supabase/migrations/20260710190000_traveler_hub_batches.sql`
+- `tests/hub.test.ts`
+- `types/database.types.ts`
+
+### Migrations appliquees
+
+- Aucune migration distante appliquee : acces Supabase distant non disponible dans cet environnement.
+- Migration locale preparee : `20260710190000_traveler_hub_batches.sql`.
+
+### Tests executes
+
+- `npm run lint` : succes.
+- `npm run typecheck` : succes.
+- `npm run test` : succes, 7 fichiers et 29 tests.
+- `npm run build` : succes, 33 routes generees.
+- `npm audit --audit-level=moderate` : 0 vulnerabilite.
+- Recherche locale de secrets : aucune cle reelle detectee ; uniquement des mentions documentaires ou references a GitHub Secrets.
+
+### Limites
+
+- L'extraction automatique de billets reste sandboxee sous forme de metadonnees saisies.
+- Les QR sont stockes en payload JSON, mais pas encore rendus en image.
+- Les migrations doivent etre appliquees au projet Supabase distant avec les secrets securises.
+
+### Phase suivante
+
+- Phase metier 6 : paiements sandbox, support, back-office, analytics et audit.
