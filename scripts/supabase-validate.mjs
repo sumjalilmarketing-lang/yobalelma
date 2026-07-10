@@ -1,4 +1,6 @@
-const EXPECTED_SUPABASE_URL = "https://rgcgtcycbiuhcaoaadbh.supabase.co";
+const PROJECT_REF = "rgcgtcycbiuhcaoaadbh";
+const EXPECTED_SUPABASE_URL = `https://${PROJECT_REF}.supabase.co`;
+const MANAGEMENT_API_BASE_URL = "https://api.supabase.com/v1";
 
 const REQUIRED_ENV = [
   "NEXT_PUBLIC_SUPABASE_URL",
@@ -71,6 +73,12 @@ function serviceHeaders(serviceRoleKey) {
   };
 }
 
+function managementHeaders(accessToken) {
+  return {
+    Authorization: `Bearer ${accessToken}`,
+  };
+}
+
 async function fetchJson(url, options) {
   const response = await fetch(url, options);
   const contentType = response.headers.get("content-type") ?? "";
@@ -82,6 +90,128 @@ async function fetchJson(url, options) {
     body,
     ok: response.ok,
     status: response.status,
+  };
+}
+
+function getKeyValue(candidate) {
+  return (
+    candidate.api_key ??
+    candidate.key ??
+    candidate.value ??
+    candidate.secret ??
+    candidate.token ??
+    ""
+  );
+}
+
+function findApiKey(apiKeys, names, prefixes) {
+  if (!Array.isArray(apiKeys)) {
+    return "";
+  }
+
+  const normalizedNames = names.map((name) => name.toLowerCase());
+  const named = apiKeys.find((candidate) => {
+    const candidateName = String(candidate.name ?? candidate.type ?? candidate.role ?? "")
+      .toLowerCase()
+      .replaceAll("-", "_");
+
+    return normalizedNames.includes(candidateName);
+  });
+
+  const namedValue = named ? getKeyValue(named) : "";
+
+  if (namedValue) {
+    return namedValue;
+  }
+
+  const prefixed = apiKeys.find((candidate) => {
+    const value = getKeyValue(candidate);
+
+    return prefixes.some((prefix) => value.startsWith(prefix));
+  });
+
+  return prefixed ? getKeyValue(prefixed) : "";
+}
+
+async function resolveCredentials() {
+  const directMissing = REQUIRED_ENV.filter((name) => !process.env[name]);
+
+  if (directMissing.length === 0) {
+    return {
+      management: null,
+      source: "environment",
+      supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    };
+  }
+
+  const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
+
+  if (!accessToken) {
+    return {
+      error: "Missing required environment variables.",
+      missing: [...directMissing, "SUPABASE_ACCESS_TOKEN"],
+    };
+  }
+
+  const project = await fetchJson(`${MANAGEMENT_API_BASE_URL}/projects/${PROJECT_REF}`, {
+    headers: managementHeaders(accessToken),
+  });
+
+  if (!project.ok) {
+    return {
+      error: "Unable to validate Supabase project with Management API.",
+      managementStatus: project.status,
+    };
+  }
+
+  const apiKeys = await fetchJson(`${MANAGEMENT_API_BASE_URL}/projects/${PROJECT_REF}/api-keys`, {
+    headers: managementHeaders(accessToken),
+  });
+
+  if (!apiKeys.ok) {
+    return {
+      error: "Unable to fetch Supabase API keys with Management API.",
+      managementStatus: apiKeys.status,
+    };
+  }
+
+  const keys = Array.isArray(apiKeys.body)
+    ? apiKeys.body
+    : Array.isArray(apiKeys.body?.api_keys)
+      ? apiKeys.body.api_keys
+      : [];
+  const supabaseAnonKey = findApiKey(
+    keys,
+    ["anon", "publishable", "publishable_key"],
+    ["sb_publishable_", "eyJ"],
+  );
+  const serviceRoleKey = findApiKey(
+    keys,
+    ["service_role", "secret", "secret_key"],
+    ["sb_secret_", "eyJ"],
+  );
+
+  if (!supabaseAnonKey || !serviceRoleKey) {
+    return {
+      error: "Management API did not return both publishable/anon and secret/service keys.",
+      keyNamesSeen: keys.map((key) => String(key.name ?? key.type ?? key.role ?? "unknown")),
+      managementStatus: apiKeys.status,
+    };
+  }
+
+  return {
+    management: {
+      apiKeysStatus: apiKeys.status,
+      projectName: project.body?.name ?? null,
+      projectStatus: project.body?.status ?? null,
+      projectStatusCode: project.status,
+    },
+    source: "management-api",
+    supabaseAnonKey,
+    supabaseUrl: EXPECTED_SUPABASE_URL,
+    serviceRoleKey,
   };
 }
 
@@ -167,15 +297,12 @@ async function validateAuth(baseUrl, serviceRoleKey) {
 }
 
 async function main() {
-  const missing = REQUIRED_ENV.filter((name) => !process.env[name]);
+  const credentials = await resolveCredentials();
 
-  if (missing.length > 0) {
+  if (credentials.error) {
     console.error(
       JSON.stringify(
-        {
-          error: "Missing required environment variables.",
-          missing,
-        },
+        credentials,
         null,
         2,
       ),
@@ -184,8 +311,7 @@ async function main() {
     return;
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const { serviceRoleKey, source, supabaseUrl } = credentials;
 
   if (supabaseUrl !== EXPECTED_SUPABASE_URL) {
     console.error(
@@ -212,6 +338,10 @@ async function main() {
   const summary = {
     auth,
     buckets,
+    credentials: {
+      management: credentials.management,
+      source,
+    },
     projectUrl: EXPECTED_SUPABASE_URL,
     tables,
   };
