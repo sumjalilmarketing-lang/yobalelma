@@ -8,7 +8,8 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "validate:supabase": "node scripts/supabase-validate.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

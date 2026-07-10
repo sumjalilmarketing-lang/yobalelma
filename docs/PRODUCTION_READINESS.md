@@ -25,6 +25,9 @@ Le projet est pret pour demonstration technique locale et pour une premiere inte
 - E2E : 5 tests HTTP reussis, 5 parcours reels sautes faute de secrets Supabase.
 - Build : reussi, 45 pages generees.
 - Commandes `npm ...` : toutes bloquees car `npm` n'est pas disponible dans le shell local.
+- Connectivite Supabase : URL projet joignable, reponse non authentifiee `401 UNAUTHORIZED_MISSING_API_KEY`.
+- Dashboard Supabase : acces bloque sur connexion GitHub/Supabase dans le navigateur integre.
+- Validation Supabase automatisee : script `npm run validate:supabase` ajoute, execution bloquee tant que les variables ne sont pas injectees.
 
 ## Blocages de production
 
@@ -32,6 +35,7 @@ Le projet est pret pour demonstration technique locale et pour une premiere inte
 - Cles collees dans la conversation utilisateur : rotation recommandee avant tout pilote.
 - Migrations non appliquees/verifiees sur Supabase distant.
 - Buckets Storage non verifies distantement.
+- Connexion dashboard Supabase requiert une intervention humaine GitHub/Supabase.
 - `npm` absent dans ce shell local ; `npm install` n'a pas pu etre execute litteralement.
 - `supabase` CLI absent dans ce shell local ; application automatique des migrations non possible sans outil/DB URL.
 - `package-lock.json` doit etre regenere dans un environnement npm apres ajout de Playwright.

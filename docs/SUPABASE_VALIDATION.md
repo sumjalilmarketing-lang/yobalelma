@@ -10,8 +10,10 @@ Projet attendu : `https://rgcgtcycbiuhcaoaadbh.supabase.co`
 | --- | --- |
 | Variables presentes dans shell Codex | Non |
 | URL projet verifiee depuis env | Non |
-| Requete reelle Supabase | Non executee |
+| Requete reelle Supabase | Oui, non authentifiee : `401 UNAUTHORIZED_MISSING_API_KEY` |
+| Dashboard Supabase | Ouvert, mais redirige vers connexion GitHub/Supabase |
 | Supabase CLI disponible | Non |
+| `psql` disponible | Non |
 | Migrations appliquees | Non |
 | Tables verifiees | 0 |
 | Functions RPC verifiees | 0 |
@@ -55,9 +57,16 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+npm run validate:supabase
 npm run test:e2e
 ```
+
+`npm run validate:supabase` execute `scripts/supabase-validate.mjs`. Cette commande verifie l'URL du projet, l'Auth Admin, les 37 tables REST et les 7 buckets Storage a partir des variables d'environnement, sans afficher les secrets.
 
 ## Migrations attendues
 
 Les migrations a appliquer sont dans `supabase/migrations/`. L'application automatique n'a pas ete tentee car ni `supabase` CLI ni URL Postgres securisee ne sont disponibles dans le shell.
+
+## Acces requis pour appliquer les migrations
+
+D'apres la documentation officielle Supabase CLI, `supabase login` requiert un personal access token, et `supabase link` / `supabase db push` peuvent aussi requérir le mot de passe Postgres du projet. Ces valeurs ne sont pas presentes dans l'environnement local Codex.
