@@ -1,0 +1,97 @@
+import { fail, ok, validationFail } from "@/lib/api/responses";
+import {
+  buildDigitalParcelTwin,
+  estimateShipment,
+} from "@/lib/shipments/estimation";
+import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
+import { shipmentSchema } from "@/lib/validation/shipment";
+
+export async function POST(request: Request) {
+  const parsed = shipmentSchema.safeParse(await request.json());
+
+  if (!parsed.success) {
+    return validationFail(parsed.error);
+  }
+
+  const supabase = await tryCreateSupabaseServerClient();
+
+  if (!supabase) {
+    return fail("Supabase n'est pas encore configure dans l'environnement local.", 503);
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return fail("Connecte-toi pour creer une expedition.", 401);
+  }
+
+  const estimate = estimateShipment(parsed.data);
+  const digitalTwin = buildDigitalParcelTwin(parsed.data, estimate);
+  const { data, error } = await supabase.rpc("create_shipment", {
+    p_currency: estimate.currency,
+    p_delivery_address: {
+      address_line1: parsed.data.deliveryAddressLine1,
+      address_line2: parsed.data.deliveryAddressLine2 || null,
+      city: parsed.data.deliveryCity,
+      contact_email: parsed.data.recipientEmail || null,
+      contact_name: parsed.data.recipientName,
+      contact_phone: parsed.data.recipientPhone,
+      country: parsed.data.deliveryCountry,
+      instructions: parsed.data.deliveryInstructions || null,
+      postal_code: parsed.data.deliveryPostalCode || null,
+    },
+    p_destination_city: parsed.data.deliveryCity,
+    p_destination_country: parsed.data.deliveryCountry,
+    p_digital_twin: digitalTwin,
+    p_estimated_price_cents: estimate.priceCents,
+    p_eta_max_days: estimate.etaMaxDays,
+    p_eta_min_days: estimate.etaMinDays,
+    p_latest_delivery_date: parsed.data.latestDeliveryDate,
+    p_origin_city: parsed.data.pickupCity,
+    p_origin_country: parsed.data.pickupCountry,
+    p_package: {
+      category: parsed.data.packageCategory,
+      declared_value_cents: parsed.data.declaredValueCents,
+      description: parsed.data.packageDescription,
+      fragile: parsed.data.fragile,
+      height_cm: parsed.data.heightCm,
+      length_cm: parsed.data.lengthCm,
+      prohibited_items_confirmed: parsed.data.prohibitedItemsConfirmed,
+      title: parsed.data.packageTitle,
+      weight_kg: parsed.data.weightKg,
+      width_cm: parsed.data.widthCm,
+    },
+    p_pickup_address: {
+      address_line1: parsed.data.pickupAddressLine1,
+      address_line2: parsed.data.pickupAddressLine2 || null,
+      city: parsed.data.pickupCity,
+      contact_email: parsed.data.senderEmail || user.email || null,
+      contact_name: parsed.data.senderName,
+      contact_phone: parsed.data.senderPhone,
+      country: parsed.data.pickupCountry,
+      instructions: parsed.data.pickupInstructions || null,
+      postal_code: parsed.data.pickupPostalCode || null,
+    },
+    p_preferred_pickup_date: parsed.data.preferredPickupDate,
+    p_scope: estimate.scope,
+    p_service_level: parsed.data.serviceLevel,
+  });
+
+  if (error) {
+    return fail(error.message, 400);
+  }
+
+  const shipment = data?.[0];
+
+  if (!shipment) {
+    return fail("Expedition creee sans reference de suivi.", 500);
+  }
+
+  return ok("Expedition creee et confirmee.", {
+    estimate,
+    shipmentId: shipment.id,
+    trackingCode: shipment.tracking_code,
+  });
+}

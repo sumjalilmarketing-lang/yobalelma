@@ -14,9 +14,9 @@ Yobalelma doit rester simple, fiable et centre sur trois parcours :
 - Devenir livreur.
 - Voyager avec Yobalelma.
 
-## MVP actuel
+## Socle livre
 
-Cette phase livre un noyau produit viable :
+Le projet livre maintenant un noyau produit viable :
 
 - application Next.js App Router ;
 - landing page de marque ;
@@ -26,7 +26,11 @@ Cette phase livre un noyau produit viable :
 - clients Supabase serveur et navigateur ;
 - connexion par lien magique Supabase ;
 - profil expediteur/voyageur ;
-- demande d'envoi de colis ;
+- creation d'expedition avec adresses structurees ;
+- detection national/international cote serveur ;
+- estimation prix et delai ;
+- code de suivi `YBL-XXXXXXXX` genere en base ;
+- digital parcel twin stocke en `jsonb` ;
 - publication de trajet voyageur ;
 - dashboard utilisateur ;
 - migration SQL initiale avec Row Level Security ;
@@ -40,16 +44,22 @@ Cette phase livre un noyau produit viable :
 - Matching avance.
 - Back-office operationnel.
 - Notifications.
-- Verification d'identite avancee.
 - Gestion de litiges.
 
-## Parcours MVP
+## Parcours expediteur
 
 1. Un utilisateur se connecte par lien magique.
-2. Il complete son profil.
-3. Il publie une demande d'envoi ou un trajet.
-4. Le dashboard affiche ses donnees rattachees a son compte.
-5. Les offres et evenements de suivi sont prevus dans le schema Supabase.
+2. Il complete ou cree son compte.
+3. Il renseigne expediteur, destinataire, adresses, colis et dates.
+4. Yobalelma affiche une revue avec type de trajet, prix estime et delai.
+5. L'utilisateur confirme les informations et l'absence d'objet interdit.
+6. Supabase cree l'expedition, les adresses, le colis, l'evenement initial et le code de suivi.
+
+## Parcours transport
+
+1. Un voyageur publie un trajet.
+2. Les futures phases matcheront les expeditions compatibles.
+3. Les evenements de suivi alimenteront le dashboard et les notifications.
 
 ## Contraintes non negociables
 

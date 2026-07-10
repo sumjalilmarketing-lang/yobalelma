@@ -75,3 +75,63 @@ Statut : terminee localement le 2026-07-10.
 ### Phase suivante
 
 - Phase metier 2 : expedition complete, adresses, colis, code tracking, prix, delai et confirmation.
+
+## Phase metier 2 - Expedition
+
+Statut : terminee localement le 2026-07-10.
+
+### Fonctionnalites terminees
+
+- Nouveau schema d'expedition `shipments`.
+- Adresses structurees depart et destination.
+- Colis avec categorie, poids, dimensions, valeur declaree et fragilite.
+- Detection national/international.
+- Estimation prix et delai.
+- Digital parcel twin stocke en `jsonb`.
+- Code de suivi `YBL-XXXXXXXX` genere en base.
+- Fonction Supabase `create_shipment` pour creation atomique.
+- RLS sur expeditions, adresses, colis et evenements.
+- Nouveau formulaire `/envoyer` avec revue avant confirmation.
+- API `POST /api/shipments`.
+- Dashboard global enrichi avec les expeditions.
+
+### Fichiers modifies
+
+- `app/api/shipments/route.ts`
+- `app/dashboard/page.tsx`
+- `app/envoyer/page.tsx`
+- `components/forms/shipment-form.tsx`
+- `docs/ARCHITECTURE.md`
+- `docs/DATABASE.md`
+- `docs/IMPLEMENTATION_PROGRESS.md`
+- `docs/PRODUCT_SPEC.md`
+- `lib/data/dashboard.ts`
+- `lib/shipments/estimation.ts`
+- `lib/validation/shipment.ts`
+- `supabase/migrations/20260710160000_shipments.sql`
+- `tests/shipment.test.ts`
+- `types/database.types.ts`
+
+### Migrations appliquees
+
+- Aucune migration distante appliquee : acces Supabase distant non disponible dans cet environnement.
+- Migration locale preparee : `20260710160000_shipments.sql`.
+
+### Tests executes
+
+- `npm run lint` : succes.
+- `npm run typecheck` : succes.
+- `npm run test` : succes, 4 fichiers et 18 tests.
+- `npm run build` : succes, 23 routes generees.
+- `npm audit --audit-level=moderate` : 0 vulnerabilite.
+- Recherche locale de secrets : aucune cle reelle detectee ; uniquement des mentions documentaires ou references a GitHub Secrets.
+
+### Limites
+
+- Le matching automatique avec les trajets voyageurs sera livre en phase suivante.
+- Le paiement, les preuves de remise et les notifications ne sont pas encore branches.
+- Les migrations doivent etre appliquees au projet Supabase distant avec les secrets securises.
+
+### Phase suivante
+
+- Phase metier 3 : transporteurs locaux, disponibilites, zones, vehicules et missions compatibles.

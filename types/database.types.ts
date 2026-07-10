@@ -185,6 +185,144 @@ export type Database = {
         >;
         Relationships: [];
       };
+      shipments: {
+        Row: {
+          id: string;
+          tracking_code: string;
+          sender_id: string;
+          scope: Database["public"]["Enums"]["shipment_scope"];
+          service_level: Database["public"]["Enums"]["shipment_service_level"];
+          status: Database["public"]["Enums"]["shipment_status"];
+          origin_city: string;
+          origin_country: string;
+          destination_city: string;
+          destination_country: string;
+          preferred_pickup_date: string;
+          latest_delivery_date: string;
+          estimated_price_cents: number;
+          currency: string;
+          eta_min_days: number;
+          eta_max_days: number;
+          digital_twin: Json;
+          confirmation_accepted_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tracking_code?: string;
+          sender_id: string;
+          scope: Database["public"]["Enums"]["shipment_scope"];
+          service_level?: Database["public"]["Enums"]["shipment_service_level"];
+          status?: Database["public"]["Enums"]["shipment_status"];
+          origin_city: string;
+          origin_country: string;
+          destination_city: string;
+          destination_country: string;
+          preferred_pickup_date: string;
+          latest_delivery_date: string;
+          estimated_price_cents: number;
+          currency?: string;
+          eta_min_days: number;
+          eta_max_days: number;
+          digital_twin: Json;
+          confirmation_accepted_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["shipments"]["Insert"]>;
+        Relationships: [];
+      };
+      shipment_addresses: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          type: Database["public"]["Enums"]["shipment_address_type"];
+          contact_name: string;
+          contact_phone: string;
+          contact_email: string | null;
+          address_line1: string;
+          address_line2: string | null;
+          city: string;
+          postal_code: string | null;
+          country: string;
+          instructions: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          type: Database["public"]["Enums"]["shipment_address_type"];
+          contact_name: string;
+          contact_phone: string;
+          contact_email?: string | null;
+          address_line1: string;
+          address_line2?: string | null;
+          city: string;
+          postal_code?: string | null;
+          country: string;
+          instructions?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["shipment_addresses"]["Insert"]>;
+        Relationships: [];
+      };
+      shipment_packages: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          category: Database["public"]["Enums"]["package_category"];
+          title: string;
+          description: string;
+          weight_kg: number;
+          length_cm: number;
+          width_cm: number;
+          height_cm: number;
+          declared_value_cents: number;
+          fragile: boolean;
+          prohibited_items_confirmed: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          category: Database["public"]["Enums"]["package_category"];
+          title: string;
+          description: string;
+          weight_kg: number;
+          length_cm: number;
+          width_cm: number;
+          height_cm: number;
+          declared_value_cents?: number;
+          fragile?: boolean;
+          prohibited_items_confirmed?: boolean;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["shipment_packages"]["Insert"]>;
+        Relationships: [];
+      };
+      shipment_status_events: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          actor_id: string | null;
+          status: Database["public"]["Enums"]["shipment_status"];
+          note: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          actor_id?: string | null;
+          status: Database["public"]["Enums"]["shipment_status"];
+          note?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["shipment_status_events"]["Insert"]>;
+        Relationships: [];
+      };
       parcel_requests: {
         Row: {
           id: string;
@@ -304,6 +442,27 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      create_shipment: {
+        Args: {
+          p_currency: string;
+          p_delivery_address: Json;
+          p_destination_city: string;
+          p_destination_country: string;
+          p_digital_twin: Json;
+          p_estimated_price_cents: number;
+          p_eta_max_days: number;
+          p_eta_min_days: number;
+          p_latest_delivery_date: string;
+          p_origin_city: string;
+          p_origin_country: string;
+          p_package: Json;
+          p_pickup_address: Json;
+          p_preferred_pickup_date: string;
+          p_scope: Database["public"]["Enums"]["shipment_scope"];
+          p_service_level: Database["public"]["Enums"]["shipment_service_level"];
+        };
+        Returns: { id: string; tracking_code: string }[];
+      };
       current_user_has_role: {
         Args: { required_roles: string[] };
         Returns: boolean;
@@ -338,6 +497,26 @@ export type Database = {
         | "driver_license";
       identity_document_kind: "front" | "back" | "selfie" | "passport";
       identity_decision: "submitted" | "approved" | "rejected" | "needs_more_information";
+      shipment_scope: "national" | "international";
+      shipment_status:
+        | "confirmed"
+        | "matching"
+        | "assigned"
+        | "picked_up"
+        | "in_transit"
+        | "at_hub"
+        | "out_for_delivery"
+        | "delivered"
+        | "cancelled";
+      shipment_service_level: "standard" | "express";
+      shipment_address_type: "pickup" | "delivery";
+      package_category:
+        | "documents"
+        | "clothing"
+        | "electronics"
+        | "food_dry"
+        | "cosmetics"
+        | "other";
       parcel_status: "draft" | "open" | "matched" | "in_transit" | "delivered" | "cancelled";
       trip_status: "planned" | "boarding" | "arrived" | "cancelled";
       offer_status: "pending" | "accepted" | "declined" | "cancelled";

@@ -18,7 +18,7 @@ docs/                 Documentation produit et technique
 
 - `app/layout.tsx` fournit le shell global et les metadata.
 - `app/page.tsx` contient la landing page de phase 1.
-- `app/envoyer/page.tsx` publie une demande d'envoi.
+- `app/envoyer/page.tsx` cree une expedition avec revue et confirmation.
 - `app/livreur/page.tsx` cree ou met a jour le profil.
 - `app/voyager/page.tsx` publie un trajet.
 - `app/dashboard/page.tsx` affiche les donnees utilisateur.
@@ -47,11 +47,14 @@ Les routes API ecrivent dans Supabase :
 - `POST /api/auth/reset-password`
 - `POST /api/auth/sign-out`
 - `POST /api/kyc`
+- `POST /api/shipments`
 - `PUT /api/profile`
 - `POST /api/parcel-requests`
 - `POST /api/trips`
 
 Les routes serveur et API lisent les cookies Supabase avec `@supabase/ssr`. Sans cle locale, les pages publiques restent executables et les surfaces donnees affichent un etat de configuration.
+
+Le calcul expedition vit dans `lib/shipments/estimation.ts` afin que la revue client et l'API serveur utilisent les memes regles de base. La creation persistante passe par la fonction Supabase `create_shipment`, qui insere l'expedition, les adresses, le colis et le premier evenement de suivi dans une transaction.
 
 ## Tests
 

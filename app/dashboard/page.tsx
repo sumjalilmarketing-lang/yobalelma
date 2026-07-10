@@ -74,18 +74,18 @@ function ReadyDashboard({
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Metric label="Demandes colis" value={state.parcelCount} />
+        <Metric label="Expeditions" value={state.shipmentCount} />
         <Metric label="Voyages publies" value={state.tripCount} />
         <Metric label="Offres emises" value={state.offerCount} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Panel title="Derniers colis" empty="Aucune demande publiee.">
-          {state.recentParcels.map((parcel) => (
+        <Panel title="Dernieres expeditions" empty="Aucune expedition creee.">
+          {state.recentShipments.map((shipment) => (
             <Row
-              key={parcel.id}
-              title={`${parcel.origin_city} -> ${parcel.destination_city}`}
-              detail={parcel.status}
+              key={shipment.id}
+              title={`${shipment.tracking_code} · ${shipment.origin_city} -> ${shipment.destination_city}`}
+              detail={shipment.status}
             />
           ))}
         </Panel>
@@ -99,6 +99,18 @@ function ReadyDashboard({
           ))}
         </Panel>
       </div>
+
+      {state.parcelCount > 0 ? (
+        <Panel title="Anciennes demandes MVP" empty="Aucune demande publiee.">
+          {state.recentParcels.map((parcel) => (
+            <Row
+              key={parcel.id}
+              title={`${parcel.origin_city} -> ${parcel.destination_city}`}
+              detail={parcel.status}
+            />
+          ))}
+        </Panel>
+      ) : null}
     </div>
   );
 }
