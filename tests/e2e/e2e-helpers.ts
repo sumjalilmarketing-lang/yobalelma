@@ -2,7 +2,10 @@ import { expect, type APIRequestContext, test } from "playwright/test";
 
 export const hasSupabaseE2EEnv =
   process.env.NEXT_PUBLIC_SUPABASE_URL === "https://rgcgtcycbiuhcaoaadbh.supabase.co" &&
-  Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) &&
+  Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  ) &&
   Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 export function requireSupabaseE2E() {

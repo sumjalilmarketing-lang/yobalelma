@@ -32,7 +32,7 @@ function NeedsEnv() {
       <h2 className="text-2xl font-black">Configuration Supabase requise</h2>
       <p className="mt-3 max-w-2xl leading-7 text-black/65">
         Ajoute les variables securisees `NEXT_PUBLIC_SUPABASE_URL` et
-        `NEXT_PUBLIC_SUPABASE_ANON_KEY` pour activer les donnees reelles du dashboard.
+        `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` pour activer les donnees reelles du dashboard.
       </p>
     </div>
   );

@@ -4,7 +4,7 @@ Date : 2026-07-11
 
 ## Critique
 
-- Fournir `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `NEXT_PUBLIC_APP_URL` dans l'environnement securise.
+- Fournir `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `NEXT_PUBLIC_APP_URL` dans l'environnement securise.
 - Injecter `SUPABASE_ACCESS_TOKEN` dans l'environnement securise ou connecter le dashboard Supabase/GitHub.
 - Fournir le mot de passe Postgres ou un `--db-url` securise pour `supabase db push`.
 - Appliquer toutes les migrations au Supabase Yobalelma et verifier les 41 tables, 7 buckets, policies RLS et RPC.

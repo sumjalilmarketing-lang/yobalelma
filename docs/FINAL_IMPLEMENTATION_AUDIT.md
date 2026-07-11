@@ -17,7 +17,7 @@ Validation locale executee :
 - `npm run build` : reussi, 49 pages generees ;
 - `npm run test:e2e` : 5 tests reussis, 5 parcours reels sautes faute de variables Supabase securisees.
 
-Blocage majeur confirme le 2026-07-11 : `.env.local` contient uniquement les valeurs publiques locales, mais `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ACCESS_TOKEN` et `DATABASE_URL` / `POSTGRES_URL` ne sont pas disponibles dans l'environnement securise Codex. Les migrations sont presentes dans le depot mais non prouvees appliquees au projet Supabase distant. Les parcours sont connectes par code aux RPC/tables Supabase, mais non valides sur la base distante.
+Blocage majeur confirme le 2026-07-11 : `.env.local` contient uniquement les valeurs publiques locales, mais `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ACCESS_TOKEN` et `DATABASE_URL` / `POSTGRES_URL` ne sont pas disponibles dans l'environnement securise Codex. Les migrations sont presentes dans le depot mais non prouvees appliquees au projet Supabase distant. Les parcours sont connectes par code aux RPC/tables Supabase, mais non valides sur la base distante.
 
 Important securite : des cles Supabase ont ete collees dans la conversation utilisateur. Elles n'ont pas ete ecrites dans le depot, ni affichees dans les commandes finales, ni commitees. Elles doivent etre considerees exposees et remplacees cote Supabase.
 

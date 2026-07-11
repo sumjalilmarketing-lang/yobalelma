@@ -54,7 +54,7 @@ Impact :
 
 La validation distante reste bloquee tant que les secrets ne sont pas visibles dans l'environnement local :
 
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_ACCESS_TOKEN`
 - `DATABASE_URL`

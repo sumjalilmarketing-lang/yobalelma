@@ -9,7 +9,7 @@ Statut : non pret pilote.
 - Rotater les cles Supabase qui ont ete collees dans la conversation.
 - Injecter les variables dans l'environnement securise, sans fichier commite :
   - `NEXT_PUBLIC_SUPABASE_URL`
-  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
   - `SUPABASE_SERVICE_ROLE_KEY`
   - `NEXT_PUBLIC_APP_URL`
 - Fournir un moyen d'application migrations :
@@ -38,4 +38,3 @@ Statut : non pret pilote.
 - RLS verifiee par role.
 - Logs et audit trail consultables.
 - Procedure rollback documentee.
-

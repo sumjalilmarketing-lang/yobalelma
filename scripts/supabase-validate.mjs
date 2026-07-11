@@ -6,7 +6,6 @@ const MANAGEMENT_API_BASE_URL = "https://api.supabase.com/v1";
 
 const REQUIRED_ENV = [
   "NEXT_PUBLIC_SUPABASE_URL",
-  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
   "SUPABASE_SERVICE_ROLE_KEY",
 ];
 
@@ -171,13 +170,26 @@ function findApiKey(apiKeys, names, prefixes) {
 }
 
 async function resolveCredentials() {
+  const publishableKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    "";
+  const databaseUrlMissing = !process.env.DATABASE_URL;
   const directMissing = REQUIRED_ENV.filter((name) => !process.env[name]);
+
+  if (!publishableKey) {
+    directMissing.push("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY");
+  }
+
+  if (databaseUrlMissing) {
+    directMissing.push("DATABASE_URL");
+  }
 
   if (directMissing.length === 0) {
     return {
       management: null,
       source: "environment",
-      supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      supabasePublishableKey: publishableKey,
       supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
       serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
     };
@@ -189,6 +201,13 @@ async function resolveCredentials() {
     return {
       error: "Missing required environment variables.",
       missing: [...directMissing, "SUPABASE_ACCESS_TOKEN"],
+    };
+  }
+
+  if (databaseUrlMissing) {
+    return {
+      error: "Missing required environment variables.",
+      missing: directMissing,
     };
   }
 
@@ -246,7 +265,7 @@ async function resolveCredentials() {
       projectStatusCode: project.status,
     },
     source: "management-api",
-    supabaseAnonKey,
+    supabasePublishableKey: supabaseAnonKey,
     supabaseUrl: EXPECTED_SUPABASE_URL,
     serviceRoleKey,
   };

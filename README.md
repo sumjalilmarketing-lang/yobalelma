@@ -56,9 +56,10 @@ Copier `.env.example` vers `.env.local`, puis renseigner les valeurs sécurisée
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://rgcgtcycbiuhcaoaadbh.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 SUPABASE_ACCESS_TOKEN=
+DATABASE_URL=
 NEXT_PUBLIC_APP_URL=http://127.0.0.1:43117
 ```
 

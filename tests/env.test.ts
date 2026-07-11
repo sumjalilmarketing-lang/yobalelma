@@ -9,29 +9,38 @@ describe("Yobalelma environment validation", () => {
     expect(
       validatePublicEnv({
         NEXT_PUBLIC_SUPABASE_URL: YOBALELMA_SUPABASE_URL,
-        NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-anon-key",
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-publishable-key",
       }),
     ).toEqual({
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-publishable-key",
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-publishable-key",
       NEXT_PUBLIC_SUPABASE_URL: YOBALELMA_SUPABASE_URL,
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-anon-key",
     });
+  });
+
+  it("accepts the legacy anon key as a fallback", () => {
+    expect(
+      validatePublicEnv({
+        NEXT_PUBLIC_SUPABASE_URL: YOBALELMA_SUPABASE_URL,
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "legacy-anon-key",
+      }).NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    ).toBe("legacy-anon-key");
   });
 
   it("rejects another Supabase project URL", () => {
     expect(() =>
       validatePublicEnv({
         NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co",
-        NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-anon-key",
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-publishable-key",
       }),
     ).toThrow(/Yobalelma project URL/);
   });
 
-  it("rejects missing anon keys", () => {
+  it("rejects missing publishable keys", () => {
     expect(() =>
       validatePublicEnv({
         NEXT_PUBLIC_SUPABASE_URL: YOBALELMA_SUPABASE_URL,
-        NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
       }),
-    ).toThrow(/anon key/);
+    ).toThrow(/publishable key/);
   });
 });

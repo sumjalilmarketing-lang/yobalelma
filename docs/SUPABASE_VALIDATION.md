@@ -42,7 +42,7 @@ Les buckets declares localement sont `avatars`, `shipment-images`, `kyc-document
 Les variables doivent etre injectees par l'environnement securise et ne doivent jamais etre commitees :
 
 - `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_APP_URL`
 - `SUPABASE_ACCESS_TOKEN`
@@ -68,7 +68,7 @@ npm run test:e2e
 
 `npm run validate:supabase` execute `scripts/supabase-validate.mjs`. Cette commande charge aussi `.env.local` s'il existe, puis verifie l'URL du projet, l'Auth Admin, les 41 tables REST et les 7 buckets Storage a partir des variables d'environnement, sans afficher les secrets. Elle accepte deux modes :
 
-- mode direct : `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` et `SUPABASE_SERVICE_ROLE_KEY` ;
+- mode direct : `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` et `SUPABASE_SERVICE_ROLE_KEY` ;
 - mode Management API : `SUPABASE_ACCESS_TOKEN`, qui recupere les cles projet en memoire sans les afficher.
 
 ## Migrations attendues

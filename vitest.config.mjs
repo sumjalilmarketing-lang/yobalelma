@@ -1,9 +1,13 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
+const rootDir = fileURLToPath(new URL(".", import.meta.url));
+
 export default defineConfig({
   plugins: [react()],
+  root: rootDir,
   test: {
     environment: "jsdom",
     exclude: ["**/node_modules/**", "**/dist/**", "tests/e2e/**"],
@@ -12,7 +16,13 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "."),
+      "@": path.resolve(rootDir, "."),
+    },
+  },
+  server: {
+    fs: {
+      allow: [rootDir],
+      strict: true,
     },
   },
 });
