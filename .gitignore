@@ -17,6 +17,7 @@ tsconfig.tsbuildinfo
 # environment
 .env
 .env*.local
+.supabase-cli-home/
 
 # logs
 npm-debug.log*
