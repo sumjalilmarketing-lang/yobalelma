@@ -27,7 +27,18 @@ Impact :
 
 - JSON invalide : reponse controlee `400`.
 - Payload invalide : reponse controlee `422`.
+- Payload trop volumineux : reponse controlee `413`.
+- `Content-Type` explicitement non JSON : reponse controlee `415`.
 - Moins de risques de `500` non maitrises sur les endpoints publics.
+
+### Callbacks Auth non bases sur `Origin`
+
+Les URLs de callback email utilisent `NEXT_PUBLIC_APP_URL` quand disponible, puis l'origine de la requete serveur en fallback.
+
+Impact :
+
+- Le header client `Origin` ne peut plus empoisonner les liens magic-link, inscription ou reset password.
+- Les chemins de redirection continuent de passer par `getSafeAuthRedirect`.
 
 ### Redirections Auth durcies
 

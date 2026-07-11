@@ -25,3 +25,29 @@ export function getSafeAuthRedirect(nextParam: string | null, fallback = "/dashb
     return fallback;
   }
 }
+
+export function getTrustedAppOrigin(
+  requestUrl: string,
+  configuredAppUrl = process.env.NEXT_PUBLIC_APP_URL,
+) {
+  if (configuredAppUrl) {
+    try {
+      const configured = new URL(configuredAppUrl);
+
+      if (configured.protocol === "https:" || configured.protocol === "http:") {
+        return configured.origin;
+      }
+    } catch {
+      // Fall back to the current request origin below.
+    }
+  }
+
+  return new URL(requestUrl).origin;
+}
+
+export function buildAuthCallbackUrl(request: Request, nextPath: string) {
+  const callbackUrl = new URL("/auth/callback", getTrustedAppOrigin(request.url));
+  callbackUrl.searchParams.set("next", getSafeAuthRedirect(nextPath));
+
+  return callbackUrl.toString();
+}

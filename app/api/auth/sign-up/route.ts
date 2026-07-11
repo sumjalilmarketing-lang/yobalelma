@@ -1,4 +1,5 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
+import { buildAuthCallbackUrl } from "@/lib/auth/redirect";
 import { getRoleDashboardPath } from "@/lib/auth/roles";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { signUpSchema } from "@/lib/validation/auth";
@@ -16,13 +17,12 @@ export async function POST(request: Request) {
     return fail("Supabase n'est pas encore configure dans l'environnement local.", 503);
   }
 
-  const origin = request.headers.get("origin") ?? new URL(request.url).origin;
   const roleDashboard = getRoleDashboardPath(parsed.data.role);
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
-      emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(roleDashboard)}`,
+      emailRedirectTo: buildAuthCallbackUrl(request, roleDashboard),
       data: {
         full_name: parsed.data.fullName,
         phone: parsed.data.phone,

@@ -1,4 +1,5 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
+import { buildAuthCallbackUrl } from "@/lib/auth/redirect";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { forgotPasswordSchema } from "@/lib/validation/auth";
 
@@ -15,9 +16,8 @@ export async function POST(request: Request) {
     return fail("Supabase n'est pas encore configure dans l'environnement local.", 503);
   }
 
-  const origin = request.headers.get("origin") ?? new URL(request.url).origin;
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
-    redirectTo: `${origin}/auth/callback?next=/auth/reset-password`,
+    redirectTo: buildAuthCallbackUrl(request, "/auth/reset-password"),
   });
 
   if (error) {
@@ -26,4 +26,3 @@ export async function POST(request: Request) {
 
   return ok("Email de reinitialisation envoye si le compte existe.");
 }
-

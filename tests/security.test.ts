@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
+import { buildAuthCallbackUrl, getTrustedAppOrigin } from "@/lib/auth/redirect";
 import { parseJsonRequest } from "@/lib/api/responses";
 import {
   contentSecurityPolicy,
@@ -27,6 +28,10 @@ describe("security headers", () => {
   });
 });
 
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
+
 describe("API JSON parsing", () => {
   const schema = z.object({
     email: z.string().email(),
@@ -36,6 +41,7 @@ describe("API JSON parsing", () => {
     const result = await parseJsonRequest(
       new Request("https://yobalelma.test/api", {
         body: JSON.stringify({ email: "client@yobalelma.test" }),
+        headers: { "Content-Type": "application/json" },
         method: "POST",
       }),
       schema,
@@ -52,6 +58,7 @@ describe("API JSON parsing", () => {
     const result = await parseJsonRequest(
       new Request("https://yobalelma.test/api", {
         body: "{not-json",
+        headers: { "Content-Type": "application/json" },
         method: "POST",
       }),
       schema,
@@ -65,5 +72,67 @@ describe("API JSON parsing", () => {
         ok: false,
       });
     }
+  });
+
+  it("rejects oversized JSON before parsing", async () => {
+    const result = await parseJsonRequest(
+      new Request("https://yobalelma.test/api", {
+        body: JSON.stringify({ email: "client@yobalelma.test" }),
+        headers: {
+          "Content-Length": "999999",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }),
+      schema,
+      { maxBytes: 32 },
+    );
+
+    expect(result.ok).toBe(false);
+
+    if (!result.ok) {
+      expect(result.response.status).toBe(413);
+    }
+  });
+
+  it("rejects explicit non-json content types", async () => {
+    const result = await parseJsonRequest(
+      new Request("https://yobalelma.test/api", {
+        body: "email=client@yobalelma.test",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        method: "POST",
+      }),
+      schema,
+    );
+
+    expect(result.ok).toBe(false);
+
+    if (!result.ok) {
+      expect(result.response.status).toBe(415);
+    }
+  });
+});
+
+describe("auth callback URL building", () => {
+  it("uses the configured app URL instead of the spoofable Origin header", () => {
+    vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://app.yobalelma.test");
+
+    const request = new Request("https://internal.yobalelma.test/api/auth/sign-in", {
+      headers: { Origin: "https://evil.example" },
+      method: "POST",
+    });
+
+    expect(buildAuthCallbackUrl(request, "/dashboard")).toBe(
+      "https://app.yobalelma.test/auth/callback?next=%2Fdashboard",
+    );
+  });
+
+  it("falls back to the request origin when no trusted app URL is configured", () => {
+    expect(
+      getTrustedAppOrigin(
+        "https://request.yobalelma.test/api/auth/sign-in",
+        undefined,
+      ),
+    ).toBe("https://request.yobalelma.test");
   });
 });
