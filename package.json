@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "diagnose:env": "node scripts/env-diagnostics.mjs",
     "validate:supabase": "node scripts/supabase-validate.mjs"
   },
   "dependencies": {
