@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from "node:fs";
+
 const PROJECT_REF = "rgcgtcycbiuhcaoaadbh";
 const EXPECTED_SUPABASE_URL = `https://${PROJECT_REF}.supabase.co`;
 const MANAGEMENT_API_BASE_URL = "https://api.supabase.com/v1";
@@ -57,6 +59,37 @@ const BUCKETS = [
   "dispute-evidence",
   "hub-inspection-images",
 ];
+
+function loadLocalEnv(path) {
+  if (!existsSync(path)) {
+    return;
+  }
+
+  const lines = readFileSync(path, "utf8").split(/\r?\n/);
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    if (!trimmed || trimmed.startsWith("#") || !trimmed.includes("=")) {
+      continue;
+    }
+
+    const separatorIndex = trimmed.indexOf("=");
+    const name = trimmed.slice(0, separatorIndex).trim();
+    let value = trimmed.slice(separatorIndex + 1).trim();
+
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+
+    if (!process.env[name]) {
+      process.env[name] = value;
+    }
+  }
+}
 
 function redactError(error) {
   if (error instanceof Error) {
@@ -352,5 +385,7 @@ async function main() {
     process.exitCode = 1;
   }
 }
+
+loadLocalEnv(".env.local");
 
 await main();

@@ -63,7 +63,7 @@ npm run validate:supabase
 npm run test:e2e
 ```
 
-`npm run validate:supabase` execute `scripts/supabase-validate.mjs`. Cette commande verifie l'URL du projet, l'Auth Admin, les 37 tables REST et les 7 buckets Storage a partir des variables d'environnement, sans afficher les secrets. Elle accepte deux modes :
+`npm run validate:supabase` execute `scripts/supabase-validate.mjs`. Cette commande charge aussi `.env.local` s'il existe, puis verifie l'URL du projet, l'Auth Admin, les 37 tables REST et les 7 buckets Storage a partir des variables d'environnement, sans afficher les secrets. Elle accepte deux modes :
 
 - mode direct : `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` et `SUPABASE_SERVICE_ROLE_KEY` ;
 - mode Management API : `SUPABASE_ACCESS_TOKEN`, qui recupere les cles projet en memoire sans les afficher.
