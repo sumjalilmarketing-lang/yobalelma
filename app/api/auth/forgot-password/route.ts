@@ -1,12 +1,12 @@
-import { fail, ok, validationFail } from "@/lib/api/responses";
+import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { forgotPasswordSchema } from "@/lib/validation/auth";
 
 export async function POST(request: Request) {
-  const parsed = forgotPasswordSchema.safeParse(await request.json());
+  const parsed = await parseJsonRequest(request, forgotPasswordSchema);
 
-  if (!parsed.success) {
-    return validationFail(parsed.error);
+  if (!parsed.ok) {
+    return parsed.response;
   }
 
   const supabase = await tryCreateSupabaseServerClient();

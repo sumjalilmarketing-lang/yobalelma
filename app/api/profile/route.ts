@@ -1,12 +1,12 @@
-import { fail, ok, validationFail } from "@/lib/api/responses";
+import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { profileSchema } from "@/lib/validation/profile";
 
 export async function PUT(request: Request) {
-  const parsed = profileSchema.safeParse(await request.json());
+  const parsed = await parseJsonRequest(request, profileSchema);
 
-  if (!parsed.success) {
-    return validationFail(parsed.error);
+  if (!parsed.ok) {
+    return parsed.response;
   }
 
   const supabase = await tryCreateSupabaseServerClient();

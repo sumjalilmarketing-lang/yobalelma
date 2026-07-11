@@ -1,4 +1,4 @@
-import { fail, ok, validationFail } from "@/lib/api/responses";
+import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { commissionSchema } from "@/lib/validation/operations";
 
@@ -31,10 +31,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const parsed = commissionSchema.safeParse(await request.json());
+  const parsed = await parseJsonRequest(request, commissionSchema);
 
-  if (!parsed.success) {
-    return validationFail(parsed.error);
+  if (!parsed.ok) {
+    return parsed.response;
   }
 
   const supabase = await tryCreateSupabaseServerClient();

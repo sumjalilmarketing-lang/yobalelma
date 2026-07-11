@@ -1,4 +1,4 @@
-import { fail, ok, validationFail } from "@/lib/api/responses";
+import { fail, ok, readJsonRequest, validationFail } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { collectionStopSchema } from "@/lib/validation/collection";
 
@@ -7,8 +7,14 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
+  const body = await readJsonRequest(request);
+
+  if (!body.ok) {
+    return body.response;
+  }
+
   const parsed = collectionStopSchema.safeParse({
-    ...(await request.json()),
+    ...(typeof body.data === "object" && body.data !== null ? body.data : {}),
     routeId: id,
   });
 

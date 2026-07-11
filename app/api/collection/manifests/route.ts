@@ -1,4 +1,4 @@
-import { fail, ok, validationFail } from "@/lib/api/responses";
+import { fail, ok, readJsonRequest, validationFail } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import {
   collectionManifestItemSchema,
@@ -6,7 +6,16 @@ import {
 } from "@/lib/validation/collection";
 
 export async function POST(request: Request) {
-  const body = await request.json();
+  const parsedBody = await readJsonRequest(request);
+
+  if (!parsedBody.ok) {
+    return parsedBody.response;
+  }
+
+  const body: Record<string, unknown> =
+    typeof parsedBody.data === "object" && parsedBody.data !== null
+      ? (parsedBody.data as Record<string, unknown>)
+      : {};
   const mode = typeof body.mode === "string" ? body.mode : "manifest";
   const supabase = await tryCreateSupabaseServerClient();
 

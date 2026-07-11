@@ -104,4 +104,9 @@ describe("auth redirect safety", () => {
     expect(getSafeAuthRedirect("https://example.com")).toBe("/dashboard");
     expect(getSafeAuthRedirect("//example.com")).toBe("/dashboard");
   });
+
+  it("rejects redirects with control characters or backslashes", () => {
+    expect(getSafeAuthRedirect("/\\example.com")).toBe("/dashboard");
+    expect(getSafeAuthRedirect("/dashboard\nSet-Cookie:x=y")).toBe("/dashboard");
+  });
 });

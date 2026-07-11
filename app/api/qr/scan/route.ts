@@ -1,12 +1,12 @@
-import { fail, ok, validationFail } from "@/lib/api/responses";
+import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { scanQrTokenSchema } from "@/lib/validation/qr";
 
 export async function POST(request: Request) {
-  const parsed = scanQrTokenSchema.safeParse(await request.json());
+  const parsed = await parseJsonRequest(request, scanQrTokenSchema);
 
-  if (!parsed.success) {
-    return validationFail(parsed.error);
+  if (!parsed.ok) {
+    return parsed.response;
   }
 
   const supabase = await tryCreateSupabaseServerClient();

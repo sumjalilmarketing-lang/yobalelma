@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { fail, ok, validationFail } from "@/lib/api/responses";
+import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { emailAuthSchema } from "@/lib/validation/auth";
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const parsed = emailAuthSchema.safeParse(body);
+  const parsed = await parseJsonRequest(request, emailAuthSchema);
 
-  if (!parsed.success) {
-    return validationFail(parsed.error);
+  if (!parsed.ok) {
+    return parsed.response;
   }
 
   const supabase = await tryCreateSupabaseServerClient();
