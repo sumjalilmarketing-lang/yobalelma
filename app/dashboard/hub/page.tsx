@@ -3,6 +3,7 @@ import { HubForms } from "@/components/forms/hub-forms";
 import { PageShell } from "@/components/layout/page-shell";
 import { ConfigurationNotice } from "@/components/operations/status-panels";
 import { Button } from "@/components/ui/button";
+import { JourneyVisualStage } from "@/components/visual/yobalelma-world";
 import { requireRole } from "@/lib/auth/server";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function HubDashboardPage() {
     >
       {state.status === "ready" ? (
         <div className="grid gap-6">
+          <JourneyVisualStage scene="hub" />
           <div className="flex flex-wrap gap-3">
             <Button asChild>
               <Link href="/dashboard/hub/batches">Batches</Link>

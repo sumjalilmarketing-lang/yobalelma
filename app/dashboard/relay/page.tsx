@@ -2,6 +2,7 @@ import Link from "next/link";
 import { RelayForms } from "@/components/forms/relay-forms";
 import { PageShell } from "@/components/layout/page-shell";
 import { Button } from "@/components/ui/button";
+import { JourneyVisualStage } from "@/components/visual/yobalelma-world";
 import { requireRole } from "@/lib/auth/server";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +25,7 @@ export default async function RelayDashboardPage() {
     >
       {state.status === "ready" ? (
         <div className="grid gap-6">
+          <JourneyVisualStage scene="relay" />
           <div className="flex flex-wrap gap-3">
             <Button asChild>
               <Link href="/dashboard/relay/scanner">Scanner</Link>
@@ -40,7 +42,7 @@ export default async function RelayDashboardPage() {
       ) : (
         <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
           <h2 className="text-2xl font-black">Configuration Supabase requise</h2>
-          <p className="mt-3 max-w-2xl leading-7 text-black/65">
+          <p className="mt-3 max-w-2xl leading-7 text-black/60">
             Ajoute les variables publiques Yobalelma pour activer les operations relais.
           </p>
         </div>

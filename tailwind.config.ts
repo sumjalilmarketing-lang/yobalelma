@@ -39,6 +39,18 @@ const config = {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        surface: "hsl(var(--surface))",
+        card: "hsl(var(--card))",
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        error: "hsl(var(--error))",
+        info: "hsl(var(--info))",
+        pearl: "#F8F4EC",
+        sand: "#EBD7B2",
+        ochre: "#C8912D",
+        earth: "#6E4B2B",
+        emerald: "#1F7A55",
+        ocean: "#1671A7",
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -51,6 +63,9 @@ const config = {
       },
       boxShadow: {
         crisp: "0 18px 60px rgb(0 0 0 / 0.18)",
+        panel: "0 24px 80px rgb(18 14 9 / 0.12)",
+        glow: "0 18px 48px rgb(255 102 0 / 0.28)",
+        line: "0 1px 0 rgb(255 255 255 / 0.6) inset",
       },
     },
   },
@@ -58,4 +73,3 @@ const config = {
 } satisfies Config;
 
 export default config;
-

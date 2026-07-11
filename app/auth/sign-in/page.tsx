@@ -14,13 +14,13 @@ export default function SignInPage() {
       title="Connexion securisee"
       description="Connecte-toi avec ton mot de passe ou recois un lien magique par email."
     >
-      <div className="mx-auto grid max-w-xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-sm">
+      <div className="mx-auto grid max-w-xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-line">
         <PasswordSignInForm />
         <div className="border-t border-black/10 pt-6">
-          <p className="mb-4 text-sm font-bold text-black/52">Ou recevoir un lien magique</p>
+          <p className="mb-4 text-sm font-bold text-black/50">Ou recevoir un lien magique</p>
           <AuthForm />
         </div>
-        <p className="text-sm leading-6 text-black/58">
+        <p className="text-sm leading-6 text-black/60">
           En continuant, tu rejoins la plateforme Yobalelma. Les donnees sont
           rattachees au projet Supabase Yobalelma uniquement.
         </p>
@@ -39,4 +39,3 @@ export default function SignInPage() {
     </PageShell>
   );
 }
-

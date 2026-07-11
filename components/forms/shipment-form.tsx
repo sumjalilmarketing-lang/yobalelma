@@ -321,7 +321,7 @@ export function ShipmentForm() {
 
 function ReviewPanel({ review }: { review: ReviewState }) {
   return (
-    <section className="rounded-lg border border-primary/35 bg-primary/10 p-5">
+    <section className="rounded-lg border border-primary/40 bg-primary/10 p-5">
       <h3 className="text-xl font-black">Verification avant creation</h3>
       <div className="mt-4 grid gap-3 text-sm md:grid-cols-2">
         <Summary label="Trajet" value={`${review.values.pickupCity} -> ${review.values.deliveryCity}`} />
@@ -351,7 +351,7 @@ function ReviewPanel({ review }: { review: ReviewState }) {
           value={`${review.values.packageTitle}, ${review.values.weightKg} kg`}
         />
       </div>
-      <p className="mt-4 text-sm font-semibold text-black/62">
+      <p className="mt-4 text-sm font-semibold text-black/60">
         Le code de suivi `YBL-XXXXXXXX` sera genere au moment de la confirmation.
       </p>
     </section>

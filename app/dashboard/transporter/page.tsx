@@ -47,7 +47,7 @@ function ConfigurationNotice() {
   return (
     <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
       <h2 className="text-2xl font-black">Configuration Supabase requise</h2>
-      <p className="mt-3 max-w-2xl leading-7 text-black/65">
+      <p className="mt-3 max-w-2xl leading-7 text-black/60">
         Ajoute les variables publiques Yobalelma dans l&apos;environnement pour activer
         l&apos;espace livreur.
       </p>

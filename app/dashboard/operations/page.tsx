@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PageShell } from "@/components/layout/page-shell";
 import { ConfigurationNotice } from "@/components/operations/status-panels";
 import { Button } from "@/components/ui/button";
+import { JourneyVisualStage } from "@/components/visual/yobalelma-world";
 import { requireRole } from "@/lib/auth/server";
 
 export const dynamic = "force-dynamic";
@@ -23,22 +24,25 @@ export default async function OperationsDashboardPage() {
       description="Accede aux modules internes hub, relais, collecte, support et administration."
     >
       {state.status === "ready" ? (
-        <div className="flex flex-wrap gap-3">
-          <Button asChild>
-            <Link href="/dashboard/hub">Hub</Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/dashboard/relay">Relais</Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/dashboard/collection">Collecte</Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/dashboard/support">Support</Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/dashboard/admin">Admin</Link>
-          </Button>
+        <div className="grid gap-6">
+          <JourneyVisualStage scene="operations" />
+          <div className="flex flex-wrap gap-3">
+            <Button asChild>
+              <Link href="/dashboard/hub">Hub</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/relay">Relais</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/collection">Collecte</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/support">Support</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/admin">Admin</Link>
+            </Button>
+          </div>
         </div>
       ) : (
         <ConfigurationNotice />

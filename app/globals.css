@@ -3,20 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 5%;
-  --border: 0 0% 88%;
-  --input: 0 0% 88%;
+  --background: 42 45% 98%;
+  --foreground: 210 12% 7%;
+  --border: 34 18% 84%;
+  --input: 34 18% 84%;
   --ring: 24 100% 50%;
   --primary: 24 100% 50%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 6%;
+  --secondary: 210 12% 7%;
   --secondary-foreground: 0 0% 100%;
-  --muted: 0 0% 95%;
-  --muted-foreground: 0 0% 34%;
-  --accent: 38 100% 95%;
-  --accent-foreground: 0 0% 6%;
-  --destructive: 0 84% 60%;
+  --muted: 40 28% 93%;
+  --muted-foreground: 210 8% 35%;
+  --accent: 38 95% 92%;
+  --accent-foreground: 210 12% 7%;
+  --surface: 0 0% 100%;
+  --card: 42 50% 99%;
+  --success: 152 53% 35%;
+  --warning: 42 95% 50%;
+  --error: 0 72% 52%;
+  --info: 202 77% 43%;
+  --destructive: 0 72% 52%;
   --destructive-foreground: 0 0% 98%;
   --radius: 0.5rem;
 }
@@ -31,8 +37,14 @@ html {
 
 body {
   min-height: 100vh;
-  background: hsl(var(--background));
+  background:
+    radial-gradient(circle at top left, hsl(var(--accent) / 0.72), transparent 28rem),
+    linear-gradient(180deg, hsl(var(--background)), hsl(36 38% 96%));
   color: hsl(var(--foreground));
+  font-feature-settings:
+    "rlig" 1,
+    "calt" 1;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
@@ -40,3 +52,82 @@ body {
   color: hsl(var(--primary-foreground));
 }
 
+.yb-route-line {
+  animation: yb-route-flow 7s linear infinite;
+}
+
+.yb-float-slow {
+  animation: yb-float 9s ease-in-out infinite;
+}
+
+.yb-signal-pulse {
+  animation: yb-signal 3.2s ease-in-out infinite;
+}
+
+.yb-map-grid {
+  background-image:
+    linear-gradient(hsl(var(--foreground) / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--foreground) / 0.06) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+.yb-pattern {
+  background-image:
+    radial-gradient(circle at 1px 1px, hsl(var(--primary) / 0.18) 1px, transparent 0),
+    linear-gradient(135deg, hsl(var(--foreground) / 0.04) 25%, transparent 25%),
+    linear-gradient(225deg, hsl(var(--foreground) / 0.04) 25%, transparent 25%);
+  background-position:
+    0 0,
+    0 0,
+    0 0;
+  background-size:
+    22px 22px,
+    32px 32px,
+    32px 32px;
+}
+
+@keyframes yb-route-flow {
+  0% {
+    stroke-dashoffset: 260;
+    opacity: 0.2;
+  }
+  45% {
+    opacity: 0.95;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.25;
+  }
+}
+
+@keyframes yb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+
+@keyframes yb-signal {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.34);
+  }
+  50% {
+    box-shadow: 0 0 0 14px hsl(var(--primary) / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .yb-route-line,
+  .yb-float-slow,
+  .yb-signal-pulse {
+    animation: none;
+  }
+}
