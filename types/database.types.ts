@@ -879,6 +879,162 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["platform_metrics_daily"]["Insert"]>;
         Relationships: [];
       };
+      notifications: {
+        Row: {
+          id: string;
+          recipient_id: string;
+          actor_id: string | null;
+          shipment_id: string | null;
+          type: Database["public"]["Enums"]["notification_type"];
+          channel: Database["public"]["Enums"]["notification_channel"];
+          status: Database["public"]["Enums"]["notification_status"];
+          title: string;
+          body: string;
+          action_url: string | null;
+          metadata: Json;
+          scheduled_for: string | null;
+          sent_at: string | null;
+          read_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          recipient_id: string;
+          actor_id?: string | null;
+          shipment_id?: string | null;
+          type: Database["public"]["Enums"]["notification_type"];
+          channel?: Database["public"]["Enums"]["notification_channel"];
+          status?: Database["public"]["Enums"]["notification_status"];
+          title: string;
+          body: string;
+          action_url?: string | null;
+          metadata?: Json;
+          scheduled_for?: string | null;
+          sent_at?: string | null;
+          read_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["notifications"]["Insert"]>;
+        Relationships: [];
+      };
+      platform_commissions: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          payment_intent_id: string | null;
+          payer_id: string;
+          beneficiary_id: string | null;
+          currency: string;
+          gross_amount_cents: number;
+          commission_rate_bps: number;
+          commission_amount_cents: number;
+          payout_amount_cents: number;
+          status: Database["public"]["Enums"]["commission_status"];
+          metadata: Json;
+          locked_at: string | null;
+          paid_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          payment_intent_id?: string | null;
+          payer_id: string;
+          beneficiary_id?: string | null;
+          currency?: string;
+          gross_amount_cents: number;
+          commission_rate_bps?: number;
+          commission_amount_cents: number;
+          payout_amount_cents: number;
+          status?: Database["public"]["Enums"]["commission_status"];
+          metadata?: Json;
+          locked_at?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["platform_commissions"]["Insert"]>;
+        Relationships: [];
+      };
+      delivery_proofs: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          mission_id: string | null;
+          handover_qr_token_id: string | null;
+          uploaded_by: string;
+          proof_type: Database["public"]["Enums"]["delivery_proof_type"];
+          storage_bucket: string | null;
+          storage_path: string | null;
+          otp_confirmed: boolean;
+          recipient_name: string | null;
+          recipient_phone_last4: string | null;
+          captured_at: string;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          mission_id?: string | null;
+          handover_qr_token_id?: string | null;
+          uploaded_by: string;
+          proof_type: Database["public"]["Enums"]["delivery_proof_type"];
+          storage_bucket?: string | null;
+          storage_path?: string | null;
+          otp_confirmed?: boolean;
+          recipient_name?: string | null;
+          recipient_phone_last4?: string | null;
+          captured_at?: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["delivery_proofs"]["Insert"]>;
+        Relationships: [];
+      };
+      shipment_disputes: {
+        Row: {
+          id: string;
+          shipment_id: string;
+          opened_by: string;
+          assigned_to: string | null;
+          category: Database["public"]["Enums"]["dispute_category"];
+          status: Database["public"]["Enums"]["dispute_status"];
+          subject: string;
+          description: string;
+          resolution: string | null;
+          evidence_bucket: string | null;
+          evidence_path: string | null;
+          resolved_at: string | null;
+          closed_at: string | null;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          shipment_id: string;
+          opened_by: string;
+          assigned_to?: string | null;
+          category: Database["public"]["Enums"]["dispute_category"];
+          status?: Database["public"]["Enums"]["dispute_status"];
+          subject: string;
+          description: string;
+          resolution?: string | null;
+          evidence_bucket?: string | null;
+          evidence_path?: string | null;
+          resolved_at?: string | null;
+          closed_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["shipment_disputes"]["Insert"]>;
+        Relationships: [];
+      };
       parcel_requests: {
         Row: {
           id: string;
@@ -1255,6 +1411,60 @@ export type Database = {
         };
         Returns: string;
       };
+      create_notification: {
+        Args: {
+          p_action_url?: string | null;
+          p_body: string;
+          p_channel?: Database["public"]["Enums"]["notification_channel"];
+          p_metadata?: Json;
+          p_recipient_id: string;
+          p_shipment_id?: string | null;
+          p_title: string;
+          p_type: Database["public"]["Enums"]["notification_type"];
+        };
+        Returns: string;
+      };
+      mark_notification_read: {
+        Args: { p_notification_id: string };
+        Returns: string;
+      };
+      create_shipment_dispute: {
+        Args: {
+          p_category: Database["public"]["Enums"]["dispute_category"];
+          p_description: string;
+          p_evidence_bucket?: string | null;
+          p_evidence_path?: string | null;
+          p_shipment_id: string;
+          p_subject: string;
+        };
+        Returns: string;
+      };
+      record_delivery_proof: {
+        Args: {
+          p_handover_qr_token_id?: string | null;
+          p_metadata?: Json;
+          p_mission_id?: string | null;
+          p_otp_confirmed?: boolean;
+          p_proof_type: Database["public"]["Enums"]["delivery_proof_type"];
+          p_recipient_name?: string | null;
+          p_recipient_phone_last4?: string | null;
+          p_shipment_id: string;
+          p_storage_bucket?: string | null;
+          p_storage_path?: string | null;
+        };
+        Returns: string;
+      };
+      calculate_platform_commission: {
+        Args: {
+          p_beneficiary_id?: string | null;
+          p_commission_rate_bps?: number;
+          p_currency?: string;
+          p_gross_amount_cents: number;
+          p_payment_intent_id: string;
+          p_shipment_id: string;
+        };
+        Returns: string;
+      };
       current_user_has_role: {
         Args: { required_roles: string[] };
         Returns: boolean;
@@ -1402,6 +1612,25 @@ export type Database = {
       support_ticket_status: "open" | "pending" | "resolved" | "closed";
       support_priority: "low" | "normal" | "high" | "urgent";
       support_category: "shipment" | "payment" | "kyc" | "damage" | "delay" | "other";
+      notification_channel: "in_app" | "email" | "sms" | "whatsapp";
+      notification_status: "queued" | "sent" | "read" | "failed" | "cancelled";
+      notification_type:
+        | "shipment_update"
+        | "payment_update"
+        | "mission_update"
+        | "kyc_update"
+        | "support_update"
+        | "security_alert";
+      commission_status: "calculated" | "locked" | "paid" | "cancelled";
+      delivery_proof_type: "photo" | "signature" | "otp" | "qr_scan" | "document";
+      dispute_status: "open" | "in_review" | "waiting_user" | "resolved" | "rejected" | "closed";
+      dispute_category:
+        | "lost_package"
+        | "damaged_package"
+        | "late_delivery"
+        | "payment_issue"
+        | "kyc_issue"
+        | "other";
       parcel_status: "draft" | "open" | "matched" | "in_transit" | "delivered" | "cancelled";
       trip_status: "planned" | "boarding" | "arrived" | "cancelled";
       offer_status: "pending" | "accepted" | "declined" | "cancelled";

@@ -20,6 +20,8 @@ Migrations locales :
 - `supabase/migrations/20260710180000_relay_collection.sql`
 - `supabase/migrations/20260710190000_traveler_hub_batches.sql`
 - `supabase/migrations/20260710200000_payments_support_admin.sql`
+- `supabase/migrations/20260710210000_operational_workflows_qr_storage.sql`
+- `supabase/migrations/20260711110000_notifications_disputes_commissions.sql`
 
 Tables :
 
@@ -55,6 +57,15 @@ Tables :
 - `trips`
 - `offers`
 - `tracking_events`
+- `pickup_requests`
+- `handover_qr_tokens`
+- `collection_manifests`
+- `collection_manifest_items`
+- `hub_package_inspections`
+- `notifications`
+- `platform_commissions`
+- `delivery_proofs`
+- `shipment_disputes`
 
 Enums :
 
@@ -90,10 +101,28 @@ Enums :
 - `trip_status`
 - `offer_status`
 - `tracking_event_type`
+- `shipment_fulfillment_method`
+- `pickup_request_status`
+- `handover_qr_token_type`
+- `handover_qr_token_status`
+- `hub_inspection_decision`
+- `notification_channel`
+- `notification_status`
+- `notification_type`
+- `commission_status`
+- `delivery_proof_type`
+- `dispute_status`
+- `dispute_category`
 
 Storage :
 
 - bucket prive `kyc-documents`
+- bucket prive `avatars`
+- bucket prive `shipment-images`
+- bucket prive `flight-tickets`
+- bucket prive `proof-of-delivery`
+- bucket prive `dispute-evidence`
+- bucket prive `hub-inspection-images`
 
 ## Principes
 
@@ -128,11 +157,16 @@ Les migrations activent Row Level Security sur toutes les tables metier sensible
 - Un trajet est modifiable par son voyageur.
 - Les offres sont visibles par le voyageur et l'expediteur concerne.
 - Les evenements de suivi sont visibles par les participants.
+- Les documents d'expedition et preuves sont visibles par les participants et roles internes autorises.
+- Les QR de handover sont utilisables via RPC avec hash, expiration et usage unique.
+- Les inspections et inventaires hub sont reserves aux roles hub et operations.
+- Les notifications sont visibles par leur destinataire, leur acteur et les roles internes autorises.
+- Les commissions sont visibles par les participants financiers et les roles internes autorises.
+- Les litiges sont visibles par les participants, l'assigne et les roles support/operations/admin.
 
 ## Prochaines evolutions schema
 
-- Pieces jointes et preuves de remise.
-- Conversations et notifications.
-- Paiements et sequestre si le modele economique le demande.
-- Matching expeditions-voyages internationaux.
-- Paiements et preuves de remise.
+- Appliquer les migrations sur Supabase distant des que `SUPABASE_ACCESS_TOKEN` et la connexion Postgres securisee sont disponibles.
+- Generer les types Supabase depuis le schema distant apres application des migrations.
+- Ajouter seeds de test non sensibles pour valider les parcours reels par role.
+- Brancher les providers externes : paiement, email, SMS/WhatsApp, OCR billet.

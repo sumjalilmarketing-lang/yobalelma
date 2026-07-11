@@ -7,7 +7,7 @@ Date : 2026-07-11
 - Fournir `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `NEXT_PUBLIC_APP_URL` dans l'environnement securise.
 - Injecter `SUPABASE_ACCESS_TOKEN` dans l'environnement securise ou connecter le dashboard Supabase/GitHub.
 - Fournir le mot de passe Postgres ou un `--db-url` securise pour `supabase db push`.
-- Appliquer toutes les migrations au Supabase Yobalelma et verifier les 37 tables, 7 buckets, policies RLS et RPC.
+- Appliquer toutes les migrations au Supabase Yobalelma et verifier les 41 tables, 7 buckets, policies RLS et RPC.
 - Creer comptes de test par role : client, local_transporter, traveler, relay_agent, collection_driver, hub_agent, operations_manager, admin.
 - Executer les parcours nationaux et internationaux reels avec donnees seed controlees.
 - Corriger toute erreur RLS observee sur la base distante.
@@ -18,7 +18,7 @@ Date : 2026-07-11
 - Ajouter page tracking publique par code `YBL-XXXXXXXX`.
 - Finaliser validation back-office KYC et billet voyage.
 - Ajouter upload direct UX vers Storage avec URL signee, preview et preuve de livraison.
-- Ajouter notifications email/SMS/in-app pour auth, mission, tracking, QR et support.
+- Brancher les providers de notifications email/SMS/WhatsApp pour auth, mission, tracking, QR et support.
 - Brancher paiement reel ou definir explicitement un pilote sans paiement reel.
 - Ajouter seed non sensible et script de reset environnement test.
 
@@ -28,7 +28,7 @@ Date : 2026-07-11
 - Ajouter dashboards analytics depuis `platform_metrics_daily`.
 - Ajouter tests RLS SQL si Supabase CLI et credentials sont disponibles.
 - Ajouter tests composants React pour les formulaires principaux.
-- Ajouter gestion avancee des incidents et litiges.
+- Ajouter workflow avance de resolution des litiges : assignation, SLA, remboursement, arbitrage et notifications externes.
 
 ## Faible
 

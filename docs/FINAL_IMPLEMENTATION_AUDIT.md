@@ -6,18 +6,18 @@ Branche auditee : `codex/yobalelma-platform`
 
 ## Synthese factuelle
 
-Le depot contient maintenant une plateforme Next.js executable avec 84 fichiers de routes/pages App Router, 37 tables definies dans les migrations, 19 fonctions SQL/RPC, 27 triggers, 107 policies RLS declarees et 7 buckets Storage declares par migration.
+Le depot contient maintenant une plateforme Next.js executable avec 88 fichiers de routes/pages App Router, 41 tables definies dans les migrations, 24 fonctions SQL/RPC, 30 triggers, 117 policies RLS declarees et 7 buckets Storage declares par migration.
 
 Validation locale executee :
 
 - `npm install` : reussi avec Node.js 22 LTS temporaire, 0 vulnerabilite ;
 - `npm run lint` : reussi ;
 - `npm run typecheck` : reussi ;
-- `npm run test` : 8 fichiers, 33 tests reussis ;
-- `npm run build` : reussi, 45 pages generees ;
+- `npm run test` : 8 fichiers, 37 tests reussis ;
+- `npm run build` : reussi, 49 pages generees ;
 - `npm run test:e2e` : 5 tests reussis, 5 parcours reels sautes faute de variables Supabase securisees.
 
-Blocage majeur confirme le 2026-07-11 : les variables reelles `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `NEXT_PUBLIC_APP_URL` ne sont pas presentes dans l'environnement shell Codex. Les migrations sont presentes dans le depot mais non prouvees appliquees au projet Supabase distant. Les parcours sont connectes par code aux RPC/tables Supabase, mais non valides sur la base distante.
+Blocage majeur confirme le 2026-07-11 : `.env.local` contient uniquement les valeurs publiques locales, mais `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ACCESS_TOKEN` et `DATABASE_URL` / `POSTGRES_URL` ne sont pas disponibles dans l'environnement securise Codex. Les migrations sont presentes dans le depot mais non prouvees appliquees au projet Supabase distant. Les parcours sont connectes par code aux RPC/tables Supabase, mais non valides sur la base distante.
 
 Important securite : des cles Supabase ont ete collees dans la conversation utilisateur. Elles n'ont pas ete ecrites dans le depot, ni affichees dans les commandes finales, ni commitees. Elles doivent etre considerees exposees et remplacees cote Supabase.
 
@@ -46,15 +46,18 @@ Important dependances : `package-lock.json` a ete regenere par `npm install`. Le
 | QR code de retrait | Terminee mais non testee | Token opaque, hash, expiration, usage unique, revocation, scan origine, audit. Pas de rendu QR image. |
 | QR code depot destination | Terminee mais non testee | Token destination, scan, incident, blocage payout. Pas teste sur Supabase reel. |
 | Tracking | Partiellement developpee | Events shipment alimentes par creation, dispatch, mission, relais, QR. Pas de page publique tracking. |
-| Paiements | Bloquee par integration externe | Sandbox payout/payment seulement. Provider reel absent. |
-| Support | Partiellement developpee | Tickets/messages existants. Pas de SLA, assignation avancee, notifications. |
+| Paiements | Bloquee par integration externe | Sandbox payout/payment, commissions plateforme et payouts modelises. Provider reel absent. |
+| Notifications | Terminee mais non testee | Table, RLS, API et RPC in-app presents. Email/SMS/WhatsApp restent a brancher. |
+| Litiges | Terminee mais non testee | Table `shipment_disputes`, RLS et API d'ouverture presents. Workflow back-office avance non teste. |
+| Preuves de livraison | Terminee mais non testee | Table `delivery_proofs`, RPC/API et rattachement OTP/QR/mission presents. Non teste sur DB distante. |
+| Support | Partiellement developpee | Tickets/messages existants, litiges ajoutes. Pas de SLA ni notifications externes. |
 | Administration | Partiellement developpee | Dashboard admin existe, operations page ajoutee. Pas de CRUD complet roles/KYC. |
 
 ## Supabase
 
 - URL attendue verrouillee : `https://rgcgtcycbiuhcaoaadbh.supabase.co`.
 - Secrets non affiches et non committes.
-- Variables d'environnement detectees dans le shell : non.
+- Variables d'environnement secretes detectees dans le shell : non.
 - Connexion reelle executee : non, faute de variables injectees dans l'environnement.
 - Migrations appliquees : non prouve.
 - Tables reellement presentes dans Supabase : non verifie, acces distant absent.
@@ -76,7 +79,7 @@ Routes prioritaires ajoutees :
 - voyageur : `/dashboard/traveler/trips`, `/new`, `/[id]`, `/qr-codes`, `/kyc` ;
 - hub : `/dashboard/hub/inbound`, `/inventory`, `/trips`, `/batches`, `/batches/[id]`, `/handover` ;
 - operations : `/dashboard/operations` ;
-- APIs : dispatch, missions, collection, inspections hub, QR, signed upload.
+- APIs : dispatch, missions, collection, inspections hub, QR, signed upload, notifications, litiges, preuves de livraison, commissions.
 
 ## Parcours
 
