@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApiResult } from "@/lib/api/responses";
 import {
@@ -189,17 +190,14 @@ export function ShipmentForm() {
             <Input placeholder="Documents administratifs" {...form.register("packageTitle")} />
           </Field>
           <Field label="Categorie" error={form.formState.errors.packageCategory?.message}>
-            <select
-              className="h-10 rounded-md border border-input bg-white px-3 text-sm"
-              {...form.register("packageCategory")}
-            >
+            <Select {...form.register("packageCategory")}>
               <option value="documents">Documents</option>
               <option value="clothing">Vetements</option>
               <option value="electronics">Electronique</option>
               <option value="food_dry">Alimentaire sec</option>
               <option value="cosmetics">Cosmetiques</option>
               <option value="other">Autre</option>
-            </select>
+            </Select>
           </Field>
           <Field label="Poids (kg)" error={form.formState.errors.weightKg?.message}>
             <Input type="number" step="0.1" min="0.1" {...form.register("weightKg")} />
@@ -217,25 +215,19 @@ export function ShipmentForm() {
             <Input type="number" min="1" {...form.register("heightCm")} />
           </Field>
           <Field label="Service" error={form.formState.errors.serviceLevel?.message}>
-            <select
-              className="h-10 rounded-md border border-input bg-white px-3 text-sm"
-              {...form.register("serviceLevel")}
-            >
+            <Select {...form.register("serviceLevel")}>
               <option value="standard">Standard</option>
               <option value="express">Express</option>
-            </select>
+            </Select>
           </Field>
           <Field
             label="Mode de depart"
             error={form.formState.errors.fulfillmentMethod?.message}
           >
-            <select
-              className="h-10 rounded-md border border-input bg-white px-3 text-sm"
-              {...form.register("fulfillmentMethod")}
-            >
+            <Select {...form.register("fulfillmentMethod")}>
               <option value="pickup">Enlevement a domicile</option>
               <option value="relay_dropoff">Depot en point relais</option>
-            </select>
+            </Select>
           </Field>
           <Field
             label="Date d'enlevement souhaitee"

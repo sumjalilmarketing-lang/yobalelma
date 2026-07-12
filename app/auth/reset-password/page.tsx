@@ -12,10 +12,9 @@ export default function ResetPasswordPage() {
       title="Choisir un nouveau mot de passe"
       description="Cette page est accessible apres le lien securise envoye par email."
     >
-      <div className="mx-auto grid max-w-xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-sm">
+      <div className="mx-auto grid max-w-xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-line">
         <ResetPasswordForm />
       </div>
     </PageShell>
   );
 }
-

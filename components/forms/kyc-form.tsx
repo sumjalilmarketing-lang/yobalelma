@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import type { ApiResult } from "@/lib/api/responses";
 import {
   identityVerificationSchema,
@@ -42,15 +43,12 @@ export function KycForm() {
     <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Type de document" error={form.formState.errors.documentType?.message}>
-          <select
-            className="h-10 rounded-md border border-input px-3 text-sm"
-            {...form.register("documentType")}
-          >
+          <Select {...form.register("documentType")}>
             <option value="national_id">Piece d&apos;identite</option>
             <option value="passport">Passeport</option>
             <option value="residence_permit">Titre de sejour</option>
             <option value="driver_license">Permis de conduire</option>
-          </select>
+          </Select>
         </Field>
         <Field label="Numero du document" error={form.formState.errors.documentNumber?.message}>
           <Input {...form.register("documentNumber")} />
@@ -104,4 +102,3 @@ function Field({
     </label>
   );
 }
-

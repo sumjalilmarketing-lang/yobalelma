@@ -22,7 +22,7 @@ export default async function KycPage() {
     >
       {state.status === "ready" ? (
         <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
-          <div className="rounded-lg border border-black/10 bg-white p-6 shadow-sm">
+          <div className="rounded-lg border border-black/10 bg-white p-6 shadow-line">
             <KycForm />
           </div>
           <aside className="grid gap-4 self-start rounded-lg bg-black p-6 text-white">

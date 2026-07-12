@@ -5,7 +5,7 @@ const { loadEnvConfig } = nextEnv;
 loadEnvConfig(process.cwd());
 
 const port = Number(process.env.PORT ?? 43117);
-const baseURL = process.env.NEXT_PUBLIC_APP_URL ?? `http://127.0.0.1:${port}`;
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 const nodeBin = process.execPath.includes(" ") ? `"${process.execPath}"` : process.execPath;
 const webServer =
   process.env.PLAYWRIGHT_SKIP_WEBSERVER === "1"

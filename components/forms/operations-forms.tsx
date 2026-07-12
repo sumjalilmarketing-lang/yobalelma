@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApiResult } from "@/lib/api/responses";
 import {
@@ -46,11 +47,11 @@ export function PaymentIntentForm() {
         <Input type="number" min="1" {...form.register("amountCents")} />
       </Field>
       <Field label="Devise" error={form.formState.errors.currency?.message}>
-        <select className="h-10 rounded-md border border-input bg-white px-3 text-sm" {...form.register("currency")}>
+        <Select {...form.register("currency")}>
           <option value="EUR">EUR</option>
           <option value="XOF">XOF</option>
           <option value="USD">USD</option>
-        </select>
+        </Select>
       </Field>
       <Button type="submit" disabled={form.formState.isSubmitting}>Creer l&apos;intention</Button>
       {result?.ok && result.data?.paymentIntentId ? (
@@ -88,22 +89,22 @@ export function SupportTicketForm() {
       </Field>
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Categorie" error={form.formState.errors.category?.message}>
-          <select className="h-10 rounded-md border border-input bg-white px-3 text-sm" {...form.register("category")}>
+          <Select {...form.register("category")}>
             <option value="shipment">Expedition</option>
             <option value="payment">Paiement</option>
             <option value="kyc">KYC</option>
             <option value="damage">Dommage</option>
             <option value="delay">Retard</option>
             <option value="other">Autre</option>
-          </select>
+          </Select>
         </Field>
         <Field label="Priorite" error={form.formState.errors.priority?.message}>
-          <select className="h-10 rounded-md border border-input bg-white px-3 text-sm" {...form.register("priority")}>
+          <Select {...form.register("priority")}>
             <option value="low">Basse</option>
             <option value="normal">Normale</option>
             <option value="high">Haute</option>
             <option value="urgent">Urgente</option>
-          </select>
+          </Select>
         </Field>
       </div>
       <Field label="Sujet" error={form.formState.errors.subject?.message}>

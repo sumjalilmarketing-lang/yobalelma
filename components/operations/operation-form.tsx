@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApiResult } from "@/lib/api/responses";
 
@@ -100,8 +101,7 @@ function Field({ field }: { field: OperationField }) {
     return (
       <label className="grid gap-2 text-sm font-semibold">
         {field.label}
-        <select
-          className="h-10 rounded-md border border-input bg-white px-3 text-sm"
+        <Select
           name={field.name}
           defaultValue={field.defaultValue}
           required={field.required}
@@ -111,7 +111,7 @@ function Field({ field }: { field: OperationField }) {
               {option.label}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
     );
   }

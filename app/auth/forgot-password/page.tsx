@@ -13,7 +13,7 @@ export default function ForgotPasswordPage() {
       title="Reinitialiser ton mot de passe"
       description="Indique ton email. Si un compte existe, Supabase enverra un lien securise."
     >
-      <div className="mx-auto grid max-w-xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-sm">
+      <div className="mx-auto grid max-w-xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-line">
         <ForgotPasswordForm />
         <Link href="/auth/sign-in" className="text-sm font-bold text-primary">
           Retour a la connexion
@@ -22,4 +22,3 @@ export default function ForgotPasswordPage() {
     </PageShell>
   );
 }
-

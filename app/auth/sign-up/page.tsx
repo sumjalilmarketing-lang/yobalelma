@@ -13,7 +13,7 @@ export default function SignUpPage() {
       title="Creer ton compte Yobalelma"
       description="Choisis ton role public et complete les informations necessaires pour demarrer."
     >
-      <div className="mx-auto grid max-w-3xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-sm">
+      <div className="mx-auto grid max-w-3xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-line">
         <SignUpForm />
         <Link href="/auth/sign-in" className="text-sm font-bold text-primary">
           J&apos;ai deja un compte
@@ -22,4 +22,3 @@ export default function SignUpPage() {
     </PageShell>
   );
 }
-

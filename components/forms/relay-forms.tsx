@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApiResult } from "@/lib/api/responses";
 import {
@@ -108,12 +109,12 @@ function RelayScanForm() {
         <Input {...form.register("relayPointId")} />
       </Field>
       <Field label="Type de scan" error={form.formState.errors.scanType?.message}>
-        <select className="h-10 rounded-md border border-input bg-white px-3 text-sm" {...form.register("scanType")}>
+        <Select {...form.register("scanType")}>
           <option value="check_in">Entree relais</option>
           <option value="check_out">Sortie relais</option>
           <option value="handover">Remise</option>
           <option value="exception">Exception</option>
-        </select>
+        </Select>
       </Field>
       <Field label="Note" error={form.formState.errors.note?.message}>
         <Textarea {...form.register("note")} />

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { type ApiResult } from "@/lib/api/responses";
 import { profileSchema, type ProfileInput } from "@/lib/validation/profile";
 
@@ -54,26 +55,20 @@ export function ProfileForm() {
           <Input placeholder="Rue, quartier, immeuble" {...form.register("address")} />
         </Field>
         <Field label="Role principal" error={form.formState.errors.role?.message}>
-          <select
-            className="h-10 rounded-md border border-input bg-white px-3 text-sm"
-            {...form.register("role")}
-          >
+          <Select {...form.register("role")}>
             <option value="client">Client</option>
             <option value="local_transporter">Livreur local</option>
             <option value="traveler">Voyageur</option>
-          </select>
+          </Select>
         </Field>
         <Field
           label="Langue preferee"
           error={form.formState.errors.preferredLanguage?.message}
         >
-          <select
-            className="h-10 rounded-md border border-input bg-white px-3 text-sm"
-            {...form.register("preferredLanguage")}
-          >
+          <Select {...form.register("preferredLanguage")}>
             <option value="fr">Francais</option>
             <option value="en">Anglais</option>
-          </select>
+          </Select>
         </Field>
       </div>
       <Button type="submit" disabled={form.formState.isSubmitting}>

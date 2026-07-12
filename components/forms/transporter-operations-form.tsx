@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApiResult } from "@/lib/api/responses";
 import {
@@ -105,13 +106,13 @@ function VehicleSection() {
     <form className="grid gap-4 rounded-lg border border-black/10 p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <h2 className="text-lg font-black">Vehicule</h2>
       <Field label="Type" error={form.formState.errors.type?.message}>
-        <select className="h-10 rounded-md border border-input bg-white px-3 text-sm" {...form.register("type")}>
+        <Select {...form.register("type")}>
           <option value="bike">Velo</option>
           <option value="scooter">Scooter</option>
           <option value="car">Voiture</option>
           <option value="van">Fourgon</option>
           <option value="truck">Camion</option>
-        </select>
+        </Select>
       </Field>
       <Field label="Nom du vehicule" error={form.formState.errors.label?.message}>
         <Input {...form.register("label")} />

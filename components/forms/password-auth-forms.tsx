@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import type { ApiResult } from "@/lib/api/responses";
 import {
   forgotPasswordSchema,
@@ -104,14 +105,11 @@ export function SignUpForm() {
           <Input type="email" autoComplete="email" {...form.register("email")} />
         </Field>
         <Field label="Role souhaite" error={form.formState.errors.role?.message}>
-          <select
-            className="h-10 rounded-md border border-input px-3 text-sm"
-            {...form.register("role")}
-          >
+          <Select {...form.register("role")}>
             <option value="client">Je veux envoyer un colis</option>
             <option value="local_transporter">Je veux devenir livreur</option>
             <option value="traveler">Je veux voyager avec Yobalelma</option>
-          </select>
+          </Select>
         </Field>
         <Field label="Pays" error={form.formState.errors.country?.message}>
           <Input autoComplete="country-name" {...form.register("country")} />
