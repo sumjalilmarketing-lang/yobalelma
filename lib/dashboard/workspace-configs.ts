@@ -1,4 +1,7 @@
-import type { OperationalWorkspaceConfig } from "@/components/dashboard/operational-workspace";
+import type {
+  OperationalWorkspaceConfig,
+  WorkspaceMetric,
+} from "@/components/dashboard/operational-workspace";
 
 export const workspaceConfigs = {
   "client/tracking": {
@@ -321,8 +324,178 @@ const extensionConfigs = {
   "hub/scanner": hubConfig("Scanner hub", "Scans QR, lots et remises voyageur.", "qr:write"),
   "hub/anomalies": hubConfig("Anomalies hub", "Colis manquants, endommages ou refuses.", "hub:write"),
   "hub/history": hubConfig("Historique hub", "Lots, reservations et inspections passees.", "hub:read"),
+  "hub/reports": hubConfig("Rapports hub", "Volumes, poids, QR et anomalies consolides.", "hub:read"),
   "hub/profile": hubConfig("Profil hub", "Equipe, site, capacite et statut operationnel.", "hub:read"),
   "hub/notifications": hubConfig("Notifications hub", "Alertes collecte, voyageur et anomalies.", "hub:read"),
+  "admin/users": adminConfig("Utilisateurs", "Recherche, profils, roles et historique utilisateur.", "admin:read", [
+    { label: "Profils", table: "profiles" },
+    { label: "KYC", table: "identity_verifications" },
+    { label: "Audit", table: "audit_log_events" },
+  ]),
+  "admin/roles": adminConfig("Roles", "RBAC applicatif, attribution et audit des roles.", "admin:read", [
+    { label: "Profils", table: "profiles" },
+    { label: "Audit role", table: "audit_log_events", filter: { column: "entity_type", value: "user_role" } },
+  ]),
+  "admin/permissions": adminConfig("Permissions", "Permissions critiques reservees super admin.", "super_admin:write", [
+    { label: "Audit permissions", table: "audit_log_events" },
+    { label: "Admins", table: "profiles", filter: { column: "primary_role", value: "admin" } },
+  ]),
+  "admin/kyc": adminConfig("KYC", "Validation des identites, documents et refus justifies.", "kyc:review", [
+    { label: "KYC", table: "identity_verifications" },
+    { label: "Documents", table: "identity_verification_documents" },
+  ]),
+  "admin/transporters": adminConfig("Livreurs", "Livreurs locaux, vehicules, disponibilites et incidents.", "admin:read", [
+    { label: "Livreurs", table: "transporter_profiles" },
+    { label: "Missions", table: "local_delivery_missions" },
+  ]),
+  "admin/travelers": adminConfig("Voyageurs", "Voyageurs, billets, trajets et capacites.", "traveler:read", [
+    { label: "Voyages", table: "trips" },
+    { label: "Billets", table: "traveler_documents" },
+    { label: "Lots", table: "hub_batches" },
+  ]),
+  "admin/collection-drivers": adminConfig("Chauffeurs collecte", "Collecte relais vers hub et manifestes.", "collection:read", [
+    { label: "Tournees", table: "collection_routes" },
+    { label: "Manifestes", table: "collection_manifests" },
+  ]),
+  "admin/relay-networks": adminConfig("Reseaux relais", "Partenaires relais configurables et performance.", "relay:read", [
+    { label: "Points relais", table: "relay_points" },
+    { label: "Inventaire relais", table: "relay_inventory" },
+  ]),
+  "admin/relay-points": adminConfig("Points relais", "Sites relais, capacites, horaires et scans.", "relay:read", [
+    { label: "Points relais", table: "relay_points" },
+    { label: "Scans", table: "relay_scan_events" },
+  ]),
+  "admin/hubs": adminConfig("Hubs", "Hubs, lots, capacites et flux internationaux.", "hub:read", [
+    { label: "Lots hub", table: "hub_batches" },
+    { label: "Reservations", table: "capacity_reservations" },
+  ]),
+  "admin/hub-users": adminConfig("Agents hub", "Affectation des agents hub et supervision.", "admin:read", [
+    { label: "Agents potentiels", table: "profiles" },
+    { label: "Audit", table: "audit_log_events" },
+  ]),
+  "admin/shipments": adminConfig("Expeditions", "Recherche globale, timeline, acteurs et corrections auditees.", "shipment:read", [
+    { label: "Expeditions", table: "shipments" },
+    { label: "Evenements", table: "shipment_status_events" },
+  ]),
+  "admin/dispatch": adminConfig("Dispatch", "Assignations et interventions operationnelles.", "dispatch:read", [
+    { label: "Dispatch", table: "local_delivery_missions" },
+    { label: "Missions", table: "local_delivery_missions" },
+  ]),
+  "admin/collections": adminConfig("Collectes", "Tournees, manifestes et handover hub.", "collection:read", [
+    { label: "Tournees", table: "collection_routes" },
+    { label: "Manifestes", table: "collection_manifests" },
+  ]),
+  "admin/trips": adminConfig("Voyages", "Trajets voyageurs, billets et disponibilite.", "traveler:read", [
+    { label: "Voyages", table: "trips" },
+    { label: "Billets", table: "traveler_documents" },
+  ]),
+  "admin/batches": adminConfig("Lots", "Lots hub, reservations et remise voyageur.", "hub:read", [
+    { label: "Lots", table: "hub_batches" },
+    { label: "Reservations", table: "capacity_reservations" },
+  ]),
+  "admin/inventory": adminConfig("Inventaire", "Inventaire relais et reservations hub disponibles.", "hub:read", [
+    { label: "Relais", table: "relay_inventory" },
+    { label: "Reservations", table: "capacity_reservations" },
+  ]),
+  "admin/anomalies": adminConfig("Anomalies", "Incidents, litiges et actions correctives.", "admin:read", [
+    { label: "Litiges", table: "shipment_disputes" },
+    { label: "Tickets", table: "support_tickets" },
+  ]),
+  "admin/payments": adminConfig("Paiements", "Paiements clients, rapprochement et litiges.", "payment:read", [
+    { label: "Paiements", table: "payment_intents" },
+    { label: "Litiges", table: "shipment_disputes" },
+  ]),
+  "admin/payouts": adminConfig("Payouts", "Payouts livreurs/voyageurs, blocages et liberation.", "payout:read", [
+    { label: "Payouts", table: "payouts" },
+    { label: "Commissions", table: "platform_commissions" },
+  ]),
+  "admin/disputes": adminConfig("Litiges", "Litiges, preuves et resolution support.", "support:read", [
+    { label: "Litiges", table: "shipment_disputes" },
+    { label: "Preuves", table: "delivery_proofs" },
+  ]),
+  "admin/support": adminConfig("Support", "Tickets, messages et SLA.", "support:read", [
+    { label: "Tickets", table: "support_tickets" },
+    { label: "Messages", table: "support_messages" },
+  ]),
+  "admin/audit": adminConfig("Audit", "Actions critiques, changements roles et corrections.", "admin:read", [
+    { label: "Audit", table: "audit_log_events" },
+    { label: "Evenements", table: "shipment_status_events" },
+  ]),
+  "admin/settings": adminConfig("Parametres", "Parametres globaux et seuils operationnels.", "super_admin:write", [
+    { label: "Audit settings", table: "audit_log_events", filter: { column: "entity_type", value: "system_setting" } },
+  ]),
+  "admin/pricing": adminConfig("Tarification", "Regles tarifaires et commissions.", "payment:read", [
+    { label: "Paiements", table: "payment_intents" },
+    { label: "Commissions", table: "platform_commissions" },
+  ]),
+  "admin/notifications": adminConfig("Notifications", "Notifications in-app et canaux externes.", "admin:read", [
+    { label: "Notifications", table: "notifications" },
+  ]),
+  "admin/analytics": adminConfig("Analytics", "KPI plateforme, pays et hubs.", "admin:read", [
+    { label: "Expeditions", table: "shipments" },
+    { label: "Paiements", table: "payment_intents" },
+    { label: "Lots", table: "hub_batches" },
+  ]),
+  "admin/reports": adminConfig("Rapports", "Exports et rapports operationnels.", "admin:read", [
+    { label: "Audit", table: "audit_log_events" },
+    { label: "Expeditions", table: "shipments" },
+  ]),
+  "admin/integrations": adminConfig("Integrations", "Providers paiement, storage, email et SMS.", "super_admin:write", [
+    { label: "Audit integrations", table: "audit_log_events" },
+  ]),
+  "admin/feature-flags": adminConfig("Feature flags", "Activation progressive des modules.", "super_admin:write", [
+    { label: "Audit flags", table: "audit_log_events", filter: { column: "entity_type", value: "feature_flag" } },
+  ]),
+  "admin/system-health": adminConfig("Sante systeme", "Etat technique, erreurs et audit.", "admin:read", [
+    { label: "Audit", table: "audit_log_events" },
+    { label: "Notifications", table: "notifications" },
+  ]),
+  "operations/shipments": operationsConfig("Expeditions", "Supervision temps reel des expeditions.", [
+    { label: "Expeditions", table: "shipments" },
+    { label: "Evenements", table: "shipment_status_events" },
+  ]),
+  "operations/dispatch": operationsConfig("Dispatch", "Reassignations et priorisation terrain.", [
+    { label: "Dispatch", table: "local_delivery_missions" },
+    { label: "Missions", table: "local_delivery_missions" },
+  ]),
+  "operations/collections": operationsConfig("Collectes", "Tournees, retards et remises hub.", [
+    { label: "Tournees", table: "collection_routes" },
+    { label: "Manifestes", table: "collection_manifests" },
+  ]),
+  "operations/relays": operationsConfig("Relais", "Performance relais, scans et inventaires.", [
+    { label: "Relais", table: "relay_points" },
+    { label: "Inventaire", table: "relay_inventory" },
+  ]),
+  "operations/hubs": operationsConfig("Hubs", "Batches, capacite et handover.", [
+    { label: "Lots", table: "hub_batches" },
+    { label: "Reservations", table: "capacity_reservations" },
+  ]),
+  "operations/trips": operationsConfig("Voyages", "Voyageurs, billets et trajets.", [
+    { label: "Voyages", table: "trips" },
+    { label: "Billets", table: "traveler_documents" },
+  ]),
+  "operations/batches": operationsConfig("Lots", "Lots prepares, en transit et arrives.", [
+    { label: "Lots", table: "hub_batches" },
+    { label: "Reservations", table: "capacity_reservations" },
+  ]),
+  "operations/anomalies": operationsConfig("Anomalies", "Incidents, tickets et litiges a traiter.", [
+    { label: "Tickets", table: "support_tickets" },
+    { label: "Litiges", table: "shipment_disputes" },
+  ], "operations:write"),
+  "operations/performance": operationsConfig("Performance", "SLA, volumes et goulets d'etranglement.", [
+    { label: "Expeditions", table: "shipments" },
+    { label: "Livraisons", table: "delivery_proofs" },
+    { label: "Payouts", table: "payouts" },
+  ]),
+  "operations/live-map": operationsConfig("Live map", "Vue terrain des flux et points actifs.", [
+    { label: "Tournees", table: "collection_routes" },
+    { label: "Relais", table: "relay_points" },
+    { label: "Missions", table: "local_delivery_missions" },
+  ]),
+  "operations/notifications": operationsConfig("Notifications", "Alertes operations et escalades.", [
+    { label: "Notifications", table: "notifications" },
+    { label: "Tickets", table: "support_tickets" },
+  ]),
 } satisfies Record<string, OperationalWorkspaceConfig>;
 
 Object.assign(workspaceConfigs, extensionConfigs);
@@ -439,3 +612,58 @@ function hubConfig(
   };
 }
 
+function adminConfig(
+  title: string,
+  description: string,
+  permission: OperationalWorkspaceConfig["permission"],
+  metrics: WorkspaceMetric[],
+): OperationalWorkspaceConfig {
+  return {
+    allowedRoles: ["admin", "super_admin"],
+    actions: [
+      { href: "/dashboard/admin/users", label: "Utilisateurs", permission: "admin:read" },
+      { href: "/dashboard/admin/shipments", label: "Expeditions", permission: "shipment:read" },
+      { href: "/dashboard/admin/audit", label: "Audit", permission: "admin:read" },
+      { href: "/dashboard/admin/settings", label: "Parametres", permission: "super_admin:write" },
+    ],
+    checkpoints: [
+      "Acces protege par role interne.",
+      "Compteurs lus depuis Supabase avec RLS.",
+      "Actions critiques a auditer dans audit_log_events.",
+    ],
+    description,
+    eyebrow: "Admin",
+    metrics,
+    permission,
+    scene: "admin",
+    title,
+  };
+}
+
+function operationsConfig(
+  title: string,
+  description: string,
+  metrics: WorkspaceMetric[],
+  permission: OperationalWorkspaceConfig["permission"] = "operations:read",
+): OperationalWorkspaceConfig {
+  return {
+    allowedRoles: ["operations_manager", "admin", "super_admin"],
+    actions: [
+      { href: "/dashboard/operations/shipments", label: "Expeditions", permission: "operations:read" },
+      { href: "/dashboard/operations/dispatch", label: "Dispatch", permission: "dispatch:write" },
+      { href: "/dashboard/operations/anomalies", label: "Anomalies", permission: "operations:write" },
+      { href: "/dashboard/hub", label: "Hub", permission: "hub:read" },
+    ],
+    checkpoints: [
+      "Lecture globale des flux critiques.",
+      "Intervention manuelle reservee operations/admin.",
+      "Historique et audit a conserver pour chaque correction.",
+    ],
+    description,
+    eyebrow: "Operations",
+    metrics,
+    permission,
+    scene: "operations",
+    title,
+  };
+}

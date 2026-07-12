@@ -28,19 +28,22 @@ export default async function OperationsDashboardPage() {
           <JourneyVisualStage scene="operations" />
           <div className="flex flex-wrap gap-3">
             <Button asChild>
-              <Link href="/dashboard/hub">Hub</Link>
+              <Link href="/dashboard/operations/shipments">Expeditions</Link>
             </Button>
             <Button asChild variant="secondary">
-              <Link href="/dashboard/relay">Relais</Link>
+              <Link href="/dashboard/operations/dispatch">Dispatch</Link>
             </Button>
             <Button asChild variant="secondary">
-              <Link href="/dashboard/collection">Collecte</Link>
+              <Link href="/dashboard/operations/collections">Collectes</Link>
             </Button>
             <Button asChild variant="secondary">
-              <Link href="/dashboard/support">Support</Link>
+              <Link href="/dashboard/operations/hubs">Hubs</Link>
             </Button>
             <Button asChild variant="secondary">
-              <Link href="/dashboard/admin">Admin</Link>
+              <Link href="/dashboard/operations/anomalies">Anomalies</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/operations/live-map">Live map</Link>
             </Button>
           </div>
         </div>

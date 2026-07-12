@@ -49,6 +49,8 @@ export const platformPermissions = [
   "kyc:review",
   "admin:read",
   "admin:write",
+  "operations:read",
+  "operations:write",
   "super_admin:write",
 ] as const;
 
@@ -128,6 +130,8 @@ export const rolePermissions: Record<PlatformRole, PlatformPermission[]> = {
     "mission:read",
     "dispatch:read",
     "dispatch:write",
+    "operations:read",
+    "operations:write",
     "relay:read",
     "collection:read",
     "hub:read",
@@ -174,6 +178,8 @@ export const rolePermissions: Record<PlatformRole, PlatformPermission[]> = {
     "kyc:review",
     "admin:read",
     "admin:write",
+    "operations:read",
+    "operations:write",
   ],
   super_admin: [...platformPermissions],
 };
