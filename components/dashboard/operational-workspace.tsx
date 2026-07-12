@@ -1,14 +1,21 @@
-import Link from "next/link";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import {
+  ArrowUpRight,
+  Database as DatabaseIcon,
+  ShieldCheck,
+} from "lucide-react";
 import { PermissionGuard } from "@/components/auth/permission-guard";
+import {
+  PremiumActionCard,
+  PremiumBadge,
+  PremiumKpi,
+  PremiumPanel,
+  toneFromLabel,
+} from "@/components/design-system/premium";
 import { PageShell } from "@/components/layout/page-shell";
 import {
   ConfigurationNotice,
-  DataCard,
-  DataGrid,
   EmptyState,
 } from "@/components/operations/status-panels";
-import { Button } from "@/components/ui/button";
 import { SignalTimeline, type JourneyScene } from "@/components/visual/yobalelma-world";
 import { requireRole } from "@/lib/auth/server";
 import {
@@ -18,7 +25,7 @@ import {
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database.types";
 
-type TableName = keyof Database["public"]["Tables"];
+type TableName = Extract<keyof Database["public"]["Tables"], string>;
 
 export type WorkspaceMetric = {
   label: string;
@@ -98,16 +105,18 @@ async function WorkspaceContent({
   userId: string;
 }) {
   const metrics = await loadWorkspaceMetrics(config.metrics, userId);
+  const tone = toneFromLabel(`${config.eyebrow} ${config.title}`);
 
   return (
     <div className="grid gap-8">
       <section className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-start">
-        <div className="rounded-lg border border-black/10 bg-white p-5 shadow-line">
+        <PremiumPanel tone={tone} className="p-5">
           <div className="flex items-start gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary text-primary">
               <ShieldCheck className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
+              <PremiumBadge tone={tone}>Controle operationnel</PremiumBadge>
               <h2 className="text-xl font-black">Controle operationnel</h2>
               <p className="mt-2 max-w-2xl leading-7 text-black/60">
                 Cette section utilise le role connecte, les politiques Supabase et les
@@ -115,50 +124,50 @@ async function WorkspaceContent({
               </p>
             </div>
           </div>
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {config.actions.map((action) => (
               <PermissionGuard
                 key={action.href}
                 role={role}
                 anyOf={action.permission ? [action.permission] : [config.permission]}
               >
-                <Button asChild variant={action.variant ?? "secondary"}>
-                  <Link href={action.href}>
-                    {action.label}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                </Button>
+                <PremiumActionCard
+                  href={action.href}
+                  label={action.label}
+                  description={`Action disponible pour le module ${config.title.toLowerCase()}.`}
+                  icon={ArrowUpRight}
+                  tone={tone}
+                />
               </PermissionGuard>
             ))}
           </div>
-        </div>
+        </PremiumPanel>
 
-        <div className="rounded-lg border border-black/10 bg-accent p-5 shadow-line">
+        <PremiumPanel tone={tone} className="p-5">
           <p className="text-sm font-bold uppercase text-black/50">Etat pilote</p>
           <p className="mt-2 text-2xl font-black">{config.emptyTitle ?? "Module connecte"}</p>
           <p className="mt-2 text-sm leading-6 text-black/60">
             Les compteurs ci-dessous proviennent de Supabase ou d&apos;un etat vide explicite.
           </p>
-        </div>
+        </PremiumPanel>
       </section>
 
-      <DataGrid>
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => (
-          <DataCard
+          <PremiumKpi
             key={metric.label}
-            title={metric.label}
-            subtitle={metric.error ?? "Supabase"}
-            rows={[
-              { label: "Elements", value: metric.count },
-              { label: "Table", value: metric.table },
-            ]}
+            label={metric.label}
+            value={metric.count}
+            icon={DatabaseIcon}
+            tone={tone}
+            description={`${metric.error ?? "Supabase"} - ${String(metric.table)}`}
           />
         ))}
-      </DataGrid>
+      </section>
 
       <section className="grid gap-4 lg:grid-cols-[1fr_360px]">
         <div>
-          <p className="text-sm font-bold uppercase text-primary">Controle du flux</p>
+          <PremiumBadge tone={tone}>Controle du flux</PremiumBadge>
           <h2 className="mt-2 text-2xl font-black">Etapes attendues</h2>
           <SignalTimeline scene={config.scene ?? "operations"} items={config.checkpoints} className="mt-5" />
         </div>

@@ -1,5 +1,9 @@
 import { PageShell } from "@/components/layout/page-shell";
 import {
+  PremiumChecklist,
+  PremiumStory,
+} from "@/components/design-system/premium";
+import {
   ConfigurationNotice,
   EmptyState,
 } from "@/components/operations/status-panels";
@@ -33,6 +37,22 @@ export default async function PublicTrackingPage({
       scene="client"
     >
       <div className="grid gap-8">
+        <PremiumStory
+          tone="client"
+          eyebrow="Suivi protege"
+          title="Une lecture publique du statut, sans exposer les donnees privees."
+          description="Le suivi Yobalelma donne un signal clair au client et au destinataire tout en gardant les informations sensibles dans les espaces authentifies."
+        >
+          <PremiumChecklist
+            tone="client"
+            items={[
+              "Format de code controle avant recherche.",
+              "Statut public separe des donnees privees.",
+              "Support disponible si le colis est introuvable.",
+            ]}
+          />
+        </PremiumStory>
+
         <TrackingSearchForm defaultValue={trackingCode} />
 
         {state.status === "idle" ? (

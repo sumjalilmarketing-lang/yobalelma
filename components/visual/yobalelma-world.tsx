@@ -284,11 +284,12 @@ export function SceneBackdrop({
         className={cn(
           "absolute inset-0",
           muted
-            ? "bg-[radial-gradient(circle_at_25%_20%,rgba(255,102,0,0.12),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.88),rgba(248,244,236,0.82))]"
-            : "bg-[radial-gradient(circle_at_20%_18%,rgba(255,102,0,0.34),transparent_32%),radial-gradient(circle_at_80%_26%,rgba(22,113,167,0.2),transparent_28%),linear-gradient(135deg,rgba(12,14,16,0.98),rgba(28,23,19,0.96))]",
+            ? "bg-[linear-gradient(135deg,rgba(255,102,0,0.12),rgba(255,255,255,0.9)_38%,rgba(235,215,178,0.62)),linear-gradient(180deg,rgba(255,255,255,0.82),rgba(248,244,236,0.86))]"
+            : "bg-[linear-gradient(135deg,rgba(255,102,0,0.28),rgba(12,14,16,0.98)_34%,rgba(22,113,167,0.2)_72%,rgba(28,23,19,0.96)),linear-gradient(180deg,rgba(12,14,16,0.96),rgba(28,23,19,0.98))]",
         )}
       />
       <div className={cn("absolute inset-0 yb-map-grid", muted ? "opacity-40" : "opacity-20")} />
+      <div className={cn("absolute inset-x-0 bottom-0 h-28 yb-skyline", muted ? "opacity-40" : "opacity-20")} />
       <div className="absolute inset-x-0 bottom-0 h-28 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.36))]" />
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         {config.cities.slice(0, -1).map((city, index) => {

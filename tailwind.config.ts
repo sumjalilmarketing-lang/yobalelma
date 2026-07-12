@@ -51,6 +51,9 @@ const config = {
         earth: "#6E4B2B",
         emerald: "#1F7A55",
         ocean: "#1671A7",
+        sky: "#4EA6D8",
+        clay: "#9A5B2E",
+        premiumgray: "#F0EEE9",
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",

@@ -1,5 +1,19 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import {
+  Bell,
+  Gauge,
+  PackageCheck,
+  Plane,
+  Route,
+  ShieldCheck,
+} from "lucide-react";
+import {
+  PremiumActionCard,
+  PremiumEmptyState,
+  PremiumKpi,
+  PremiumPanel,
+  PremiumStory,
+} from "@/components/design-system/premium";
 import { PageShell } from "@/components/layout/page-shell";
 import { Button } from "@/components/ui/button";
 import { JourneyVisualStage } from "@/components/visual/yobalelma-world";
@@ -29,27 +43,24 @@ export default async function DashboardPage() {
 
 function NeedsEnv() {
   return (
-    <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
+    <PremiumPanel tone="support" className="p-6">
       <h2 className="text-2xl font-black">Configuration Supabase requise</h2>
       <p className="mt-3 max-w-2xl leading-7 text-black/60">
         Ajoute les variables securisees `NEXT_PUBLIC_SUPABASE_URL` et
         `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` pour activer les donnees reelles du dashboard.
       </p>
-    </div>
+    </PremiumPanel>
   );
 }
 
 function SignedOut() {
   return (
-    <div className="grid gap-5 rounded-lg border border-black/10 bg-white p-6 shadow-line">
-      <h2 className="text-2xl font-black">Connecte-toi pour continuer</h2>
-      <p className="max-w-2xl leading-7 text-black/60">
-        Le dashboard affiche les colis, voyages et offres rattaches a ton compte.
-      </p>
-      <Button asChild>
-        <Link href="/auth/sign-in">Connexion</Link>
-      </Button>
-    </div>
+    <PremiumEmptyState
+      tone="operations"
+      title="Connecte-toi pour continuer"
+      description="Le dashboard affiche les colis, voyages et offres rattaches a ton compte, avec un contexte adapte a ton role."
+      action={{ href: "/auth/sign-in", label: "Connexion" }}
+    />
   );
 }
 
@@ -60,7 +71,34 @@ function ReadyDashboard({
 }) {
   return (
     <div className="grid gap-8">
-      <JourneyVisualStage scene="operations" />
+      <PremiumStory
+        tone="operations"
+        eyebrow="Centre de pilotage"
+        title="Un tableau de bord pense pour suivre la route, la preuve et la confiance."
+        description="Yobalelma rassemble les actions importantes dans une interface claire : expeditions, voyages, offres, alertes et prochaines etapes."
+        icon={Gauge}
+      >
+        <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-center">
+          <JourneyVisualStage scene="operations" frame={false} className="min-h-[260px]" />
+          <div className="grid gap-3">
+            <PremiumActionCard
+              href="/envoyer"
+              label="Envoyer un colis"
+              description="Creer une expedition nationale ou internationale."
+              icon={PackageCheck}
+              tone="client"
+            />
+            <PremiumActionCard
+              href="/voyager"
+              label="Publier un voyage"
+              description="Declarer une capacite disponible et recevoir des lots."
+              icon={Plane}
+              tone="traveler"
+            />
+          </div>
+        </div>
+      </PremiumStory>
+
       <div className="flex flex-col justify-between gap-4 rounded-lg bg-secondary p-6 text-white shadow-panel md:flex-row md:items-center">
         <div>
           <p className="text-sm font-bold uppercase text-primary">Connecte</p>
@@ -74,9 +112,27 @@ function ReadyDashboard({
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Metric label="Expeditions" value={state.shipmentCount} />
-        <Metric label="Voyages publies" value={state.tripCount} />
-        <Metric label="Offres emises" value={state.offerCount} />
+        <PremiumKpi
+          tone="client"
+          label="Expeditions"
+          value={state.shipmentCount}
+          icon={PackageCheck}
+          description="Colis crees et suivis depuis ton compte."
+        />
+        <PremiumKpi
+          tone="traveler"
+          label="Voyages publies"
+          value={state.tripCount}
+          icon={Plane}
+          description="Trajets disponibles ou passes rattaches au profil."
+        />
+        <PremiumKpi
+          tone="operations"
+          label="Offres emises"
+          value={state.offerCount}
+          icon={Route}
+          description="Mises en relation et opportunites logistiques."
+        />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -115,15 +171,6 @@ function ReadyDashboard({
   );
 }
 
-function Metric({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-lg border border-black/10 bg-white p-5 shadow-line">
-      <p className="text-sm font-bold text-black/50">{label}</p>
-      <p className="mt-2 text-4xl font-black">{value}</p>
-    </div>
-  );
-}
-
 function Panel({
   title,
   empty,
@@ -136,18 +183,32 @@ function Panel({
   const hasChildren = Array.isArray(children) ? children.length > 0 : Boolean(children);
 
   return (
-    <section className="rounded-lg border border-black/10 bg-white p-5 shadow-line">
-      <h2 className="text-xl font-black">{title}</h2>
-      <div className="mt-4 grid gap-3">{hasChildren ? children : <p>{empty}</p>}</div>
-    </section>
+    <PremiumPanel tone="neutral" className="p-5">
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary text-primary">
+          {title.includes("voyage") ? (
+            <Plane className="h-5 w-5" aria-hidden="true" />
+          ) : title.includes("expedition") ? (
+            <PackageCheck className="h-5 w-5" aria-hidden="true" />
+          ) : (
+            <Bell className="h-5 w-5" aria-hidden="true" />
+          )}
+        </span>
+        <h2 className="text-xl font-black">{title}</h2>
+      </div>
+      <div className="mt-4 grid gap-3">{hasChildren ? children : <p className="text-sm font-semibold text-black/60">{empty}</p>}</div>
+    </PremiumPanel>
   );
 }
 
 function Row({ title, detail }: { title: string; detail: string }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-md bg-muted p-3">
-      <p className="font-bold">{title}</p>
-      <p className="text-sm text-black/60">{detail}</p>
+    <div className="flex items-center justify-between gap-4 rounded-md border border-black/10 bg-white/80 p-3 shadow-line">
+      <div className="flex items-center gap-3">
+        <ShieldCheck className="h-4 w-4 text-primary" aria-hidden="true" />
+        <p className="font-bold">{title}</p>
+      </div>
+      <p className="text-sm font-semibold text-black/60">{detail}</p>
     </div>
   );
 }

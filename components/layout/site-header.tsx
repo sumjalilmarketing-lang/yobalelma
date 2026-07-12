@@ -36,6 +36,17 @@ export function SiteHeader() {
           </Link>
         </Button>
       </div>
+      <nav className="container flex gap-2 overflow-x-auto pb-3 text-sm font-bold text-black/70 md:hidden">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="shrink-0 rounded-md border border-black/10 bg-muted/70 px-3 py-2 transition hover:border-primary/50 hover:bg-white hover:text-black"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
     </header>
   );
 }
