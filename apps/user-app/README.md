@@ -1,11 +1,22 @@
 # Yobalelma User App
 
-Target domain: `app.yobalelma.com`
+Application utilisateur independante du monorepo Yobalelma.
 
-Roles:
+## Roles
 
-- `client`
-- `local_transporter`
-- `traveler`
+- client
+- local_transporter
+- traveler
 
-Migration status: planned. Existing client, transporter, traveler, tracking and public routes are still hosted by the root Next.js app until each route is migrated and validated.
+## Commandes
+
+```bash
+npm run dev --workspace=user-app
+npm run lint --workspace=user-app
+npm run typecheck --workspace=user-app
+npm run test --workspace=user-app
+npm run build --workspace=user-app
+npm run test:e2e --workspace=user-app
+```
+
+Cette app partage Supabase, les packages et les composants communs avec le reste du monorepo, mais expose ses routes physiques dans `apps/user-app/app`.

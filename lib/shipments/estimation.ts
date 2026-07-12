@@ -56,6 +56,13 @@ export function detectShipmentScope(originCountry: string, destinationCountry: s
     : "international";
 }
 
+export function detectShipmentType(
+  originCountryCode: string,
+  destinationCountryCode: string,
+) {
+  return detectShipmentScope(originCountryCode, destinationCountryCode);
+}
+
 export function estimateShipment(input: ShipmentInput): ShipmentEstimate {
   const scope = detectShipmentScope(input.pickupCountry, input.deliveryCountry);
   const volumeWeightKg =

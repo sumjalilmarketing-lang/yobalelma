@@ -31,14 +31,40 @@ const requiredDocs = [
   "docs/ACCESS_CONTROL_MATRIX.md",
 ];
 
+const rootDir = findWorkspaceRoot(process.cwd());
+
+function findWorkspaceRoot(startDir) {
+  let current = startDir;
+
+  while (true) {
+    const packagePath = path.join(current, "package.json");
+
+    if (existsSync(packagePath)) {
+      const packageJson = JSON.parse(readFileSync(packagePath, "utf8"));
+
+      if (Array.isArray(packageJson.workspaces)) {
+        return current;
+      }
+    }
+
+    const parent = path.dirname(current);
+
+    if (parent === current) {
+      throw new Error("Unable to locate Yobalelma workspace root.");
+    }
+
+    current = parent;
+  }
+}
+
 function assertExists(relativePath) {
-  if (!existsSync(path.join(process.cwd(), relativePath))) {
+  if (!existsSync(path.join(rootDir, relativePath))) {
     throw new Error(`Missing required monorepo artifact: ${relativePath}`);
   }
 }
 
 function readJson(relativePath) {
-  return JSON.parse(readFileSync(path.join(process.cwd(), relativePath), "utf8"));
+  return JSON.parse(readFileSync(path.join(rootDir, relativePath), "utf8"));
 }
 
 function main() {
