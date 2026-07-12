@@ -26,8 +26,12 @@ export default async function TravelerDashboardPage() {
           actions={[
             { href: "/dashboard/traveler/trips/new", label: "Ajouter un voyage" },
             { href: "/dashboard/traveler/trips", label: "Mes voyages", variant: "secondary" },
+            { href: "/dashboard/traveler/tickets", label: "Billets", variant: "secondary" },
+            { href: "/dashboard/traveler/capacity", label: "Capacite", variant: "secondary" },
+            { href: "/dashboard/traveler/assignments", label: "Assignations", variant: "secondary" },
             { href: "/dashboard/traveler/qr-codes", label: "QR lots", variant: "secondary" },
-            { href: "/dashboard/kyc", label: "Verification KYC", variant: "secondary" },
+            { href: "/dashboard/traveler/earnings", label: "Gains", variant: "secondary" },
+            { href: "/dashboard/traveler/support", label: "Support", variant: "secondary" },
           ]}
           checkpoints={[
             "Trajets relies au compte voyageur authentifie.",

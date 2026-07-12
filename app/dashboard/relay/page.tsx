@@ -36,6 +36,15 @@ export default async function RelayDashboardPage() {
             <Button asChild variant="secondary">
               <Link href="/dashboard/relay/outbound">Sortie collecte</Link>
             </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/relay/dropoff">Depot relais</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/relay/destination-reception">Reception destination</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/relay/anomalies">Anomalies</Link>
+            </Button>
           </div>
           <RelayForms />
         </div>

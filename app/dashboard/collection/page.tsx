@@ -30,6 +30,15 @@ export default async function CollectionDashboardPage() {
           <Button asChild variant="secondary">
             <Link href="/dashboard/collection/manifests">Manifestes</Link>
           </Button>
+          <Button asChild variant="secondary">
+            <Link href="/dashboard/collection/stops">Arrets</Link>
+          </Button>
+          <Button asChild variant="secondary">
+            <Link href="/dashboard/collection/incidents">Incidents</Link>
+          </Button>
+          <Button asChild variant="secondary">
+            <Link href="/dashboard/collection/history">Historique</Link>
+          </Button>
         </div>
       ) : (
         <ConfigurationNotice />

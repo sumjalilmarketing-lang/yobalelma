@@ -1,4 +1,5 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
+import { createPaymentProvider } from "@/lib/payments/providers";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { paymentIntentSchema } from "@/lib/validation/operations";
 
@@ -23,15 +24,20 @@ export async function POST(request: Request) {
     return fail("Connecte-toi pour creer un paiement.", 401);
   }
 
-  const { data, error } = await supabase.rpc("create_sandbox_payment_intent", {
-    p_amount_cents: parsed.data.amountCents,
-    p_currency: parsed.data.currency,
-    p_shipment_id: parsed.data.shipmentId,
-  });
+  try {
+    const provider = createPaymentProvider(supabase);
+    const paymentIntent = await provider.createIntent({
+      amountCents: parsed.data.amountCents,
+      currency: parsed.data.currency,
+      shipmentId: parsed.data.shipmentId,
+    });
 
-  if (error) {
-    return fail(error.message, 400);
+    return ok("Intention de paiement sandbox creee.", {
+      mode: paymentIntent.mode,
+      paymentIntentId: paymentIntent.id,
+      provider: paymentIntent.provider,
+    });
+  } catch (error) {
+    return fail(error instanceof Error ? error.message : "Paiement impossible.", 400);
   }
-
-  return ok("Intention de paiement sandbox creee.", { paymentIntentId: data });
 }

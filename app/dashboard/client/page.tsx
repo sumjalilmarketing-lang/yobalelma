@@ -26,8 +26,11 @@ export default async function ClientDashboardPage() {
           actions={[
             { href: "/dashboard/client/shipments/new", label: "Creer une expedition" },
             { href: "/dashboard/client/shipments", label: "Mes expeditions", variant: "secondary" },
-            { href: "/dashboard/kyc", label: "Verification KYC", variant: "secondary" },
-            { href: "/support", label: "Support", variant: "secondary" },
+            { href: "/dashboard/client/tracking", label: "Tracking", variant: "secondary" },
+            { href: "/dashboard/client/payments", label: "Paiements", variant: "secondary" },
+            { href: "/dashboard/client/messages", label: "Messages", variant: "secondary" },
+            { href: "/dashboard/client/profile", label: "Profil", variant: "secondary" },
+            { href: "/dashboard/client/support", label: "Support", variant: "secondary" },
           ]}
           checkpoints={[
             "Profil client rattache au projet Supabase Yobalelma.",

@@ -365,3 +365,43 @@ Statut : terminee localement le 2026-07-10.
 ### Phase suivante
 
 - Stabilisation produit : appliquer les migrations Supabase, essais end-to-end avec comptes reels et durcissement back-office.
+
+## Phase finale pilote - Routes, RBAC, dispatch et providers
+
+Statut : terminee localement sur `codex/finish-yobalelma` le 2026-07-12.
+
+### Fonctionnalites ajoutees
+
+- Catalogue explicite de permissions par role.
+- `RoleGuard` et `PermissionGuard`.
+- Workspaces operationnels reutilisables avec compteurs Supabase.
+- Routes manquantes par role pour client, livreur, relais, collecte, voyageur et hub.
+- Vues missions livreur disponibles, actives et historique.
+- Route hub de creation de lot et detail voyage hub.
+- Provider boundary pour paiements et payouts avec fallback manuel.
+- Migration locale non destructive pour moteur dispatch avance.
+- Runner Supabase CLI avec redaction de secrets.
+
+### Tests ajoutes
+
+- `tests/rbac.test.ts`.
+- `tests/e2e/role-access-control.spec.ts`.
+- Tests providers dans `tests/operations.test.ts`.
+
+### Validations executees
+
+- `npm install` : succes.
+- `npm run diagnose:env` : succes.
+- `npm run validate:supabase` : succes avec acces reseau ; Auth OK, 41 tables REST OK, 7 buckets OK.
+- `npm run lint` : succes.
+- `npm run typecheck` : succes.
+- `npm run test` : succes, 10 fichiers et 55 tests.
+- `npm run build` : succes, 49 pages generees.
+- `npm run test:e2e` : succes, 26 tests Playwright.
+- `npm audit --audit-level=moderate` : succes, 0 vulnerabilite.
+
+### Limites restantes
+
+- Migration dispatch non appliquee a distance tant que la connexion PostgreSQL CLI Supabase echoue.
+- Parcours authentifies complets avec comptes seedes encore a executer.
+- Providers externes paiement, payout et notifications encore absents.

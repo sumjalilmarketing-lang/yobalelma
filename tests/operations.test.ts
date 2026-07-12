@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  ManualPaymentProvider,
+  createPaymentProvider,
+  createPayoutProvider,
+} from "@/lib/payments/providers";
+import {
   commissionSchema,
   deliveryProofSchema,
   notificationCreateSchema,
@@ -28,6 +33,40 @@ describe("operations validation", () => {
         shipmentId: "00000000-0000-4000-8000-000000000001",
       }),
     ).toThrow();
+  });
+
+  it("keeps a manual payment fallback available for pilot operations", async () => {
+    const provider = new ManualPaymentProvider();
+    const result = await provider.createIntent({
+      amountCents: 2500,
+      currency: "EUR",
+      shipmentId: "shipment-test",
+    });
+
+    expect(result).toEqual({
+      id: "manual_shipment-test_2500_eur",
+      mode: "manual",
+      provider: "manual",
+    });
+  });
+
+  it("fails fast for unconfigured external payment providers", () => {
+    expect(() => createPaymentProvider({} as never, "mobile_money")).toThrow(
+      "Payment provider mobile_money is not configured yet.",
+    );
+  });
+
+  it("keeps payouts behind a provider boundary", async () => {
+    const provider = createPayoutProvider("manual");
+    const result = await provider.createPayout({
+      amountCents: 1500,
+      beneficiaryId: "beneficiary-test",
+      currency: "EUR",
+      shipmentId: "shipment-test",
+    });
+
+    expect(result.mode).toBe("manual");
+    expect(result.provider).toBe("manual");
   });
 
   it("accepts a support ticket", () => {
