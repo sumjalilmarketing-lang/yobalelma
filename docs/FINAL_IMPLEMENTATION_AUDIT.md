@@ -78,9 +78,9 @@ This file summarizes the final audit state. Detailed reports are available in:
 
 ## Blockers
 
-- Supabase CLI migration listing/push blocked by PostgreSQL connection error.
+- Supabase CLI linked and migration history aligned through `20260712120000`.
 - Full authenticated role journeys need seeded test accounts.
-- Full remote RLS policy catalog verification is blocked until PostgreSQL CLI access is fixed.
+- Full SQL-level RLS verification still needs seeded role accounts and explicit role-negative cases.
 - Production payment, payout and external notification providers are not connected.
 
 ## Readiness

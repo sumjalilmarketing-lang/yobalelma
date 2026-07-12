@@ -36,7 +36,7 @@ Impact:
 ## Data and Query Risks
 
 - Dashboard data queries are simple and limited, but production lists need cursor pagination and filters.
-- No production query plans were collected because PostgreSQL CLI access is blocked.
+- Production query plans were not collected in this phase; add query-plan review for dispatch, tracking and dashboard counters before pilot load testing.
 - Several workflows rely on RPCs; concurrent scan/dispatch/payout paths need load and race-condition tests before pilot.
 - Search/filter indexes should be revisited once real traffic and query patterns are known.
 

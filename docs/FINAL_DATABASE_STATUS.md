@@ -2,14 +2,14 @@
 
 Date: 2026-07-12
 
-## Existing Remote Validation
+## Remote Validation
 
 - Supabase URL validated: `https://rgcgtcycbiuhcaoaadbh.supabase.co`
 - REST Auth validation: OK.
-- REST table validation before this phase: 41/41 OK.
+- REST table validation: 46/46 OK.
 - Storage buckets: 7/7 OK.
 
-## New Local Migration
+## Dispatch Migration
 
 Added `supabase/migrations/20260712120000_dispatch_engine_foundation.sql`.
 
@@ -26,10 +26,14 @@ New objects:
 
 ## Remote Status
 
-The new migration has not been proven applied remotely because Supabase CLI PostgreSQL connection remains blocked. No destructive migration was run.
+The dispatch migration is applied remotely and migration history is aligned.
 
-Latest attempts:
+Latest verified commands:
 
-- `node scripts/supabase-cli-safe.mjs migration list --db-url-env DATABASE_URL`: failed with `LegacyDbConnectError`.
-- `node scripts/supabase-cli-safe.mjs migration list --db-url-env-require-ssl DATABASE_URL`: failed with `LegacyDbConnectError`.
-- TCP connectivity to the configured database host and port is OK, so the remaining blocker is PostgreSQL connection/authentication compatibility, not REST Supabase access.
+- `node scripts/supabase-cli-safe.mjs login --token-env SUPABASE_ACCESS_TOKEN`: OK.
+- `node scripts/supabase-cli-safe.mjs link --project-ref rgcgtcycbiuhcaoaadbh`: OK.
+- `node scripts/supabase-cli-safe.mjs migration repair --linked --status applied ...`: OK for already-existing migrations.
+- `node scripts/supabase-cli-safe.mjs db push --linked`: applied `20260712120000_dispatch_engine_foundation.sql`.
+- `node scripts/supabase-cli-safe.mjs migration list --linked`: local and remote versions match through `20260712120000`.
+
+Note: `db push` emitted a Docker catalog cache warning on Windows after applying the migration. This did not block migration execution.

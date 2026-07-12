@@ -53,6 +53,11 @@ const TABLES = [
   "collection_manifests",
   "collection_manifest_items",
   "hub_package_inspections",
+  "dispatch_jobs",
+  "dispatch_candidates",
+  "dispatch_events",
+  "transporter_locations",
+  "transporter_matching_scores",
 ];
 
 const BUCKETS = [

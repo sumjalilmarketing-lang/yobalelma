@@ -41,9 +41,9 @@ export async function PATCH(
 
   const { data, error } = await supabase.rpc("progress_local_delivery_mission", {
     p_action: parsed.data.action,
-    p_delivery_otp: parsed.data.deliveryOtp || null,
+    p_delivery_otp: parsed.data.deliveryOtp || undefined,
     p_mission_id: id,
-    p_proof_path: parsed.data.proofPath || null,
+    p_proof_path: parsed.data.proofPath || undefined,
   });
 
   if (error) {

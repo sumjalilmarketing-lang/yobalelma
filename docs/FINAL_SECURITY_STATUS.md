@@ -18,5 +18,5 @@ Date: 2026-07-12
 - SQL-level RLS tests require PostgreSQL CLI access.
 - Service role must remain server-only.
 - Storage policy tests still require authenticated seeded users.
-- Supabase CLI PostgreSQL access remains blocked, so pending dispatch RLS policies are locally reviewed but not remotely proven applied.
+- Dispatch RLS policies are now applied remotely through the linked Supabase CLI project.
 - CSP hardening remains future production work.

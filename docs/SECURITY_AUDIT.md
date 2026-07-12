@@ -52,7 +52,7 @@ Implemented controls:
 
 Remaining risks:
 
-- Role-to-role negative tests are not complete at SQL level because PostgreSQL CLI access is blocked.
+- Role-to-role negative tests are not complete at SQL level; seeded users per role are still required.
 - Admin/super admin permission boundaries need seeded authenticated E2E tests.
 
 ## API Protection

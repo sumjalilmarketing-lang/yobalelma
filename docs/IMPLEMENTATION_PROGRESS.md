@@ -381,6 +381,10 @@ Statut : terminee localement sur `codex/finish-yobalelma` le 2026-07-12.
 - Provider boundary pour paiements et payouts avec fallback manuel.
 - Migration locale non destructive pour moteur dispatch avance.
 - Runner Supabase CLI avec redaction de secrets.
+- CLI Supabase liee au projet Yobalelma et migration dispatch appliquee a distance.
+- Page publique `/suivi` et route `/suivi/[trackingCode]` avec filtrage privacy-safe.
+- QR SVG reels pour payloads de retrait/depot destination.
+- Runtime dispatch journalise dans `dispatch_jobs`, `dispatch_candidates` et `dispatch_events`.
 
 ### Tests ajoutes
 
@@ -392,16 +396,15 @@ Statut : terminee localement sur `codex/finish-yobalelma` le 2026-07-12.
 
 - `npm install` : succes.
 - `npm run diagnose:env` : succes.
-- `npm run validate:supabase` : succes avec acces reseau ; Auth OK, 41 tables REST OK, 7 buckets OK.
+- `npm run validate:supabase` : succes avec acces reseau ; Auth OK, 46 tables REST OK, 7 buckets OK.
 - `npm run lint` : succes.
 - `npm run typecheck` : succes.
-- `npm run test` : succes, 10 fichiers et 55 tests.
+- `npm run test` : succes, 12 fichiers et 62 tests.
 - `npm run build` : succes, 49 pages generees.
-- `npm run test:e2e` : succes, 26 tests Playwright.
+- `npm run test:e2e` : succes, 28 tests Playwright.
 - `npm audit --audit-level=moderate` : succes, 0 vulnerabilite.
 
 ### Limites restantes
 
-- Migration dispatch non appliquee a distance tant que la connexion PostgreSQL CLI Supabase echoue.
 - Parcours authentifies complets avec comptes seedes encore a executer.
 - Providers externes paiement, payout et notifications encore absents.

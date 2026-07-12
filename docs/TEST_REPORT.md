@@ -84,4 +84,4 @@ The following manual verifications remain unexecuted because they require seeded
 
 ## Final Test Verdict
 
-The automated suite is clean. Remaining risk is not automated test failure; it is lack of authenticated seeded production-like scenarios and blocked PostgreSQL CLI verification.
+The automated suite is clean. Remaining risk is not automated test failure; it is lack of authenticated seeded production-like scenarios and SQL-level role-by-role policy tests.

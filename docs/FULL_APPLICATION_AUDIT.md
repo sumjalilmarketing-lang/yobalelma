@@ -91,7 +91,7 @@ No business logic, schema, product rules or visual redesign were changed during 
 
 - Migration history could not be listed or pushed through the Supabase CLI because PostgreSQL client connection fails with the configured `DATABASE_URL`. REST validation proves the expected tables and buckets exist, but does not prove exact migration history order.
 - Auth works at Supabase admin endpoint level, but full manual signup/login/logout/password reset flows were not completed with browser-created users in this audit.
-- RLS policies are declared in migrations and anonymous API/E2E tests confirm key endpoints do not succeed anonymously. Full remote policy catalog introspection is blocked by the PostgreSQL CLI connection issue.
+- RLS policies are declared in migrations, remote migration history is aligned, and anonymous API/E2E tests confirm key endpoints do not succeed anonymously. Full SQL-level role-by-role RLS tests with seeded users remain to be added.
 - Payment is sandbox/model-only. Orange Money, Wave, Stripe or other providers are not integrated as production payment rails.
 - Notifications are in-app/model foundations; external email/SMS/WhatsApp providers are not wired.
 - QR tokens and scans exist at API/RPC level, but printed/scannable QR image UX remains incomplete.

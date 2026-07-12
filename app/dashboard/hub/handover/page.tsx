@@ -1,4 +1,5 @@
 import { OperationForm } from "@/components/operations/operation-form";
+import { QrHandoverForm } from "@/components/operations/qr-handover-form";
 import { PageShell } from "@/components/layout/page-shell";
 import { ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
@@ -23,19 +24,7 @@ export default async function HubHandoverPage() {
     >
       {state.status === "ready" ? (
         <div className="grid gap-8 lg:grid-cols-2">
-          <OperationForm
-            title="Generer QR"
-            endpoint="/api/qr/handover"
-            submitLabel="Generer"
-            fields={[
-              { name: "batchId", label: "ID batch", required: true },
-              { name: "tokenType", label: "Type", type: "select", options: [
-                { label: "Retrait origine", value: "origin_pickup" },
-                { label: "Depot destination", value: "destination_dropoff" },
-              ], required: true },
-              { name: "expiresInMinutes", label: "Expiration minutes", type: "number", defaultValue: 30 },
-            ]}
-          />
+          <QrHandoverForm />
           <OperationForm
             title="Scanner QR"
             endpoint="/api/qr/scan"

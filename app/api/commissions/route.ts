@@ -52,7 +52,7 @@ export async function POST(request: Request) {
   }
 
   const { data, error } = await supabase.rpc("calculate_platform_commission", {
-    p_beneficiary_id: parsed.data.beneficiaryId || null,
+    p_beneficiary_id: parsed.data.beneficiaryId || undefined,
     p_commission_rate_bps: parsed.data.commissionRateBps,
     p_currency: parsed.data.currency,
     p_gross_amount_cents: parsed.data.grossAmountCents,

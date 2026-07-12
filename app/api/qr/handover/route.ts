@@ -1,4 +1,5 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
+import { createHandoverQrPayload, renderQrSvg } from "@/lib/qr/payload";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { createQrTokenSchema } from "@/lib/validation/qr";
 
@@ -39,5 +40,19 @@ export async function POST(request: Request) {
     return fail("QR non genere.", 500);
   }
 
-  return ok("QR genere.", token);
+  const qrPayload = createHandoverQrPayload({
+    expiresAt: token.expires_at,
+    token: token.token,
+    tokenId: token.token_id,
+    tokenType: parsed.data.tokenType,
+  });
+  const qrSvg = await renderQrSvg(qrPayload);
+
+  return ok("QR genere.", {
+    expiresAt: token.expires_at,
+    qrPayload,
+    qrSvg,
+    tokenId: token.token_id,
+    tokenType: parsed.data.tokenType,
+  });
 }

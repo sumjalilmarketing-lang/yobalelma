@@ -58,16 +58,16 @@ export async function POST(request: Request) {
   }
 
   const { data, error } = await supabase.rpc("record_delivery_proof", {
-    p_handover_qr_token_id: parsed.data.handoverQrTokenId || null,
+    p_handover_qr_token_id: parsed.data.handoverQrTokenId || undefined,
     p_metadata: {},
-    p_mission_id: parsed.data.missionId || null,
+    p_mission_id: parsed.data.missionId || undefined,
     p_otp_confirmed: parsed.data.otpConfirmed,
     p_proof_type: parsed.data.proofType,
-    p_recipient_name: parsed.data.recipientName || null,
-    p_recipient_phone_last4: parsed.data.recipientPhoneLast4 || null,
+    p_recipient_name: parsed.data.recipientName || undefined,
+    p_recipient_phone_last4: parsed.data.recipientPhoneLast4 || undefined,
     p_shipment_id: parsed.data.shipmentId,
-    p_storage_bucket: parsed.data.storageBucket || null,
-    p_storage_path: parsed.data.storagePath || null,
+    p_storage_bucket: parsed.data.storageBucket || undefined,
+    p_storage_path: parsed.data.storagePath || undefined,
   });
 
   if (error) {

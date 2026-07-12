@@ -7,7 +7,7 @@ export const createQrTokenSchema = z.object({
 });
 
 export const scanQrTokenSchema = z.object({
-  token: z.string().trim().min(32, "Token QR invalide.").max(256),
+  token: z.string().trim().min(32, "Token QR invalide.").max(1000),
   expectedTokenType: z.enum(["origin_pickup", "destination_dropoff"]),
   note: z.string().trim().max(1000).optional().or(z.literal("")),
   incidentType: z.string().trim().max(120).optional().or(z.literal("")),

@@ -102,7 +102,7 @@ Local migrations declare:
 - Role-aware helper `current_user_has_role(required_roles text[])`.
 - Audit logging around key operations such as payments, QR token generation/scans and disputes.
 
-Remote RLS catalog introspection remains blocked by the PostgreSQL CLI connection issue. Anonymous HTTP/E2E tests confirm sensitive API operations do not anonymously succeed.
+Remote migration history is linked and aligned through `20260712120000`. Anonymous HTTP/E2E tests confirm sensitive API operations do not anonymously succeed; full SQL-level role-by-role RLS tests with seeded users remain to be added.
 
 ## Database Risks
 

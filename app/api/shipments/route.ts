@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       width_cm: parsed.data.widthCm,
     },
     p_fulfillment_method: parsed.data.fulfillmentMethod,
-    p_package_photo_path: parsed.data.packagePhotoPath || null,
+    p_package_photo_path: parsed.data.packagePhotoPath || undefined,
     p_pickup_address: {
       address_line1: parsed.data.pickupAddressLine1,
       address_line2: parsed.data.pickupAddressLine2 || null,

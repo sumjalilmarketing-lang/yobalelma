@@ -56,12 +56,12 @@ export async function POST(request: Request) {
   }
 
   const { data, error } = await supabase.rpc("create_notification", {
-    p_action_url: parsed.data.actionUrl || null,
+    p_action_url: parsed.data.actionUrl || undefined,
     p_body: parsed.data.body,
     p_channel: parsed.data.channel,
     p_metadata: {},
     p_recipient_id: parsed.data.recipientId,
-    p_shipment_id: parsed.data.shipmentId || null,
+    p_shipment_id: parsed.data.shipmentId || undefined,
     p_title: parsed.data.title,
     p_type: parsed.data.type,
   });

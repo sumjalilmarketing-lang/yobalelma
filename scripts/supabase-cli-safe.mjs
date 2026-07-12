@@ -74,6 +74,18 @@ function normalizeArgs(argv) {
       continue;
     }
 
+    if (arg === "--token-env") {
+      const envName = argv[index + 1];
+
+      if (!envName || !process.env[envName]) {
+        throw new Error(`Missing environment variable for --token-env: ${envName ?? "(none)"}`);
+      }
+
+      normalized.push({ kind: "literal", value: "--token" }, { kind: "env", value: envName });
+      index += 1;
+      continue;
+    }
+
     normalized.push({ kind: "literal", value: arg });
   }
 

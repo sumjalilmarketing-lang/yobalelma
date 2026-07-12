@@ -4,7 +4,7 @@ Date: 2026-07-12
 
 ## Summary
 
-- Current app page/API route files: 99.
+- Current app page/API route files: 101.
 - Previous audited routes before this branch: 88.
 - New route files added in this phase: 11.
 - Dynamic section routes expose many requested missing pages while keeping code maintainable.
@@ -16,7 +16,7 @@ Date: 2026-07-12
 - Existing dashboard CRUD/operation pages: functional or partial depending on seeded data and role session.
 - Newly exposed role section pages: protected, buildable and connected to Supabase counters; pilotable workspace, not full CRUD.
 - API routes: functional foundation with Zod validation and Supabase access; external providers remain sandbox/manual.
-- Supabase CLI migration application route: blocked outside the app by PostgreSQL connection error.
+- Public tracking route `/suivi` and permanent public route `/suivi/[trackingCode]`: functional foundation with privacy filtering.
 
 ## Newly Covered Requested Routes
 
@@ -67,6 +67,8 @@ Date: 2026-07-12
 - `/dashboard/hub/history`
 - `/dashboard/hub/profile`
 - `/dashboard/hub/notifications`
+- `/suivi`
+- `/suivi/[trackingCode]`
 
 ## Status
 

@@ -54,8 +54,8 @@ export async function POST(request: Request) {
   const { data, error } = await supabase.rpc("create_shipment_dispute", {
     p_category: parsed.data.category,
     p_description: parsed.data.description,
-    p_evidence_bucket: parsed.data.evidenceBucket || null,
-    p_evidence_path: parsed.data.evidencePath || null,
+    p_evidence_bucket: parsed.data.evidenceBucket || undefined,
+    p_evidence_path: parsed.data.evidencePath || undefined,
     p_shipment_id: parsed.data.shipmentId,
     p_subject: parsed.data.subject,
   });

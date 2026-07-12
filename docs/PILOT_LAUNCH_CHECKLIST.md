@@ -14,9 +14,8 @@ Statut : non pret pilote.
   - `SUPABASE_ACCESS_TOKEN`
   - `DATABASE_URL`
   - `NEXT_PUBLIC_APP_URL`
-- Corriger l'acces PostgreSQL de la Supabase CLI : REST, Auth et Storage sont OK, mais `migration list` echoue avec `LegacyDbConnectError`.
-- Appliquer la migration dispatch `20260712120000_dispatch_engine_foundation.sql` et verifier les objets distants.
-- Verifier les 41 tables REST existantes et les nouvelles tables dispatch apres migration.
+- Maintenir la Supabase CLI liee au projet Yobalelma et verifier l'historique avant chaque migration.
+- Verifier les 46 tables REST existantes apres migration.
 - Verifier les 7 buckets Storage avec des uploads par role.
 - Creer les comptes de test par role.
 - Executer les parcours authentifies complets par role.

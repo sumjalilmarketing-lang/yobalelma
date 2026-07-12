@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   const { data, error } = await supabase.rpc("record_relay_scan", {
-    p_note: parsed.data.note || null,
+    p_note: parsed.data.note || undefined,
     p_relay_point_id: parsed.data.relayPointId,
     p_scan_type: parsed.data.scanType,
     p_tracking_code: parsed.data.trackingCode,

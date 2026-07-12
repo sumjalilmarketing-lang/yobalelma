@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     p_category: parsed.data.category,
     p_initial_message: parsed.data.message,
     p_priority: parsed.data.priority,
-    p_shipment_id: parsed.data.shipmentId || null,
+    p_shipment_id: parsed.data.shipmentId || undefined,
     p_subject: parsed.data.subject,
   });
 

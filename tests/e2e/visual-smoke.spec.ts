@@ -25,6 +25,11 @@ const publicSurfaces = [
     text: ["Ticket support", "Compte requis", "Connexion"],
   },
   {
+    path: "/suivi",
+    heading: "Suivre un colis",
+    text: ["Code de suivi", "Donnees privees", "Code de suivi requis"],
+  },
+  {
     path: "/auth/sign-in",
     heading: "Connexion securisee",
     text: ["Se connecter", "Creer un compte", "Ou recevoir un lien magique"],
@@ -84,6 +89,16 @@ test("dashboard protection remains presentable", async ({ page }) => {
     await expect(page.getByText(/Connecte-toi pour continuer|Configuration Supabase requise/)).toBeVisible();
   }
 
+  await expectNoHorizontalOverflow(page);
+});
+
+test("public tracking rejects malformed codes without leaking private data", async ({ page }) => {
+  await page.setViewportSize(desktop);
+  await page.goto("/suivi?code=BAD-123");
+
+  await expect(page.getByRole("heading", { name: "Suivre un colis" })).toBeVisible();
+  await expect(page.getByText("Code invalide")).toBeVisible();
+  await expect(page.getByText(/noms|telephones|adresses|OTP/i)).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
 });
 
