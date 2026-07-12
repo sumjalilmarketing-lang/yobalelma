@@ -1,4 +1,6 @@
 import { spawn } from "node:child_process";
+import { readFile, rm, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import nextEnv from "@next/env";
 
@@ -8,16 +10,21 @@ loadEnvConfig(process.cwd());
 
 const port = Number(process.env.PORT ?? 43117);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
+const e2eDistDir = process.env.NEXT_DIST_DIR ?? ".next-e2e";
 const passthroughArgs = process.argv.slice(2);
 const serverLogs = [];
+const nextTypeFiles = ["next-env.d.ts", "tsconfig.json"];
 
 let ownedServer;
+let nextTypeFileSnapshots = [];
 
 try {
   if (process.env.PLAYWRIGHT_SKIP_WEBSERVER !== "1") {
     if (await isReady(baseURL)) {
       console.log(`[e2e] Reusing ${baseURL}`);
     } else {
+      await snapshotNextTypeFiles();
+      await prepareE2eDistDir();
       ownedServer = startNextServer();
       await waitForServer(baseURL);
     }
@@ -31,6 +38,7 @@ try {
   process.exitCode = 1;
 } finally {
   await stopOwnedServer();
+  await restoreNextTypeFiles();
 }
 
 function startNextServer() {
@@ -50,6 +58,7 @@ function startNextServer() {
       cwd: process.cwd(),
       env: {
         ...process.env,
+        NEXT_DIST_DIR: e2eDistDir,
         PORT: String(port),
       },
       stdio: ["ignore", "pipe", "pipe"],
@@ -69,6 +78,7 @@ async function runPlaywright() {
     cwd: process.cwd(),
     env: {
       ...process.env,
+      NEXT_DIST_DIR: e2eDistDir,
       PLAYWRIGHT_BASE_URL: baseURL,
       PLAYWRIGHT_SKIP_WEBSERVER: "1",
       PORT: String(port),
@@ -106,6 +116,46 @@ async function waitForServer(url) {
   }
 
   throw new Error(`[e2e] Next.js did not become ready at ${url}.`);
+}
+
+async function prepareE2eDistDir() {
+  if (process.env.PLAYWRIGHT_SKIP_WEBSERVER === "1") {
+    return;
+  }
+
+  const cwd = path.resolve(process.cwd());
+  const target = path.resolve(cwd, e2eDistDir);
+
+  if (!target.startsWith(`${cwd}${path.sep}`)) {
+    throw new Error(`[e2e] Refusing to clean NEXT_DIST_DIR outside the workspace.`);
+  }
+
+  await rm(target, { force: true, recursive: true });
+}
+
+async function snapshotNextTypeFiles() {
+  nextTypeFileSnapshots = await Promise.all(
+    nextTypeFiles.map(async (file) => ({
+      content: await readFile(file, "utf8"),
+      file,
+    })),
+  );
+}
+
+async function restoreNextTypeFiles() {
+  if (nextTypeFileSnapshots.length === 0) {
+    return;
+  }
+
+  await Promise.all(
+    nextTypeFileSnapshots.map(async ({ content, file }) => {
+      const current = await readFile(file, "utf8");
+
+      if (current !== content) {
+        await writeFile(file, content, "utf8");
+      }
+    }),
+  );
 }
 
 async function isReady(url) {

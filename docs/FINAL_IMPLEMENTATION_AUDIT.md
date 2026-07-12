@@ -1,91 +1,91 @@
 # Final Implementation Audit
 
-Date : 2026-07-11
+Date: 2026-07-12
+Branch: `codex/final-audit-yobalelma`
 
-Branche auditee : `codex/yobalelma-platform`
+This file summarizes the final audit state. Detailed reports are available in:
 
-## Synthese factuelle
+- `docs/FULL_APPLICATION_AUDIT.md`
+- `docs/FUNCTIONAL_INVENTORY.md`
+- `docs/ROUTE_AUDIT.md`
+- `docs/DATABASE_AUDIT.md`
+- `docs/SECURITY_AUDIT.md`
+- `docs/UX_UI_AUDIT.md`
+- `docs/PERFORMANCE_AUDIT.md`
+- `docs/BUG_FIX_REPORT.md`
+- `docs/TEST_REPORT.md`
+- `docs/REMAINING_RISKS.md`
+- `docs/PRODUCTION_READINESS.md`
 
-Le depot contient maintenant une plateforme Next.js executable avec 88 fichiers de routes/pages App Router, 41 tables definies dans les migrations, 24 fonctions SQL/RPC, 30 triggers, 117 policies RLS declarees et 7 buckets Storage declares par migration.
+## Facts
 
-Validation locale executee :
+- Total App Router entries: 88.
+- Pages: 48.
+- Route handlers: 40.
+- Non-dynamic pages HTTP-audited: 43.
+- Non-dynamic API route handlers anonymously HTTP-audited: 37.
+- Dynamic routes requiring seeded IDs: 8.
+- Supabase migrations in repo: 10.
+- Public tables declared: 41.
+- Enums declared: 44.
+- SQL/RPC functions declared: 23.
+- Triggers declared: 30.
+- Indexes declared: 56.
+- RLS policies declared: 117.
+- Storage buckets expected and remotely validated: 7.
 
-- `npm install` : reussi avec Node.js 22 LTS temporaire, 0 vulnerabilite ;
-- `npm run lint` : reussi ;
-- `npm run typecheck` : reussi ;
-- `npm run test` : 8 fichiers, 37 tests reussis ;
-- `npm run build` : reussi, 49 pages generees ;
-- `npm run test:e2e` : 5 tests reussis, 5 parcours reels sautes faute de variables Supabase securisees.
+## Feature Classification
 
-Blocage majeur confirme le 2026-07-11 : `.env.local` contient uniquement les valeurs publiques locales, mais `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ACCESS_TOKEN` et `DATABASE_URL` / `POSTGRES_URL` ne sont pas disponibles dans l'environnement securise Codex. Les migrations sont presentes dans le depot mais non prouvees appliquees au projet Supabase distant. Les parcours sont connectes par code aux RPC/tables Supabase, mais non valides sur la base distante.
-
-Important securite : des cles Supabase ont ete collees dans la conversation utilisateur. Elles n'ont pas ete ecrites dans le depot, ni affichees dans les commandes finales, ni commitees. Elles doivent etre considerees exposees et remplacees cote Supabase.
-
-Important dependances : `package-lock.json` a ete regenere par `npm install`. Le projet cible maintenant Node.js `>=22.0.0`, coherent avec les versions Supabase resolues.
-
-## Fonctionnalites
-
-| Fonctionnalite | Classement | Verification factuelle |
-| --- | --- | --- |
-| Authentification | Terminee mais non testee | APIs sign-up, password sign-in, magic link, reset, callback, middleware session. Non testee avec Supabase reel. |
-| Roles | Terminee mais non testee | Roles publics et internes, redirections dashboards, protections serveur. Non verifie avec comptes reels. |
-| Profils | Partiellement developpee | Profil et transporteur connectes aux tables. Pas d'admin CRUD complet. |
-| KYC | Partiellement developpee | Tables, formulaires, documents, bucket prive. Upload signe ajoute, validation humaine non complete. |
-| Creation d'expedition | Terminee mais non testee | `/dashboard/client/shipments/new` appelle `create_operational_shipment`. Non executee sur Supabase distant. |
-| Detection national/international | Terminee et testee | Couverte par Vitest dans `tests/shipment.test.ts`. |
-| Livreurs locaux / Tiak-Tiak | Partiellement developpee | Profil, vehicule, zones, disponibilite, missions, actions accept/arrive/pickup/deliver. Non teste avec base reelle. |
-| Missions d'enlevement | Terminee mais non testee | RPC transactionnelles `dispatch_local_delivery_missions`, `accept_local_delivery_mission`, `progress_local_delivery_mission`. |
-| Livraisons nationales | Partiellement developpee | Code complet cote app/SQL, mais parcours reel E2E saute faute de Supabase. |
-| Points relais | Partiellement developpee | Inbound, inventory, scanner, outbound et RPC scan relais. Non verifie sur DB distante. |
-| Collecte | Partiellement developpee | Tournees, stops, manifestes, scan manifeste. Pas de cycle hub reel teste. |
-| Hub | Partiellement developpee | Reception, inspections, inventory, trips, batches, reservations, handover. Non teste sur DB distante. |
-| Voyageurs | Partiellement developpee | Trips, documents, capacite, QR list. Validation billet humaine incomplete. |
-| Billet d'avion | Partiellement developpee | `FlightTicketExtractor` sandbox, score de confiance, champs DB. Pas d'OCR reelle. |
-| Capacite disponible | Terminee mais non testee | Capacite voyageur et reservation batch avec protection contre depassement via RPC. |
-| Lots | Terminee mais non testee | Batches, reservations, detail, inspections, QR handover. |
-| QR code de retrait | Terminee mais non testee | Token opaque, hash, expiration, usage unique, revocation, scan origine, audit. Pas de rendu QR image. |
-| QR code depot destination | Terminee mais non testee | Token destination, scan, incident, blocage payout. Pas teste sur Supabase reel. |
-| Tracking | Partiellement developpee | Events shipment alimentes par creation, dispatch, mission, relais, QR. Pas de page publique tracking. |
-| Paiements | Bloquee par integration externe | Sandbox payout/payment, commissions plateforme et payouts modelises. Provider reel absent. |
-| Notifications | Terminee mais non testee | Table, RLS, API et RPC in-app presents. Email/SMS/WhatsApp restent a brancher. |
-| Litiges | Terminee mais non testee | Table `shipment_disputes`, RLS et API d'ouverture presents. Workflow back-office avance non teste. |
-| Preuves de livraison | Terminee mais non testee | Table `delivery_proofs`, RPC/API et rattachement OTP/QR/mission presents. Non teste sur DB distante. |
-| Support | Partiellement developpee | Tickets/messages existants, litiges ajoutes. Pas de SLA ni notifications externes. |
-| Administration | Partiellement developpee | Dashboard admin existe, operations page ajoutee. Pas de CRUD complet roles/KYC. |
-
-## Supabase
-
-- URL attendue verrouillee : `https://rgcgtcycbiuhcaoaadbh.supabase.co`.
-- Secrets non affiches et non committes.
-- Variables d'environnement secretes detectees dans le shell : non.
-- Connexion reelle executee : non, faute de variables injectees dans l'environnement.
-- Migrations appliquees : non prouve.
-- Tables reellement presentes dans Supabase : non verifie, acces distant absent.
-- Buckets reellement crees : non verifie, migration declare `avatars`, `shipment-images`, `kyc-documents`, `flight-tickets`, `proof-of-delivery`, `dispute-evidence`, `hub-inspection-images`.
-- RLS active reellement : non verifie distantement, policies declarees en SQL.
-
-## Routes
-
-Routes fonctionnelles localement sans Supabase : landing et routes qui rendent/renvoient proprement sans secret.
-
-Routes partiellement fonctionnelles : dashboards et APIs connectes a Supabase mais non testables en ecriture sans variables.
-
-Routes prioritaires ajoutees :
-
-- client : `/dashboard/client/shipments`, `/new`, `/[id]` ;
-- livreur : `/dashboard/transporter/missions`, `/[id]`, `/availability`, `/vehicle`, `/zones` ;
-- relais : `/dashboard/relay/inbound`, `/inventory`, `/scanner`, `/outbound` ;
-- collecte : `/dashboard/collection`, `/routes`, `/routes/[id]`, `/scanner`, `/manifests` ;
-- voyageur : `/dashboard/traveler/trips`, `/new`, `/[id]`, `/qr-codes`, `/kyc` ;
-- hub : `/dashboard/hub/inbound`, `/inventory`, `/trips`, `/batches`, `/batches/[id]`, `/handover` ;
-- operations : `/dashboard/operations` ;
-- APIs : dispatch, missions, collection, inspections hub, QR, signed upload, notifications, litiges, preuves de livraison, commissions.
-
-## Parcours
-
-| Parcours | Resultat |
+| Feature | Classification |
 | --- | --- |
-| National complet | Non reussi en reel : code present, E2E reel saute faute de Supabase et comptes de test. |
-| International complet | Non reussi en reel : code present, E2E reel saute faute de Supabase et comptes de test. |
-| QR retrait/destination | Non reussi en reel : RPC/API presentes, tests anonymes OK, scan reel non execute. |
-| Dispatch | Non reussi en reel : RPC/API presentes, test anonyme OK, pas de donnees Supabase. |
+| Authentication | Partially developed and Supabase Auth endpoint validated; full browser account flow not manually completed. |
+| Roles and RBAC | Partially developed; role mapping and RLS policies exist, SQL negative tests missing. |
+| Profiles | Partially developed; client/transporter/traveler foundations exist. |
+| KYC | Partially developed; tables/forms/storage exist, back-office completion pending. |
+| Shipment creation | Partially developed and covered by validation/E2E foundations; authenticated manual creation pending. |
+| National/international detection | Completed and tested by unit/E2E workflow tests. |
+| Local transporters / Tiak-Tiak | Partially developed; profile, vehicle, zones, availability and missions exist. |
+| Pickup missions | Partially developed; dispatch/accept/progress RPCs and APIs exist. |
+| National delivery | Partially developed; E2E foundation passes but full seeded role journey not manually completed. |
+| Relay points | Partially developed; inbound, scanner, inventory and outbound surfaces exist. |
+| Collection | Partially developed; route and manifest foundations exist. |
+| Hub | Partially developed; inbound, inventory, trips, batches and handover exist. |
+| Travelers | Partially developed; trips, documents, capacity and QR route surfaces exist. |
+| Flight tickets | Sandbox/model; upload/extractor foundation exists, no real OCR/provider validation. |
+| Capacity | Partially developed; reservation RPC exists. |
+| Batches | Partially developed; hub batch routes and APIs exist. |
+| Pickup QR | Partially developed and E2E workflow covered at API level; rendered QR image pending. |
+| Destination QR | Partially developed and E2E workflow covered at API level; role/device testing pending. |
+| Tracking | Partially developed through private events; public tracking missing. |
+| Payments | Sandbox/model only. |
+| Payouts | Sandbox/model; blocked-on-incident E2E foundation passes. |
+| Support | Partially developed; tickets/messages/disputes exist. |
+| Administration | Partially developed; admin route exists, full CRUD/settings incomplete. |
+
+## Validation Results
+
+| Command | Result |
+| --- | --- |
+| `npm install` | Passed. |
+| `npm run diagnose:env` | Passed. |
+| `npm run validate:supabase` | Passed. |
+| `npm run lint` | Passed. |
+| `npm run typecheck` | Passed. |
+| `npm run test` | Passed after sandbox rerun outside restricted Windows access. |
+| `npm run build` | Passed after generated `.next` cleanup and E2E dist isolation. |
+| `npm run test:e2e` | Passed with isolated `.next-e2e` runner. |
+| `npm audit --audit-level=moderate` | Passed, 0 vulnerabilities. |
+
+## Blockers
+
+- Supabase CLI migration listing/push blocked by PostgreSQL connection error.
+- Full authenticated role journeys need seeded test accounts.
+- Full remote RLS policy catalog verification is blocked until PostgreSQL CLI access is fixed.
+- Production payment, payout and external notification providers are not connected.
+
+## Readiness
+
+Ready for demonstration: yes.
+Ready for internal testing: yes, with seeded-user constraints.
+Ready for pilot: no.
+Ready for production: no.

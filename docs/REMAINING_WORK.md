@@ -1,38 +1,41 @@
 # Remaining Work
 
-Date : 2026-07-11
+Date: 2026-07-12
 
-## Critique
+## Critical
 
-- Fournir `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `NEXT_PUBLIC_APP_URL` dans l'environnement securise.
-- Injecter `SUPABASE_ACCESS_TOKEN` dans l'environnement securise ou connecter le dashboard Supabase/GitHub.
-- Fournir le mot de passe Postgres ou un `--db-url` securise pour `supabase db push`.
-- Appliquer toutes les migrations au Supabase Yobalelma et verifier les 41 tables, 7 buckets, policies RLS et RPC.
-- Creer comptes de test par role : client, local_transporter, traveler, relay_agent, collection_driver, hub_agent, operations_manager, admin.
-- Executer les parcours nationaux et internationaux reels avec donnees seed controlees.
-- Corriger toute erreur RLS observee sur la base distante.
+- Fix PostgreSQL CLI connectivity for the configured Supabase database.
+- Run `supabase migration list` and `supabase db push` only after CLI connection is proven and non-destructive migration plan is clear.
+- Generate seeded test users for all roles: client, local transporter, traveler, relay agent, collection driver, hub agent, operations manager, support agent, admin and super admin.
+- Execute authenticated E2E workflows for every role.
+- Add SQL-level RLS negative tests for cross-user and cross-role access.
+- Rotate any live secrets that were pasted outside Git before pilot.
 
-## Haute
+## High
 
-- Ajouter rendu QR image imprimable/exportable autour des tokens opaques.
-- Ajouter page tracking publique par code `YBL-XXXXXXXX`.
-- Finaliser validation back-office KYC et billet voyage.
-- Ajouter upload direct UX vers Storage avec URL signee, preview et preuve de livraison.
-- Brancher les providers de notifications email/SMS/WhatsApp pour auth, mission, tracking, QR et support.
-- Brancher paiement reel ou definir explicitement un pilote sans paiement reel.
-- Ajouter seed non sensible et script de reset environnement test.
+- Add real Storage upload/download/delete tests for avatars, shipment images, KYC documents, flight tickets, delivery proofs, dispute evidence and hub inspections.
+- Add printable/scannable QR image rendering around existing opaque QR token workflows.
+- Add public tracking by tracking code with privacy-safe data exposure.
+- Complete KYC back-office decisions and audit trail UX.
+- Complete flight ticket validation beyond sandbox extraction.
+- Integrate production payment and payout provider(s), or explicitly define a no-payment pilot.
+- Integrate external notifications: email, SMS and WhatsApp.
+- Complete admin/super-admin CRUD for roles, permissions, KYC, pricing, payouts, disputes and settings.
 
-## Moyenne
+## Medium
 
-- Ajouter filtres/recherche sur listes expeditions, missions, relais, hub, support.
-- Ajouter dashboards analytics depuis `platform_metrics_daily`.
-- Ajouter tests RLS SQL si Supabase CLI et credentials sont disponibles.
-- Ajouter tests composants React pour les formulaires principaux.
-- Ajouter workflow avance de resolution des litiges : assignation, SLA, remboursement, arbitrage et notifications externes.
+- Add pagination, search, filters and exports on operational lists.
+- Add full empty/loading/error states for authenticated dashboard data.
+- Add observability dashboards and alerting.
+- Harden CSP with nonce-based scripts when feasible.
+- Review and resolve the Supabase SSR Edge Runtime warning before production.
+- Add load/race tests for dispatch, QR scan, batch capacity and payout idempotency.
+- Add component tests for complex forms.
 
-## Faible
+## Low
 
-- Ajouter i18n complet fr/en.
-- Ajouter etiquettes colis PDF.
-- Ajouter guide operateur relais/hub/collecte.
-- Ajouter skeleton loading et exports CSV.
+- Add visual smoke tests for all auth pages.
+- Add i18n beyond the French-first experience.
+- Add PDF shipping labels, manifests and operator exports.
+- Add operator guides for relay, collection and hub teams.
+- Add onboarding/help content for each role after product flows stabilize.
