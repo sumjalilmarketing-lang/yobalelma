@@ -13,7 +13,7 @@ export default async function HubTripDetailPage({
     <OperationalWorkspace
       returnTo={`/dashboard/hub/trips/${id}`}
       config={{
-        allowedRoles: ["hub_agent", "operations_manager", "admin", "super_admin"],
+        allowedRoles: ["hub_agent", "hub_manager", "operations_manager", "admin", "super_admin"],
         actions: [
           { href: "/dashboard/hub/batches/new", label: "Creer un lot", permission: "hub:write" },
           { href: "/dashboard/hub/trips", label: "Voyages hub", permission: "hub:read" },
@@ -37,4 +37,3 @@ export default async function HubTripDetailPage({
     />
   );
 }
-

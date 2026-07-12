@@ -13,7 +13,7 @@ export const metadata = {
 
 export default async function RelayDashboardPage() {
   const state = await requireRole(
-    ["relay_agent", "hub_agent", "collection_driver", "operations_manager", "admin", "super_admin"],
+    ["relay_agent", "relay_manager", "hub_agent", "collection_driver", "operations_manager", "admin", "super_admin"],
     "/dashboard/relay",
   );
 

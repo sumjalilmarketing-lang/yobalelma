@@ -16,7 +16,7 @@ export default async function CollectionRouteDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const state = await requireRole(["collection_driver"], `/dashboard/collection/routes/${id}`);
+  const state = await requireRole(["collection_driver", "collection_manager"], `/dashboard/collection/routes/${id}`);
 
   return (
     <PageShell

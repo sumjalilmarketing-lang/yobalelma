@@ -1,0 +1,13 @@
+{
+  "name": "@yobalelma/relay-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node ../../scripts/check-five-apps-architecture.mjs relay-app"
+  },
+  "yobalelma": {
+    "domain": "relais.yobalelma.com",
+    "migrationStatus": "planned"
+  }
+}

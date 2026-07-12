@@ -13,7 +13,7 @@ export const metadata = {
 
 export default async function HubHandoverPage() {
   const state = await requireRole(
-    ["hub_agent", "relay_agent", "operations_manager", "admin", "super_admin"],
+    ["hub_agent", "hub_manager", "relay_agent", "relay_manager", "operations_manager", "admin", "super_admin"],
     "/dashboard/hub/handover",
   );
 

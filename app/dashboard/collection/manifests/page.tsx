@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 export default async function CollectionManifestsPage() {
-  const state = await requireRole(["collection_driver"], "/dashboard/collection/manifests");
+  const state = await requireRole(["collection_driver", "collection_manager"], "/dashboard/collection/manifests");
 
   return (
     <PageShell

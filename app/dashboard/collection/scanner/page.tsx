@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 export default async function CollectionScannerPage() {
-  const state = await requireRole(["collection_driver"], "/dashboard/collection/scanner");
+  const state = await requireRole(["collection_driver", "collection_manager"], "/dashboard/collection/scanner");
 
   return (
     <PageShell

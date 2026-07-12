@@ -12,7 +12,7 @@ export const metadata = {
 
 export default async function HubBatchesPage() {
   const state = await requireRole(
-    ["hub_agent", "operations_manager", "admin", "super_admin"],
+    ["hub_agent", "hub_manager", "operations_manager", "admin", "super_admin"],
     "/dashboard/hub/batches",
   );
 

@@ -1,0 +1,13 @@
+{
+  "name": "@yobalelma/hub-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node ../../scripts/check-five-apps-architecture.mjs hub-app"
+  },
+  "yobalelma": {
+    "domain": "hub.yobalelma.com",
+    "migrationStatus": "planned"
+  }
+}

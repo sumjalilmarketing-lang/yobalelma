@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 export default async function RelayOutboundPage() {
-  const state = await requireRole(["relay_agent"], "/dashboard/relay/outbound");
+  const state = await requireRole(["relay_agent", "relay_manager"], "/dashboard/relay/outbound");
 
   return (
     <PageShell

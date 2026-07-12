@@ -1,0 +1,13 @@
+{
+  "name": "@yobalelma/collection-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node ../../scripts/check-five-apps-architecture.mjs collection-app"
+  },
+  "yobalelma": {
+    "domain": "collecte.yobalelma.com",
+    "migrationStatus": "planned"
+  }
+}

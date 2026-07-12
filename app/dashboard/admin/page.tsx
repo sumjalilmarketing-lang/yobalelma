@@ -12,7 +12,10 @@ export const metadata = {
 };
 
 export default async function AdminDashboardPage() {
-  const state = await requireRole(["admin", "super_admin"], "/dashboard/admin");
+  const state = await requireRole(
+    ["operations_manager", "support_agent", "finance_agent", "admin", "super_admin"],
+    "/dashboard/admin",
+  );
 
   return (
     <PageShell

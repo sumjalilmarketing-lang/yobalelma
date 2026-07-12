@@ -37,7 +37,7 @@ export default async function HubInboundDetailPage({
 }) {
   const { id } = await params;
   const state = await requireRole(
-    ["hub_agent", "operations_manager", "admin", "super_admin"],
+    ["hub_agent", "hub_manager", "operations_manager", "admin", "super_admin"],
     `/dashboard/hub/inbound/${id}`,
   );
 

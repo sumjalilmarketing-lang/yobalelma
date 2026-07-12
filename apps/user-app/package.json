@@ -1,0 +1,13 @@
+{
+  "name": "@yobalelma/user-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node ../../scripts/check-five-apps-architecture.mjs user-app"
+  },
+  "yobalelma": {
+    "domain": "app.yobalelma.com",
+    "migrationStatus": "planned"
+  }
+}

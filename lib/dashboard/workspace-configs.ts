@@ -512,7 +512,7 @@ function relayConfig(
   permission: OperationalWorkspaceConfig["permission"],
 ): OperationalWorkspaceConfig {
   return {
-    allowedRoles: ["relay_agent", "operations_manager", "admin", "super_admin"],
+    allowedRoles: ["relay_agent", "relay_manager", "operations_manager", "admin", "super_admin"],
     actions: [
       { href: "/dashboard/relay/scanner", label: "Scanner", permission: "relay:write" },
       { href: "/dashboard/relay/inventory", label: "Inventaire", permission: "relay:read" },
@@ -538,7 +538,7 @@ function collectionConfig(
   permission: OperationalWorkspaceConfig["permission"],
 ): OperationalWorkspaceConfig {
   return {
-    allowedRoles: ["collection_driver", "operations_manager", "admin", "super_admin"],
+    allowedRoles: ["collection_driver", "collection_manager", "operations_manager", "admin", "super_admin"],
     actions: [
       { href: "/dashboard/collection/routes", label: "Tournees", permission: "collection:read" },
       { href: "/dashboard/collection/manifests", label: "Manifestes", permission: "collection:read" },
@@ -591,7 +591,7 @@ function hubConfig(
   permission: OperationalWorkspaceConfig["permission"],
 ): OperationalWorkspaceConfig {
   return {
-    allowedRoles: ["hub_agent", "operations_manager", "admin", "super_admin"],
+    allowedRoles: ["hub_agent", "hub_manager", "operations_manager", "admin", "super_admin"],
     actions: [
       { href: "/dashboard/hub/inbound", label: "Reception", permission: "hub:write" },
       { href: "/dashboard/hub/batches", label: "Lots", permission: "hub:read" },
@@ -619,7 +619,7 @@ function adminConfig(
   metrics: WorkspaceMetric[],
 ): OperationalWorkspaceConfig {
   return {
-    allowedRoles: ["admin", "super_admin"],
+    allowedRoles: ["operations_manager", "support_agent", "finance_agent", "admin", "super_admin"],
     actions: [
       { href: "/dashboard/admin/users", label: "Utilisateurs", permission: "admin:read" },
       { href: "/dashboard/admin/shipments", label: "Expeditions", permission: "shipment:read" },
