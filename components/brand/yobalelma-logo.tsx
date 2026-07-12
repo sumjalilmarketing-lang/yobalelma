@@ -4,23 +4,55 @@ import { cn } from "@/lib/utils";
 type YobalelmaLogoProps = {
   className?: string;
   compact?: boolean;
+  variant?: "mark" | "wordmark" | "lockup";
 };
 
-export function YobalelmaLogo({ className, compact = false }: YobalelmaLogoProps) {
+const logoAssets = {
+  mark: {
+    src: "/brand/yobalelma-official-mark.jpeg",
+    width: 740,
+    height: 390,
+    className: "h-10 w-[76px] p-1",
+  },
+  wordmark: {
+    src: "/brand/yobalelma-official-wordmark.jpeg",
+    width: 1210,
+    height: 230,
+    className: "h-10 w-[210px] p-1.5 sm:h-11 sm:w-[232px]",
+  },
+  lockup: {
+    src: "/brand/yobalelma-official-lockup.jpeg",
+    width: 1210,
+    height: 650,
+    className: "h-28 w-[220px] p-1.5 sm:h-32 sm:w-[250px]",
+  },
+};
+
+export function YobalelmaLogo({
+  className,
+  compact = false,
+  variant,
+}: YobalelmaLogoProps) {
+  const logo = logoAssets[variant ?? (compact ? "mark" : "wordmark")];
+
   return (
-    <div className={cn("inline-flex items-center gap-3", className)} aria-label="Yobalelma">
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center overflow-hidden rounded-md bg-black shadow-line",
+        logo.className,
+        className,
+      )}
+      role="img"
+      aria-label="Yobalelma"
+    >
       <Image
-        src="/brand/yobalelma-mark.svg"
+        src={logo.src}
         alt=""
-        width={42}
-        height={42}
+        width={logo.width}
+        height={logo.height}
         priority
-        className="h-10 w-10"
+        className="h-full w-full object-contain"
       />
-      {!compact ? (
-        <span className="text-xl font-black tracking-normal">Yobalelma</span>
-      ) : null}
-    </div>
+    </span>
   );
 }
-

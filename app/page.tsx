@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -61,6 +62,16 @@ export default function Home() {
 
           <div className="flex flex-1 flex-col justify-center py-10">
             <div className="max-w-5xl">
+              <div className="mb-6 max-w-[430px] overflow-hidden rounded-lg border border-white/20 bg-black/70 p-2 shadow-panel backdrop-blur">
+                <Image
+                  src="/brand/yobalelma-official-lockup.jpeg"
+                  alt="Yobalelma - Chaque voyage devient une livraison"
+                  width={1210}
+                  height={650}
+                  priority
+                  className="h-auto w-full rounded-md object-contain"
+                />
+              </div>
               <p className="mb-5 inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm font-bold text-white/80 backdrop-blur">
                 <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
                 Livraison collaborative par voyageurs
