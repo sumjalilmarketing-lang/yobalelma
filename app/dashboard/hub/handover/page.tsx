@@ -1,5 +1,6 @@
 import { OperationForm } from "@/components/operations/operation-form";
 import { QrHandoverForm } from "@/components/operations/qr-handover-form";
+import { HubHandoverEventForm } from "@/components/forms/hub-operations-forms";
 import { PageShell } from "@/components/layout/page-shell";
 import { ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
@@ -23,7 +24,7 @@ export default async function HubHandoverPage() {
       description="Genere un QR opaque a usage unique, puis scanne le retrait ou le depot destination."
     >
       {state.status === "ready" ? (
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid gap-8 xl:grid-cols-3">
           <QrHandoverForm />
           <OperationForm
             title="Scanner QR"
@@ -39,6 +40,7 @@ export default async function HubHandoverPage() {
               { name: "note", label: "Note", type: "textarea" },
             ]}
           />
+          <HubHandoverEventForm />
         </div>
       ) : (
         <ConfigurationNotice />

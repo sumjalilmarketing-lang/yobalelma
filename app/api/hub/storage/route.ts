@@ -1,10 +1,15 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
 import { callSupabaseRpc } from "@/lib/supabase/rpc";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
-import { hubBatchAssignmentSchema } from "@/lib/validation/hub";
+import { hubStorageMoveSchema } from "@/lib/validation/hub";
+
+function nullableText(value?: string | null) {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
+}
 
 export async function POST(request: Request) {
-  const parsed = await parseJsonRequest(request, hubBatchAssignmentSchema);
+  const parsed = await parseJsonRequest(request, hubStorageMoveSchema);
 
   if (!parsed.ok) {
     return parsed.response;
@@ -21,16 +26,19 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return fail("Connecte-toi pour reserver une capacite hub.", 401);
+    return fail("Connecte-toi pour deplacer un colis au hub.", 401);
   }
 
   const { data, error } = await callSupabaseRpc<string>(
     supabase,
-    "reserve_hub_batch_capacity_v2",
+    "move_hub_inventory",
     {
-      p_batch_id: parsed.data.batchId,
-      p_reserved_weight_kg: parsed.data.reservedWeightKg,
+      p_hub_id: parsed.data.hubId,
+      p_measured_weight_kg: parsed.data.measuredWeightKg ?? null,
+      p_note: nullableText(parsed.data.note),
       p_shipment_id: parsed.data.shipmentId,
+      p_status: parsed.data.status,
+      p_to_location_id: nullableText(parsed.data.toLocationId),
     },
   );
 
@@ -38,5 +46,5 @@ export async function POST(request: Request) {
     return fail(error.message, 400);
   }
 
-  return ok("Expedition ajoutee au batch.", { reservationId: data });
+  return ok("Mouvement inventaire hub enregistre.", { inventoryId: data ?? undefined });
 }

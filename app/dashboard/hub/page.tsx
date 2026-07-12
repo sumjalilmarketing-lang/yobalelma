@@ -49,6 +49,12 @@ export default async function HubDashboardPage() {
             <Button asChild variant="secondary">
               <Link href="/dashboard/hub/scanner">Scanner</Link>
             </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/hub/anomalies">Anomalies</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/hub/reports">Rapports</Link>
+            </Button>
           </div>
           <HubForms />
         </div>

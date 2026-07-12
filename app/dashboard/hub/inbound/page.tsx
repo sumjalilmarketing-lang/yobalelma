@@ -1,4 +1,7 @@
-import { OperationForm } from "@/components/operations/operation-form";
+import {
+  HubAdvancedInspectionForm,
+  HubInboundReceiptForm,
+} from "@/components/forms/hub-operations-forms";
 import { PageShell } from "@/components/layout/page-shell";
 import { ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
@@ -22,24 +25,10 @@ export default async function HubInboundPage() {
       description="Controle les colis entrants, le poids, l'etat et l'emplacement hub."
     >
       {state.status === "ready" ? (
-        <OperationForm
-          title="Inspection colis"
-          endpoint="/api/hub/inspections"
-          submitLabel="Enregistrer l'inspection"
-          fields={[
-            { name: "shipmentId", label: "ID expedition", required: true },
-            { name: "decision", label: "Decision", type: "select", options: [
-              { label: "Accepte", value: "accepted" },
-              { label: "Endommage", value: "damaged" },
-              { label: "Manquant", value: "missing" },
-              { label: "Refuse", value: "rejected" },
-            ], required: true },
-            { name: "measuredWeightKg", label: "Poids mesure", type: "number" },
-            { name: "storageLocation", label: "Emplacement" },
-            { name: "photoPath", label: "Photo inspection Storage" },
-            { name: "note", label: "Note", type: "textarea" },
-          ]}
-        />
+        <div className="grid gap-8 xl:grid-cols-2">
+          <HubInboundReceiptForm />
+          <HubAdvancedInspectionForm />
+        </div>
       ) : (
         <ConfigurationNotice />
       )}
