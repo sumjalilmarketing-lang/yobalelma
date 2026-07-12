@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --hostname 127.0.0.1 --port 43121",
-    "build": "next build",
+    "dev": "node scripts/next-with-root-env.mjs dev --hostname 127.0.0.1 --port 43121",
+    "build": "node scripts/next-with-root-env.mjs build",
     "lint": "eslint . --ignore-pattern .next/** --ignore-pattern next-env.d.ts --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --config vitest.config.mjs",
