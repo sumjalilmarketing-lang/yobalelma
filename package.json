@@ -10,6 +10,9 @@
     "test": "vitest run",
     "test:e2e": "node scripts/run-e2e.mjs",
     "diagnose:env": "node scripts/env-diagnostics.mjs",
+    "audit:supabase-security": "node scripts/supabase-security-audit.mjs",
+    "configure:storage": "node scripts/supabase-storage-ensure.mjs",
+    "migrate:supabase:management": "node scripts/supabase-management-migrate.mjs",
     "validate:supabase": "node scripts/supabase-validate.mjs"
   },
   "dependencies": {
