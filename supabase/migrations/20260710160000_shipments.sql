@@ -26,7 +26,7 @@ returns text
 language sql
 volatile
 as $$
-  select 'YBL-' || upper(substr(encode(gen_random_bytes(6), 'hex'), 1, 8));
+  select 'YBL-' || upper(substr(encode(public.yobalelma_random_bytes(6), 'hex'), 1, 8));
 $$;
 
 create table public.shipments (

@@ -1,5 +1,14 @@
 create extension if not exists pgcrypto;
 
+create or replace function public.yobalelma_random_bytes(p_length integer)
+returns bytea
+language sql
+volatile
+set search_path = public, extensions, pg_catalog
+as $$
+  select gen_random_bytes(p_length);
+$$;
+
 create type public.user_role as enum ('sender', 'traveler', 'both', 'admin');
 create type public.parcel_status as enum ('draft', 'open', 'matched', 'in_transit', 'delivered', 'cancelled');
 create type public.trip_status as enum ('planned', 'boarding', 'arrived', 'cancelled');

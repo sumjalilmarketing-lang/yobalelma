@@ -272,7 +272,7 @@ create table if not exists public.hub_inbound_receipts (
   id uuid primary key default gen_random_uuid(),
   hub_id uuid not null references public.airport_hubs(id) on delete restrict,
   manifest_id uuid references public.collection_manifests(id) on delete set null,
-  receipt_code text not null unique default ('HIR-' || upper(substr(encode(gen_random_bytes(8), 'hex'), 1, 12))),
+  receipt_code text not null unique default ('HIR-' || upper(substr(encode(public.yobalelma_random_bytes(8), 'hex'), 1, 12))),
   status public.hub_inbound_receipt_status not null default 'draft',
   expected_count integer not null default 0 check (expected_count >= 0),
   received_count integer not null default 0 check (received_count >= 0),
@@ -329,7 +329,7 @@ create table if not exists public.hub_inspections (
 
 create table if not exists public.operational_incidents (
   id uuid primary key default gen_random_uuid(),
-  incident_code text not null unique default ('INC-' || upper(substr(encode(gen_random_bytes(8), 'hex'), 1, 12))),
+  incident_code text not null unique default ('INC-' || upper(substr(encode(public.yobalelma_random_bytes(8), 'hex'), 1, 12))),
   incident_type public.operational_incident_type not null,
   status public.operational_incident_status not null default 'open',
   priority public.operational_priority not null default 'medium',

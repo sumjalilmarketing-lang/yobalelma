@@ -867,7 +867,7 @@ begin
     raise exception 'Batch not found';
   end if;
 
-  v_token := encode(gen_random_bytes(32), 'hex');
+  v_token := encode(public.yobalelma_random_bytes(32), 'hex');
   v_expires_at := now() + make_interval(mins => least(greatest(p_expires_in_minutes, 5), 240));
 
   update public.handover_qr_tokens
