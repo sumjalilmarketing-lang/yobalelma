@@ -20,6 +20,9 @@ $$;
 alter function public.create_handover_qr_token(uuid, public.handover_qr_token_type, integer)
   set search_path = public, extensions, pg_catalog;
 
+alter function public.scan_handover_qr_token(text, public.handover_qr_token_type, text, text)
+  set search_path = public, extensions, pg_catalog;
+
 alter table public.hub_inbound_receipts
   alter column receipt_code
   set default ('HIR-' || upper(substr(encode(public.yobalelma_random_bytes(8), 'hex'), 1, 12)));

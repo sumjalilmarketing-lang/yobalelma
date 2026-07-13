@@ -22,7 +22,8 @@ export type E2EUser = {
   role: E2ERole;
 };
 
-const userCache = new Map<E2ERole, Promise<E2EUser>>();
+const DEFAULT_E2E_NAMESPACE = "default";
+const userCache = new Map<string, Promise<E2EUser>>();
 
 export function requireSupabaseAuthenticatedE2E() {
   test.skip(
@@ -36,15 +37,17 @@ export function requireSupabaseAuthenticatedE2E() {
   );
 }
 
-export function ensureE2EUser(role: E2ERole) {
-  const cached = userCache.get(role);
+export function ensureE2EUser(role: E2ERole, namespace = DEFAULT_E2E_NAMESPACE) {
+  const normalizedNamespace = normalizeE2ENamespace(namespace);
+  const cacheKey = `${normalizedNamespace}:${role}`;
+  const cached = userCache.get(cacheKey);
 
   if (cached) {
     return cached;
   }
 
-  const promise = createOrUpdateE2EUser(role);
-  userCache.set(role, promise);
+  const promise = createOrUpdateE2EUser(role, normalizedNamespace);
+  userCache.set(cacheKey, promise);
   return promise;
 }
 
@@ -70,15 +73,37 @@ export function dateFromToday(days: number) {
   return date.toISOString().slice(0, 10);
 }
 
-async function createOrUpdateE2EUser(role: E2ERole): Promise<E2EUser> {
+function normalizeE2ENamespace(namespace: string) {
+  const normalized = namespace
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 32);
+
+  return normalized || DEFAULT_E2E_NAMESPACE;
+}
+
+function e2eEmailForRole(role: E2ERole, namespace: string) {
+  if (namespace === DEFAULT_E2E_NAMESPACE) {
+    return `codex.${role}@yobalelma.test`;
+  }
+
+  return `codex.${namespace}.${role}@yobalelma.test`;
+}
+
+async function createOrUpdateE2EUser(
+  role: E2ERole,
+  namespace: string,
+): Promise<E2EUser> {
   const supabase = createAdminClient();
-  const email = `codex.${role}@yobalelma.test`;
+  const email = e2eEmailForRole(role, namespace);
   const password = `Yb-${randomUUID()}-Test!2026`;
   const existing = await findUserByEmail(supabase, email);
   const metadata = {
     city: "Paris",
     country: "France",
-    full_name: `Codex ${role} test`,
+    full_name: `Codex ${namespace} ${role} test`,
     phone: "+33100000000",
     primary_role: role,
     yobalelma_e2e: true,
@@ -102,7 +127,7 @@ async function createOrUpdateE2EUser(role: E2ERole): Promise<E2EUser> {
   };
 }
 
-function createAdminClient(): SupabaseClient {
+export function createAdminClient(): SupabaseClient {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 

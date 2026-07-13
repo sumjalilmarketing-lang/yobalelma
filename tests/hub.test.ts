@@ -39,12 +39,16 @@ describe("hub and traveler validation", () => {
       capacityKg: 120,
       code: "HUB-CDGDSS01",
       departureDate: "2026-08-01",
+      destinationCity: "Dakar",
+      destinationCountry: "Senegal",
       destinationHub: "Dakar Hub",
       flightNumber: "AF000",
+      hubId: "00000000-0000-4000-8000-000000000010",
       originHub: "Paris Hub",
     });
 
     expect(result.code).toBe("HUB-CDGDSS01");
+    expect(result.destinationCountry).toBe("Senegal");
   });
 
   it("rejects malformed hub batch codes", () => {

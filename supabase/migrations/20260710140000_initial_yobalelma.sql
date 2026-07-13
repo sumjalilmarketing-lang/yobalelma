@@ -161,13 +161,39 @@ create policy "parcel_requests_update_own" on public.parcel_requests
 for update using (auth.uid() = sender_id) with check (auth.uid() = sender_id);
 
 create policy "trips_select_visible" on public.trips
-for select using (auth.uid() = traveler_id or status in ('planned', 'boarding'));
+for select using (
+  auth.uid() = traveler_id
+  or status in ('planned', 'boarding')
+  or public.current_user_has_role(array[
+    'operations_manager',
+    'hub_agent',
+    'admin',
+    'super_admin'
+  ])
+);
 
 create policy "trips_insert_own" on public.trips
 for insert with check (auth.uid() = traveler_id);
 
 create policy "trips_update_own" on public.trips
 for update using (auth.uid() = traveler_id) with check (auth.uid() = traveler_id);
+
+create policy "trips_update_operations" on public.trips
+for update using (
+  public.current_user_has_role(array[
+    'operations_manager',
+    'hub_agent',
+    'admin',
+    'super_admin'
+  ])
+) with check (
+  public.current_user_has_role(array[
+    'operations_manager',
+    'hub_agent',
+    'admin',
+    'super_admin'
+  ])
+);
 
 create policy "offers_select_participants" on public.offers
 for select using (

@@ -24,26 +24,30 @@ export async function POST(request: Request) {
     return fail("Connecte-toi pour soumettre un document de voyage.", 401);
   }
 
-  const { error } = await supabase.from("traveler_documents").insert({
-    arrival_airport: parsed.data.arrivalAirport,
-    arrival_date: parsed.data.arrivalDate,
-    departure_airport: parsed.data.departureAirport,
-    departure_date: parsed.data.departureDate,
-    document_number: parsed.data.documentNumber,
-    file_path: parsed.data.filePath,
-    confidence_score: parsed.data.confidenceScore ?? null,
-    extracted_payload: (parsed.data.extractionPayload ?? {}) as Json,
-    issuing_country: parsed.data.issuingCountry,
-    manual_review_required: true,
-    status: "submitted",
-    traveler_id: user.id,
-    traveler_name: parsed.data.travelerName,
-    trip_id: parsed.data.tripId,
-  });
+  const { data, error } = await supabase
+    .from("traveler_documents")
+    .insert({
+      arrival_airport: parsed.data.arrivalAirport,
+      arrival_date: parsed.data.arrivalDate,
+      departure_airport: parsed.data.departureAirport,
+      departure_date: parsed.data.departureDate,
+      document_number: parsed.data.documentNumber,
+      file_path: parsed.data.filePath,
+      confidence_score: parsed.data.confidenceScore ?? null,
+      extracted_payload: (parsed.data.extractionPayload ?? {}) as Json,
+      issuing_country: parsed.data.issuingCountry,
+      manual_review_required: true,
+      status: "submitted",
+      traveler_id: user.id,
+      traveler_name: parsed.data.travelerName,
+      trip_id: parsed.data.tripId,
+    })
+    .select("id")
+    .single();
 
   if (error) {
     return fail(error.message, 400);
   }
 
-  return ok("Document de voyage soumis.");
+  return ok("Document de voyage soumis.", { documentId: data.id });
 }

@@ -27,15 +27,18 @@ export function HubForms() {
 }
 
 function HubBatchForm() {
-  const [result, setResult] = useState<ApiResult | null>(null);
+  const [result, setResult] = useState<ApiResult<{ batchId?: string }> | null>(null);
   const form = useForm<HubBatchFormInput, unknown, HubBatchInput>({
     resolver: zodResolver(hubBatchSchema),
     defaultValues: {
       capacityKg: 120,
       code: "",
       departureDate: "",
+      destinationCity: "",
+      destinationCountry: "",
       destinationHub: "",
       flightNumber: "",
+      hubId: "",
       originHub: "",
       travelerId: "",
       tripId: "",
@@ -43,7 +46,7 @@ function HubBatchForm() {
   });
 
   async function onSubmit(values: HubBatchInput) {
-    setResult(await submitJson("/api/hub/batches", values));
+    setResult(await submitJson<{ batchId?: string }>("/api/hub/batches", values));
   }
 
   return (
@@ -58,6 +61,17 @@ function HubBatchForm() {
       <Field label="Hub destination" error={form.formState.errors.destinationHub?.message}>
         <Input {...form.register("destinationHub")} />
       </Field>
+      <Field label="ID hub operationnel" error={form.formState.errors.hubId?.message}>
+        <Input placeholder="UUID hub aeroport" {...form.register("hubId")} />
+      </Field>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Field label="Pays destination" error={form.formState.errors.destinationCountry?.message}>
+          <Input placeholder="Senegal" {...form.register("destinationCountry")} />
+        </Field>
+        <Field label="Ville destination" error={form.formState.errors.destinationCity?.message}>
+          <Input placeholder="Dakar" {...form.register("destinationCity")} />
+        </Field>
+      </div>
       <Field label="Vol" error={form.formState.errors.flightNumber?.message}>
         <Input {...form.register("flightNumber")} />
       </Field>
@@ -74,6 +88,11 @@ function HubBatchForm() {
         <Input type="number" min="1" {...form.register("capacityKg")} />
       </Field>
       <Button type="submit" disabled={form.formState.isSubmitting}>Creer le batch</Button>
+      {result?.ok && result.data?.batchId ? (
+        <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
+          Batch ID : {result.data.batchId}
+        </p>
+      ) : null}
       <FormMessage message={result?.message} tone={result ? (result.ok ? "success" : "error") : "info"} />
     </form>
   );

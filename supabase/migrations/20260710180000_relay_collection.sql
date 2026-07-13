@@ -380,7 +380,7 @@ begin
       updated_by = excluded.updated_by,
       updated_at = now();
 
-    v_next_status := 'at_hub';
+    v_next_status := 'at_relay';
   elsif p_scan_type in ('check_out', 'handover') then
     update public.relay_inventory
     set status = 'released',
@@ -391,7 +391,7 @@ begin
 
     v_next_status := case
       when p_scan_type = 'handover' then 'delivered'::public.shipment_status
-      else 'out_for_delivery'::public.shipment_status
+      else 'collected_for_hub'::public.shipment_status
     end;
   else
     update public.relay_inventory
@@ -400,7 +400,7 @@ begin
         updated_at = now()
     where shipment_id = v_shipment_id;
 
-    v_next_status := 'at_hub';
+    v_next_status := 'at_relay';
   end if;
 
   update public.shipments

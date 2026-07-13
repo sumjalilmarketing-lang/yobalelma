@@ -23,22 +23,29 @@ export async function POST(request: Request) {
     return fail("Connecte-toi pour creer un batch hub.", 401);
   }
 
-  const { error } = await supabase.from("hub_batches").insert({
-    capacity_kg: parsed.data.capacityKg,
-    code: parsed.data.code,
-    created_by: user.id,
-    departure_date: parsed.data.departureDate,
-    destination_hub: parsed.data.destinationHub,
-    flight_number: parsed.data.flightNumber || null,
-    origin_hub: parsed.data.originHub,
-    status: "open",
-    traveler_id: parsed.data.travelerId || null,
-    trip_id: parsed.data.tripId || null,
-  });
+  const { data, error } = await supabase
+    .from("hub_batches")
+    .insert({
+      capacity_kg: parsed.data.capacityKg,
+      code: parsed.data.code,
+      created_by: user.id,
+      departure_date: parsed.data.departureDate,
+      destination_city: parsed.data.destinationCity || null,
+      destination_country: parsed.data.destinationCountry || null,
+      destination_hub: parsed.data.destinationHub,
+      flight_number: parsed.data.flightNumber || null,
+      hub_id: parsed.data.hubId || null,
+      origin_hub: parsed.data.originHub,
+      status: "open",
+      traveler_id: parsed.data.travelerId || null,
+      trip_id: parsed.data.tripId || null,
+    })
+    .select("id")
+    .single();
 
   if (error) {
     return fail(error.message, 400);
   }
 
-  return ok("Batch hub cree.");
+  return ok("Batch hub cree.", { batchId: data.id });
 }

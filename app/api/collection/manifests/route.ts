@@ -52,6 +52,27 @@ export async function POST(request: Request) {
       return fail(error.message, 400);
     }
 
+    const { error: shipmentError } = await supabase
+      .from("shipments")
+      .update({ status: "collected_for_hub" })
+      .eq("id", parsed.data.shipmentId);
+
+    if (shipmentError) {
+      return fail(shipmentError.message, 400);
+    }
+
+    const { error: statusError } = await supabase.from("shipment_status_events").insert({
+      actor_id: user.id,
+      metadata: { collection_manifest_id: parsed.data.manifestId, collection_manifest_item_id: data.id },
+      note: "Colis ajoute au manifeste de collecte hub.",
+      shipment_id: parsed.data.shipmentId,
+      status: "collected_for_hub",
+    });
+
+    if (statusError) {
+      return fail(statusError.message, 400);
+    }
+
     return ok("Colis ajoute au manifeste.", { itemId: data.id });
   }
 

@@ -4,6 +4,8 @@ create type public.shipment_status as enum (
   'matching',
   'assigned',
   'picked_up',
+  'at_relay',
+  'collected_for_hub',
   'in_transit',
   'at_hub',
   'out_for_delivery',
@@ -129,7 +131,11 @@ for select using (
     'admin',
     'super_admin',
     'operations_manager',
-    'support_agent'
+    'support_agent',
+    'relay_agent',
+    'hub_agent',
+    'collection_driver',
+    'local_transporter'
   ])
 );
 
@@ -174,7 +180,11 @@ for select using (
           'admin',
           'super_admin',
           'operations_manager',
-          'support_agent'
+          'support_agent',
+          'relay_agent',
+          'hub_agent',
+          'collection_driver',
+          'local_transporter'
         ])
       )
   )
@@ -221,7 +231,11 @@ for select using (
           'admin',
           'super_admin',
           'operations_manager',
-          'support_agent'
+          'support_agent',
+          'relay_agent',
+          'hub_agent',
+          'collection_driver',
+          'local_transporter'
         ])
       )
   )
@@ -268,7 +282,11 @@ for select using (
           'admin',
           'super_admin',
           'operations_manager',
-          'support_agent'
+          'support_agent',
+          'relay_agent',
+          'hub_agent',
+          'collection_driver',
+          'local_transporter'
         ])
       )
   )

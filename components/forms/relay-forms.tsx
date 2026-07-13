@@ -29,7 +29,7 @@ export function RelayForms() {
 }
 
 function RelayPointForm() {
-  const [result, setResult] = useState<ApiResult | null>(null);
+  const [result, setResult] = useState<ApiResult<{ relayPointId?: string }> | null>(null);
   const form = useForm<RelayPointFormInput, unknown, RelayPointInput>({
     resolver: zodResolver(relayPointSchema),
     defaultValues: {
@@ -45,7 +45,7 @@ function RelayPointForm() {
   });
 
   async function onSubmit(values: RelayPointInput) {
-    setResult(await submitJson("/api/relay/points", values));
+    setResult(await submitJson<{ relayPointId?: string }>("/api/relay/points", values));
   }
 
   return (
@@ -78,6 +78,11 @@ function RelayPointForm() {
         </Field>
       </div>
       <Button type="submit" disabled={form.formState.isSubmitting}>Creer le relais</Button>
+      {result?.ok && result.data?.relayPointId ? (
+        <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
+          Relais ID : {result.data.relayPointId}
+        </p>
+      ) : null}
       <FormMessage message={result?.message} tone={result ? (result.ok ? "success" : "error") : "info"} />
     </form>
   );

@@ -15,7 +15,7 @@ import {
 } from "@/lib/validation/hub";
 
 export function TravelDocumentForm() {
-  const [result, setResult] = useState<ApiResult | null>(null);
+  const [result, setResult] = useState<ApiResult<{ documentId?: string }> | null>(null);
   const form = useForm<TravelDocumentFormInput, unknown, TravelDocumentInput>({
     resolver: zodResolver(travelDocumentSchema),
     defaultValues: {
@@ -37,7 +37,7 @@ export function TravelDocumentForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
-    setResult((await response.json()) as ApiResult);
+    setResult((await response.json()) as ApiResult<{ documentId?: string }>);
   }
 
   return (
@@ -73,6 +73,11 @@ export function TravelDocumentForm() {
         </Field>
       </div>
       <Button type="submit" disabled={form.formState.isSubmitting}>Soumettre le document</Button>
+      {result?.ok && result.data?.documentId ? (
+        <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
+          Document ID : {result.data.documentId}
+        </p>
+      ) : null}
       <FormMessage message={result?.message} tone={result ? (result.ok ? "success" : "error") : "info"} />
     </form>
   );

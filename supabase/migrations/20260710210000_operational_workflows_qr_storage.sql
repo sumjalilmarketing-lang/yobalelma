@@ -326,6 +326,7 @@ create or replace function public.hash_handover_token(p_token text)
 returns text
 language sql
 immutable
+set search_path = public, extensions, pg_catalog
 as $$
   select encode(digest(p_token, 'sha256'), 'hex');
 $$;
@@ -341,7 +342,7 @@ returns table (
 )
 language plpgsql
 security invoker
-set search_path = public
+set search_path = public, extensions, pg_catalog
 as $$
 declare
   v_match record;
@@ -928,7 +929,7 @@ returns table (
 )
 language plpgsql
 security invoker
-set search_path = public
+set search_path = public, extensions, pg_catalog
 as $$
 declare
   v_token public.handover_qr_tokens%rowtype;
@@ -990,18 +991,18 @@ begin
         sealed_at = coalesce(sealed_at, now())
     where id = v_token.batch_id;
 
-    update public.capacity_reservations
+    update public.capacity_reservations cr
     set status = 'loaded',
         updated_at = now()
-    where batch_id = v_token.batch_id
-      and status = 'reserved';
+    where cr.batch_id = v_token.batch_id
+      and cr.status = 'reserved';
 
-    update public.shipments
+    update public.shipments s
     set status = 'in_transit'
-    where id in (
-      select shipment_id
-      from public.capacity_reservations
-      where batch_id = v_token.batch_id
+    where s.id in (
+      select cr.shipment_id
+      from public.capacity_reservations cr
+      where cr.batch_id = v_token.batch_id
     );
 
     insert into public.shipment_status_events (shipment_id, actor_id, status, note, metadata)
@@ -1029,20 +1030,20 @@ begin
       set status = 'closed'
       where id = v_token.batch_id;
 
-      update public.capacity_reservations
+      update public.capacity_reservations cr
       set status = 'released',
           updated_at = now()
-      where batch_id = v_token.batch_id
-        and status in ('reserved', 'loaded');
+      where cr.batch_id = v_token.batch_id
+        and cr.status in ('reserved', 'loaded');
 
-      update public.shipments
+      update public.shipments s
       set status = 'delivered',
           payout_eligible_for_release = true,
           payout_blocked_reason = null
-      where id in (
-        select shipment_id
-        from public.capacity_reservations
-        where batch_id = v_token.batch_id
+      where s.id in (
+        select cr.shipment_id
+        from public.capacity_reservations cr
+        where cr.batch_id = v_token.batch_id
       );
 
       insert into public.shipment_status_events (shipment_id, actor_id, status, note, metadata)
@@ -1059,13 +1060,13 @@ begin
       set status = 'arrived'
       where id = v_token.batch_id;
 
-      update public.shipments
+      update public.shipments s
       set payout_eligible_for_release = false,
           payout_blocked_reason = p_incident_type
-      where id in (
-        select shipment_id
-        from public.capacity_reservations
-        where batch_id = v_token.batch_id
+      where s.id in (
+        select cr.shipment_id
+        from public.capacity_reservations cr
+        where cr.batch_id = v_token.batch_id
       );
 
       insert into public.shipment_status_events (shipment_id, actor_id, status, note, metadata)

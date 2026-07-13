@@ -46,7 +46,9 @@ const trackingCodePattern = /^YBL-[A-Z0-9]{8}$/;
 const publicStatusLabels: Record<string, string> = {
   assigned: "Mission assignee",
   at_hub: "Arrive au hub",
+  at_relay: "Depose au relais",
   cancelled: "Annule",
+  collected_for_hub: "Collecte vers le hub",
   confirmed: "Expedition confirmee",
   delivered: "Livre",
   in_transit: "En transit",

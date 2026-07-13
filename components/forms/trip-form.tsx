@@ -12,7 +12,7 @@ import { type ApiResult } from "@/lib/api/responses";
 import { type TripFormInput, tripSchema, type TripInput } from "@/lib/validation/trip";
 
 export function TripForm() {
-  const [result, setResult] = useState<ApiResult | null>(null);
+  const [result, setResult] = useState<ApiResult<{ tripId?: string }> | null>(null);
   const form = useForm<TripFormInput, unknown, TripInput>({
     resolver: zodResolver(tripSchema),
     defaultValues: {
@@ -34,7 +34,7 @@ export function TripForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
-    setResult((await response.json()) as ApiResult);
+    setResult((await response.json()) as ApiResult<{ tripId?: string }>);
   }
 
   return (
@@ -84,6 +84,11 @@ export function TripForm() {
         message={result?.message}
         tone={result ? (result.ok ? "success" : "error") : "info"}
       />
+      {result?.ok && result.data?.tripId ? (
+        <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
+          Voyage ID : {result.data.tripId}
+        </p>
+      ) : null}
     </form>
   );
 }

@@ -695,16 +695,24 @@ export type Database = {
       }
       hub_batches: {
         Row: {
+          anomaly_count: number
           capacity_kg: number
           code: string
           created_at: string
           created_by: string | null
           departure_date: string
+          destination_city: string | null
+          destination_country: string | null
           destination_hub: string
           flight_number: string | null
+          handover_deadline_at: string | null
+          hub_id: string | null
           id: string
           origin_hub: string
+          preparation_location_id: string | null
+          prepared_by: string | null
           qr_payload: Json
+          ready_at: string | null
           reserved_weight_kg: number
           sealed_at: string | null
           sealed_by: string | null
@@ -712,18 +720,28 @@ export type Database = {
           traveler_id: string | null
           trip_id: string | null
           updated_at: string
+          validated_at: string | null
+          validated_by: string | null
         }
         Insert: {
+          anomaly_count?: number
           capacity_kg: number
           code: string
           created_at?: string
           created_by?: string | null
           departure_date: string
+          destination_city?: string | null
+          destination_country?: string | null
           destination_hub: string
           flight_number?: string | null
+          handover_deadline_at?: string | null
+          hub_id?: string | null
           id?: string
           origin_hub: string
+          preparation_location_id?: string | null
+          prepared_by?: string | null
           qr_payload?: Json
+          ready_at?: string | null
           reserved_weight_kg?: number
           sealed_at?: string | null
           sealed_by?: string | null
@@ -731,18 +749,28 @@ export type Database = {
           traveler_id?: string | null
           trip_id?: string | null
           updated_at?: string
+          validated_at?: string | null
+          validated_by?: string | null
         }
         Update: {
+          anomaly_count?: number
           capacity_kg?: number
           code?: string
           created_at?: string
           created_by?: string | null
           departure_date?: string
+          destination_city?: string | null
+          destination_country?: string | null
           destination_hub?: string
           flight_number?: string | null
+          handover_deadline_at?: string | null
+          hub_id?: string | null
           id?: string
           origin_hub?: string
+          preparation_location_id?: string | null
+          prepared_by?: string | null
           qr_payload?: Json
+          ready_at?: string | null
           reserved_weight_kg?: number
           sealed_at?: string | null
           sealed_by?: string | null
@@ -750,11 +778,34 @@ export type Database = {
           traveler_id?: string | null
           trip_id?: string | null
           updated_at?: string
+          validated_at?: string | null
+          validated_by?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "hub_batches_created_by_fkey"
             columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hub_batches_hub_id_fkey"
+            columns: ["hub_id"]
+            isOneToOne: false
+            referencedRelation: "airport_hubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hub_batches_preparation_location_id_fkey"
+            columns: ["preparation_location_id"]
+            isOneToOne: false
+            referencedRelation: "hub_storage_locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hub_batches_prepared_by_fkey"
+            columns: ["prepared_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -778,6 +829,13 @@ export type Database = {
             columns: ["trip_id"]
             isOneToOne: false
             referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hub_batches_validated_by_fkey"
+            columns: ["validated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -3109,6 +3167,8 @@ export type Database = {
         | "matching"
         | "assigned"
         | "picked_up"
+        | "at_relay"
+        | "collected_for_hub"
         | "in_transit"
         | "at_hub"
         | "out_for_delivery"
@@ -3423,6 +3483,8 @@ export const Constants = {
         "matching",
         "assigned",
         "picked_up",
+        "at_relay",
+        "collected_for_hub",
         "in_transit",
         "at_hub",
         "out_for_delivery",
