@@ -52,8 +52,8 @@ export function InternationalWorkflowView({
     return (
       <PremiumEmptyState
         tone={tone}
-        title="Configuration Supabase requise"
-        description="Le cockpit international a besoin des variables Supabase locales pour lire les expeditions, lots, QR et notifications."
+        title="Connexion au service indisponible"
+        description="Le parcours international sera disponible des que l'environnement Yobalelma sera connecte."
       />
     );
   }
@@ -73,9 +73,8 @@ export function InternationalWorkflowView({
                 Une chaine unique du client au relais destination.
               </h2>
               <p className="mt-3 max-w-3xl leading-7 text-black/60">
-                Cette vue lit les tables Supabase du parcours international et expose les
-                actions autorisees au role connecte. Les compteurs et listes respectent les
-                policies RLS appliquees au projet.
+                Suis les envois, lots, QR, relais et notifications avec les actions
+                disponibles pour ton espace.
               </p>
             </div>
             <div className="rounded-lg border border-black/10 bg-white/80 p-4 shadow-line">
@@ -101,9 +100,9 @@ export function InternationalWorkflowView({
           <PremiumBadge tone={tone}>Controle qualite</PremiumBadge>
           <div className="mt-4 grid gap-3">
             {[
-              "Donnees reelles lues via Supabase.",
-              "Timeline reconstruite depuis shipment_status_events.",
-              "Actions sensibles protegees par role et RLS.",
+              "Envois et lots synchronises.",
+              "Etapes internationales consolidees.",
+              "Actions sensibles limitees au bon role.",
             ].map((item) => (
               <div key={item} className="flex items-start gap-3 rounded-md border border-black/10 bg-white/80 p-3">
                 <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
@@ -150,8 +149,8 @@ export function InternationalWorkflowView({
               <PremiumBadge tone={tone}>Timeline operationnelle</PremiumBadge>
               <h2 className="mt-3 text-2xl font-black">Statuts du flux international</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-black/60">
-                Les etapes ci-dessous sont la lecture produit du flux. Les badges indiquent
-                combien d&apos;evenements reels correspondent aux statuts techniques.
+                Les etapes ci-dessous montrent les passages cles entre client, relais,
+                collecte, hub, voyageur et destination.
               </p>
             </div>
             <span className="rounded-md border border-black/10 bg-white px-3 py-2 text-sm font-black text-black/70">
@@ -254,7 +253,7 @@ function RecentShipments({
               <p>Etape: {currentLabel}</p>
               <p>Suite: {nextLabel}</p>
               <p>
-                Dernier evenement:{" "}
+                Dernier mouvement:{" "}
                 {lastEvent ? `${lastEvent.status} - ${formatDateTime(lastEvent.created_at)}` : "aucun evenement visible"}
               </p>
               <p>Prix estime: {formatMoney(shipment.estimated_price_cents, shipment.currency)}</p>
@@ -296,7 +295,7 @@ function InternationalSignals({
           icon={Bell}
           label="Notifications"
           value={String(data.notifications.length)}
-          detail="Alertes in-app visibles pour l'utilisateur connecte."
+          detail="Alertes visibles pour l'utilisateur connecte."
         />
       </div>
     </PremiumPanel>
@@ -355,7 +354,7 @@ function NotificationList({
 }) {
   return (
     <PremiumPanel tone={tone} className="p-6">
-      <PremiumBadge tone={tone}>Notifications et audit utilisateur</PremiumBadge>
+      <PremiumBadge tone={tone}>Notifications</PremiumBadge>
       {data.notifications.length ? (
         <div className="mt-5 grid gap-3">
           {data.notifications.map((notification) => (

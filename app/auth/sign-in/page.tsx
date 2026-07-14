@@ -31,7 +31,7 @@ export default function SignInPage() {
           <PremiumChecklist
             tone="admin"
             items={[
-              "Sessions gerees par Supabase Auth.",
+              "Sessions protegees par Yobalelma.",
               "Redirection vers le dashboard du role.",
               "Donnees rattachees au projet Yobalelma uniquement.",
             ]}
@@ -47,7 +47,7 @@ export default function SignInPage() {
           </div>
           <p className="text-sm leading-6 text-black/60">
             En continuant, tu rejoins la plateforme Yobalelma. Les donnees sont
-            rattachees au projet Supabase Yobalelma uniquement.
+            protegees dans l&apos;environnement Yobalelma.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link href="/auth/sign-up" className="text-sm font-bold text-primary">

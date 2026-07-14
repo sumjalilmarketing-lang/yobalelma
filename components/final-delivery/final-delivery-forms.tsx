@@ -155,7 +155,7 @@ export function DeliveryOtpPanel({
       <form action={submitGenerate} className="grid gap-4 rounded-lg border border-black/10 bg-white p-5 shadow-line">
         <FormHeader
           title="Generer / renvoyer un OTP"
-          description="Le serveur revoque l'ancien OTP, stocke uniquement le hash et cree les evenements."
+          description="Un nouveau code annule automatiquement le precedent et reste limite dans le temps."
         />
         <Field name="shipmentId" label="ID expedition" defaultValue={shipmentId} required />
         <DeliveryModeSelect defaultValue={deliveryMode} />
@@ -173,7 +173,7 @@ export function DeliveryOtpPanel({
         <ResultMessage result={generate.result} />
         {generate.result?.ok && generate.result.data?.otpCodeForTestOnly ? (
           <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm font-black text-amber-900">
-            Mode developpement uniquement: {String(generate.result.data.otpCodeForTestOnly)}
+            Code temporaire: {String(generate.result.data.otpCodeForTestOnly)}
           </p>
         ) : null}
       </form>
@@ -217,9 +217,9 @@ export function FinalMileMissionForm({ shipmentId }: { shipmentId?: string }) {
 
   return (
     <form action={submit} className="grid gap-4 rounded-lg border border-black/10 bg-white p-5 shadow-line">
-      <FormHeader
-        title="Creer une mission finale"
-        description="Selectionne un livreur disponible ou laisse le moteur prendre le meilleur profil actif pour une mission relay_to_recipient."
+        <FormHeader
+          title="Creer une mission finale"
+          description="Selectionne un livreur disponible ou laisse Yobalelma proposer le meilleur profil actif."
       />
       <Field name="shipmentId" label="ID expedition" defaultValue={shipmentId} required />
       <Field name="transporterId" label="ID livreur optionnel" />
@@ -249,9 +249,9 @@ export function FinalDeliveryAttemptForm({ shipmentId }: { shipmentId?: string }
 
   return (
     <form action={submit} className="grid gap-4 rounded-lg border border-black/10 bg-white p-5 shadow-line">
-      <FormHeader
-        title="Journaliser un echec ou une reprise"
-        description="Chaque tentative cree un event, bloque le payout si necessaire et ne marque jamais automatiquement livre."
+        <FormHeader
+          title="Journaliser un echec ou une reprise"
+          description="Chaque tentative garde une trace claire et preserve la remise finale tant qu'elle n'est pas confirmee."
       />
       <Field name="shipmentId" label="ID expedition" defaultValue={shipmentId} required />
       <label className="grid gap-2 text-sm font-semibold">
@@ -295,9 +295,9 @@ export function AdminOverrideForm({ shipmentId }: { shipmentId?: string }) {
 
   return (
     <form action={submit} className="grid gap-4 rounded-lg border border-black/10 bg-white p-5 shadow-line">
-      <FormHeader
-        title="Override admin audite"
-        description="Action sensible: motif, commentaire, ancien/nouveau statut et preuve alternative sont traces."
+        <FormHeader
+        title="Correction admin"
+        description="Action sensible: le motif, le commentaire, le statut et la preuve alternative sont conserves."
       />
       <Field name="shipmentId" label="ID expedition" defaultValue={shipmentId} required />
       <label className="grid gap-2 text-sm font-semibold">

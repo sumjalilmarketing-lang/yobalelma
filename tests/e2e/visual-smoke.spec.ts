@@ -86,7 +86,7 @@ test("dashboard protection remains presentable", async ({ page }) => {
     await expect(page.getByText("Se connecter").first()).toBeVisible();
   } else {
     await expect(page.getByRole("heading", { name: "Dashboard Yobalelma" })).toBeVisible();
-    await expect(page.getByText(/Connecte-toi pour continuer|Configuration Supabase requise/)).toBeVisible();
+    await expect(page.getByText(/Connecte-toi pour continuer|Connexion au service indisponible/)).toBeVisible();
   }
 
   await expectNoHorizontalOverflow(page);

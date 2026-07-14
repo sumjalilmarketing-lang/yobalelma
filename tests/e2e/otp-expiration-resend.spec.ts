@@ -6,6 +6,6 @@ test.describe("OTP expiration and resend", () => {
 
     await expect(page.getByRole("heading", { name: "Generer / renvoyer un OTP" })).toBeVisible();
     await expect(page.getByLabel("Duree de vie minutes")).toHaveValue("15");
-    await expect(page.getByText("stocke uniquement le hash")).toBeVisible();
+    await expect(page.getByText("limite dans le temps")).toBeVisible();
   });
 });

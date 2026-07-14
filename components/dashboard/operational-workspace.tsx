@@ -1,8 +1,4 @@
-import {
-  ArrowUpRight,
-  Database as DatabaseIcon,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowUpRight, Gauge, ShieldCheck } from "lucide-react";
 import { PermissionGuard } from "@/components/auth/permission-guard";
 import {
   PremiumActionCard,
@@ -131,8 +127,8 @@ async function WorkspaceContent({
               <PremiumBadge tone={tone}>Controle operationnel</PremiumBadge>
               <h2 className="text-xl font-black">Controle operationnel</h2>
               <p className="mt-2 max-w-2xl leading-7 text-black/60">
-                Cette section utilise le role connecte, les politiques Supabase et les
-                tables metier existantes pour rendre le parcours pilotable.
+                Toutes les actions sensibles restent limitees au bon role et au bon
+                dossier, avec une lecture claire de l&apos;avancement.
               </p>
             </div>
           </div>
@@ -159,7 +155,7 @@ async function WorkspaceContent({
           <p className="text-sm font-bold uppercase text-black/50">Etat pilote</p>
           <p className="mt-2 text-2xl font-black">{config.emptyTitle ?? "Module connecte"}</p>
           <p className="mt-2 text-sm leading-6 text-black/60">
-            Les compteurs ci-dessous proviennent de Supabase ou d&apos;un etat vide explicite.
+            Les indicateurs se mettent a jour des qu&apos;une activite est visible.
           </p>
         </PremiumPanel>
       </section>
@@ -170,9 +166,9 @@ async function WorkspaceContent({
             key={metric.label}
             label={metric.label}
             value={metric.count}
-            icon={DatabaseIcon}
+            icon={Gauge}
             tone={tone}
-            description={`${metric.error ?? "Supabase"} - ${String(metric.table)}`}
+            description={metric.error ? "Donnee temporairement indisponible." : "Activite visible pour ce compte."}
           />
         ))}
       </section>
@@ -194,7 +190,7 @@ async function loadWorkspaceMetrics(metrics: WorkspaceMetric[], userId: string) 
   if (!supabase) {
     return metrics.map((metric) => ({
       count: 0,
-      error: "Configuration Supabase requise",
+      error: "Connexion au service indisponible",
       label: metric.label,
       table: metric.table,
     }));

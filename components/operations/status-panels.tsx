@@ -12,7 +12,7 @@ import type {
 } from "@/lib/auth/server";
 
 export function ConfigurationNotice({
-  label = "Configuration Supabase requise",
+  label = "Connexion au service indisponible",
 }: {
   label?: string;
 }) {
@@ -20,8 +20,7 @@ export function ConfigurationNotice({
     <PremiumPanel tone="support" className="p-6">
       <h2 className="text-2xl font-black">{label}</h2>
       <p className="mt-3 max-w-2xl leading-7 text-black/60">
-        Ajoute les variables d&apos;environnement Yobalelma pour activer ce parcours
-        avec le projet Supabase attendu.
+        Cette zone sera active des que l&apos;environnement Yobalelma sera connecte.
       </p>
       <div className="mt-5 h-2 rounded-full bg-amber-100 yb-loader-line" />
     </PremiumPanel>
@@ -179,7 +178,7 @@ export function DataMetric({
       label={label}
       value={value}
       icon={Layers3}
-      description="Donnee lue depuis les tables operationnelles ou etat vide explicite."
+      description="Indicateur mis a jour avec l'activite disponible."
     />
   );
 }

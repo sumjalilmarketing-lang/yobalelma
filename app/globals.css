@@ -55,6 +55,23 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+a,
+button,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid hsl(var(--primary));
+  outline-offset: 3px;
+}
+
 ::selection {
   background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
@@ -154,6 +171,25 @@ body {
   transform: translateX(-100%);
 }
 
+.yb-page-enter {
+  animation: yb-page-enter 420ms ease-out both;
+}
+
+.yb-qr-shimmer {
+  background:
+    linear-gradient(135deg, hsl(var(--secondary)), hsl(28 45% 13%)),
+    repeating-linear-gradient(90deg, hsl(var(--primary) / 0.2) 0 8px, transparent 8px 16px);
+}
+
+.yb-qr-shimmer::after {
+  animation: yb-qr-scan 2.2s ease-in-out infinite;
+  background: linear-gradient(180deg, transparent, hsl(var(--primary) / 0.48), transparent);
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform: translateY(-100%);
+}
+
 @keyframes yb-route-flow {
   0% {
     stroke-dashoffset: 260;
@@ -208,6 +244,29 @@ body {
   }
 }
 
+@keyframes yb-page-enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes yb-qr-scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  55% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -217,6 +276,8 @@ body {
   .yb-float-slow,
   .yb-signal-pulse,
   .yb-card-reveal,
+  .yb-page-enter,
+  .yb-qr-shimmer::after,
   .yb-loader-line::after {
     animation: none;
   }

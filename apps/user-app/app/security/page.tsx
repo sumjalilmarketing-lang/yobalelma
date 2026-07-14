@@ -9,9 +9,9 @@ export default function Page() {
     <UserAppInfoPage
       eyebrow="Confiance"
       title="Securite et confiance"
-      description="Les roles, la verification KYC, les preuves et les politiques RLS protegent les donnees et les colis."
+      description="Les roles, la verification KYC et les preuves protegent les donnees et les colis."
       bullets={[
-        "Routes protegees par session Supabase.",
+        "Routes protegees par session utilisateur.",
         "Donnees privees masquees du tracking public.",
         "Documents et preuves rattaches aux permissions."
 ]}

@@ -14,13 +14,13 @@ export async function POST(request: Request) {
   const supabase = await tryCreateSupabaseServerClient();
 
   if (!supabase) {
-    return fail("Supabase n'est pas encore configure dans l'environnement local.", 503);
+    return fail("Le service Yobalelma n'est pas encore disponible.", 503);
   }
 
   const auth = await getAuthState();
 
   if (auth.status === "needs-env") {
-    return fail("Supabase n'est pas encore configure dans l'environnement local.", 503);
+    return fail("Le service Yobalelma n'est pas encore disponible.", 503);
   }
 
   if (auth.status === "signed-out") {

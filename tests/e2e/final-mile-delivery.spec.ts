@@ -10,6 +10,6 @@ test.describe("final mile delivery", () => {
     await loginAs(page, relay, "/dashboard/relay/final-delivery");
     await expect(page.getByRole("heading", { name: "Livraison finale destination" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Creer une mission finale" })).toBeVisible();
-    await expect(page.getByText("relay_to_recipient").first()).toBeVisible();
+    await expect(page.getByText("meilleur profil actif").first()).toBeVisible();
   });
 });

@@ -47,6 +47,8 @@ type SceneConfig = {
   status: string[];
 };
 
+export type WorldRegion = "africa" | "europe" | "asia" | "americas" | "middleEast" | "global";
+
 const globalCities: CityPoint[] = [
   { name: "Paris", region: "Europe", x: 27, y: 25 },
   { name: "Dakar", region: "Afrique", x: 38, y: 57 },
@@ -163,20 +165,20 @@ const scenes: Record<JourneyScene, SceneConfig> = {
   admin: {
     eyebrow: "Admin",
     title: "Centre de controle",
-    description: "KPI, alertes, paiements, audit et securite operationnelle.",
+    description: "Indicateurs, alertes, paiements et supervision operationnelle.",
     icon: ShieldCheck,
     cities: [
       { name: "KPI", region: "Temps reel", x: 17, y: 31 },
       { name: "Paiements", region: "Controle", x: 38, y: 55 },
       { name: "Support", region: "Alertes", x: 61, y: 36 },
-      { name: "Audit", region: "RLS", x: 82, y: 59 },
+      { name: "Audit", region: "Controle", x: 82, y: 59 },
     ],
     metrics: [
-      { label: "RLS", value: "Actif" },
+      { label: "Acces", value: "Protege" },
       { label: "Audit", value: "111" },
-      { label: "Build", value: "OK" },
+      { label: "Alertes", value: "OK" },
     ],
-    status: ["Controle acces", "Audit logs", "Paiements", "Incidents"],
+    status: ["Acces protege", "Journal", "Paiements", "Incidents"],
   },
   operations: {
     eyebrow: "Operations",
@@ -251,6 +253,41 @@ const destinationModes = [
     color: "bg-earth",
   },
 ];
+
+const regionKeywords: Record<WorldRegion, string[]> = {
+  africa: ["dakar", "senegal", "abidjan", "cote d'ivoire", "côte d'ivoire", "lagos", "casablanca", "maroc", "kigali", "nairobi"],
+  americas: ["montreal", "montréal", "canada", "new york", "etats-unis", "états-unis", "sao paulo", "brasil"],
+  asia: ["tokyo", "japon", "seoul", "singapore", "singapour", "chine", "shanghai"],
+  europe: ["paris", "france", "madrid", "espagne", "londres", "bruxelles", "allemagne", "rome", "lisbonne"],
+  global: [],
+  middleEast: ["dubai", "dubaï", "emirats", "émirats", "abu dhabi"],
+};
+
+export function resolveWorldRegion(value?: string | null): WorldRegion {
+  const input = value?.toLowerCase() ?? "";
+  const found = (Object.entries(regionKeywords) as Array<[WorldRegion, string[]]>).find(([, keywords]) =>
+    keywords.some((keyword) => input.includes(keyword)),
+  );
+
+  return found?.[0] ?? "global";
+}
+
+export function routeSceneFromPlaces({
+  destination,
+  origin,
+}: {
+  destination?: string | null;
+  origin?: string | null;
+}): JourneyScene {
+  const regions = [resolveWorldRegion(origin), resolveWorldRegion(destination)];
+
+  if (regions.includes("asia") || regions.includes("middleEast")) return "traveler";
+  if (regions.includes("africa") && regions.includes("europe")) return "home";
+  if (regions.includes("americas")) return "traveler";
+  if (regions.includes("africa")) return "client";
+
+  return "neutral";
+}
 
 export function resolveJourneyScene(input?: string): JourneyScene {
   const value = input?.toLowerCase() ?? "";
@@ -413,7 +450,7 @@ export function SignalTimeline({
           </div>
           <div className="rounded-md border border-black/10 bg-white/80 p-3 shadow-line">
             <p className="text-sm font-bold text-black">{item}</p>
-            <p className="mt-1 text-xs leading-5 text-black/50">{config.eyebrow} - controle trace</p>
+            <p className="mt-1 text-xs leading-5 text-black/50">Etape suivie</p>
           </div>
         </div>
       ))}
@@ -534,7 +571,7 @@ export const roleWorldCards = [
   {
     scene: "admin" as const,
     title: "Admin",
-    text: "KPI, audit, securite et alertes temps reel.",
+    text: "Indicateurs, alertes, paiements et supervision temps reel.",
     icon: Building2,
   },
 ];

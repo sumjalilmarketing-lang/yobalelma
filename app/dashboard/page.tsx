@@ -44,7 +44,7 @@ export default async function DashboardPage() {
 function NeedsEnv() {
   return (
     <PremiumPanel tone="support" className="p-6">
-      <h2 className="text-2xl font-black">Configuration Supabase requise</h2>
+      <h2 className="text-2xl font-black">Connexion au service indisponible</h2>
       <p className="mt-3 max-w-2xl leading-7 text-black/60">
         Ajoute les variables securisees `NEXT_PUBLIC_SUPABASE_URL` et
         `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` pour activer les donnees reelles du dashboard.

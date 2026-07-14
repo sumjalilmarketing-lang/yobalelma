@@ -12,7 +12,7 @@ export default function Page() {
       description="Les produits dangereux, illegaux, non declares ou incompatibles avec le voyage sont interdits."
       bullets={[
         "Confirmation obligatoire dans le formulaire colis.",
-        "Controle relais et hub prevu dans les workflows.",
+        "Controle relais et hub prevu dans les parcours.",
         "Incident cree si le colis est refuse ou bloque."
 ]}
     />

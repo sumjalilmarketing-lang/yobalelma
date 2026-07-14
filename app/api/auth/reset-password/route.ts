@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   const supabase = await tryCreateSupabaseServerClient();
 
   if (!supabase) {
-    return fail("Supabase n'est pas encore configure dans l'environnement local.", 503);
+    return fail("Le service Yobalelma n'est pas encore disponible.", 503);
   }
 
   const { error } = await supabase.auth.updateUser({
@@ -25,4 +25,3 @@ export async function POST(request: Request) {
 
   return ok("Mot de passe mis a jour.");
 }
-

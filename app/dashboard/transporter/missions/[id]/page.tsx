@@ -22,7 +22,7 @@ export default async function TransporterMissionDetailPage({
     <PageShell
       eyebrow="Livreur"
       title="Detail mission"
-      description="Les actions utilisent les RPC transactionnelles pour eviter la double acceptation."
+      description="Pilote l'enlevement, le retrait et la remise avec un controle clair a chaque etape."
     >
       {state.status === "ready" ? (
         <MissionDetail missionId={id} userId={state.userId} />

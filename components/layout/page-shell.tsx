@@ -1,15 +1,12 @@
 import type { ReactNode } from "react";
-import { Globe2, ShieldCheck, Sparkles } from "lucide-react";
-import {
-  PremiumBadge,
-  PremiumChecklist,
-  toneFromLabel,
-} from "@/components/design-system/premium";
+import { MapPinned, Plane } from "lucide-react";
+import { PremiumBadge, toneFromLabel } from "@/components/design-system/premium";
 import { SiteHeader } from "@/components/layout/site-header";
 import {
   SceneBackdrop,
   type JourneyScene,
   resolveJourneyScene,
+  sceneSummary,
 } from "@/components/visual/yobalelma-world";
 
 type PageShellProps = {
@@ -23,6 +20,9 @@ type PageShellProps = {
 export function PageShell({ eyebrow, title, description, children, scene }: PageShellProps) {
   const resolvedScene = scene ?? resolveJourneyScene(`${eyebrow ?? ""} ${title}`);
   const tone = toneFromLabel(`${eyebrow ?? ""} ${title}`);
+  const summary = sceneSummary(resolvedScene);
+  const start = summary.cities[0];
+  const end = summary.cities.at(-1) ?? start;
 
   return (
     <main className="min-h-screen yb-soft-canvas text-foreground">
@@ -42,36 +42,41 @@ export function PageShell({ eyebrow, title, description, children, scene }: Page
               {title}
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-white/70">{description}</p>
-            <div className="mt-6 grid max-w-3xl gap-3 sm:grid-cols-3">
-              {[
-                { label: "Identite controlee", icon: ShieldCheck },
-                { label: "Route suivie", icon: Globe2 },
-                { label: "Experience premium", icon: Sparkles },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="flex items-center gap-2 rounded-md border border-white/15 bg-white/10 px-3 py-2 text-sm font-bold text-white/75 backdrop-blur"
-                >
-                  <item.icon className="h-4 w-4 text-primary" aria-hidden="true" />
-                  {item.label}
-                </div>
-              ))}
-            </div>
           </div>
-          <div className="hidden rounded-lg border border-white/20 bg-white/10 p-4 shadow-line backdrop-blur lg:block">
-            <p className="text-xs font-bold uppercase text-white/60">Yobalelma live layer</p>
-            <p className="mt-2 text-2xl font-black">Route, role, preuve</p>
-            <p className="mt-2 text-sm leading-6 text-white/70">
-              Une experience pensee pour inspirer confiance avant chaque action.
-            </p>
-            <PremiumChecklist
-              tone={tone}
-              items={["Signal visuel par role.", "Contexte de destination.", "Actions lisibles et securisees."]}
-            />
+          <div className="hidden overflow-hidden rounded-lg border border-white/20 bg-white/10 shadow-line backdrop-blur lg:block">
+            <div className="relative h-72">
+              <SceneBackdrop scene={resolvedScene} className="opacity-95" />
+              <div className="absolute inset-0 yb-modern-kente opacity-20" aria-hidden />
+              <div className="relative flex h-full flex-col justify-between p-5">
+                <div className="flex items-center justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-md border border-white/20 bg-black/35 text-primary">
+                    <MapPinned className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-md border border-white/20 bg-black/35 text-primary">
+                    <Plane className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </div>
+                <div className="grid gap-4 rounded-lg border border-white/20 bg-black/35 p-4">
+                  <div className="flex items-center justify-between gap-3 text-sm font-black text-white">
+                    <span className="truncate">{start.name}</span>
+                    <span className="h-px flex-1 bg-gradient-to-r from-primary via-white/50 to-primary" />
+                    <span className="truncate">{end.name}</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {summary.metrics.map((metric) => (
+                      <div key={metric.label} className="rounded-md border border-white/15 bg-white/10 p-3">
+                        <p className="text-[10px] font-black uppercase text-white/50">{metric.label}</p>
+                        <p className="mt-1 text-sm font-black text-white">{metric.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-      <section className="container py-10 md:py-14">{children}</section>
+      <section className="container yb-page-enter py-10 md:py-14">{children}</section>
     </main>
   );
 }

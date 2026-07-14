@@ -11,7 +11,7 @@ export default function ForgotPasswordPage() {
     <PageShell
       eyebrow="Securite"
       title="Reinitialiser ton mot de passe"
-      description="Indique ton email. Si un compte existe, Supabase enverra un lien securise."
+      description="Indique ton email. Si un compte existe, Yobalelma enverra un lien securise."
     >
       <div className="mx-auto grid max-w-xl gap-6 rounded-lg border border-black/10 bg-white p-6 shadow-line">
         <ForgotPasswordForm />

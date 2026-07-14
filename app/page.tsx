@@ -79,9 +79,9 @@ export default function Home() {
               <h1 className="max-w-5xl text-5xl font-black leading-[0.98] tracking-normal text-white sm:text-6xl lg:text-7xl">
                 Chaque voyage devient une livraison
               </h1>
-              <p className="mt-6 max-w-3xl text-lg leading-8 text-white/75 sm:text-xl">
-                Yobalelma relie expediteurs, voyageurs, livreurs, relais et hubs dans
-                une experience premium, controlee et transparente.
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/75 sm:text-xl">
+              Yobalelma relie expediteurs, voyageurs, livreurs, relais et hubs dans
+              une experience fluide, controlee et transparente.
               </p>
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -141,11 +141,11 @@ export default function Home() {
           <div>
             <p className="text-sm font-bold uppercase text-primary">Mode pays</p>
             <h2 className="mt-3 text-3xl font-black leading-tight md:text-4xl">
-              Une interface qui reconnait les destinations et leur contexte.
+              Des routes qui traversent les continents avec la meme clarte.
             </h2>
             <p className="mt-4 max-w-xl leading-7 text-black/60">
-              Le produit peut afficher une ambiance visuelle differente selon les villes,
-              pays et continents, sans masquer les actions operationnelles.
+              Dakar, Paris, Abidjan, Montreal, Casablanca ou Tokyo: chaque trajet
+              reste lisible, rassurant et adapte a son marche.
             </p>
           </div>
           <DestinationModeGrid />
@@ -157,7 +157,7 @@ export default function Home() {
           <div className="max-w-3xl">
             <p className="text-sm font-bold uppercase text-primary">Espaces metiers</p>
             <h2 className="mt-3 text-3xl font-black leading-tight md:text-4xl">
-              Chaque role garde sa propre ambiance sans perdre la meme exigence produit.
+              Chaque equipe retrouve ses priorites au bon endroit.
             </h2>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -194,8 +194,8 @@ export default function Home() {
               La meme qualite visuelle pour le terrain, les airs et le back-office.
             </h2>
             <p className="mt-4 max-w-xl leading-7 text-white/70">
-              Les dashboards reprennent cette grammaire: cartes de routes, signaux de
-              statut, metriques, scans QR et preuves.
+              Les tableaux de bord gardent les routes, les statuts, les QR et les
+              preuves visibles au moment ou l&apos;action se decide.
             </p>
           </div>
           <JourneyVisualStage scene="operations" />

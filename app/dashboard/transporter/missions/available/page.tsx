@@ -15,7 +15,7 @@ export default function AvailableMissionsPage() {
         checkpoints: [
           "Missions offertes au livreur authentifie.",
           "KYC et disponibilite requis avant acceptation.",
-          "Acceptation transactionnelle via RPC.",
+          "Acceptation securisee pour eviter les doublons.",
         ],
         description: "Missions proposees par le dispatch automatique.",
         eyebrow: "Livreur",
@@ -30,4 +30,3 @@ export default function AvailableMissionsPage() {
     />
   );
 }
-

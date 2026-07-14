@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LogIn } from "lucide-react";
 import { YobalelmaLogo } from "@/components/brand/yobalelma-logo";
+import { LocalizationSwitcher } from "@/components/i18n/localization-switcher";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -32,12 +33,15 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <Button asChild size="sm">
-          <Link href="/auth/sign-in">
-            <LogIn className="h-4 w-4" aria-hidden="true" />
-            Connexion
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <LocalizationSwitcher className="hidden lg:flex" />
+          <Button asChild size="sm">
+            <Link href="/auth/sign-in">
+              <LogIn className="h-4 w-4" aria-hidden="true" />
+              Connexion
+            </Link>
+          </Button>
+        </div>
       </div>
       <nav className="container flex gap-2 overflow-x-auto pb-3 text-sm font-bold text-black/70 md:hidden">
         {navItems.map((item) => (
@@ -50,6 +54,9 @@ export function SiteHeader() {
           </Link>
         ))}
       </nav>
+      <div className="container pb-3 lg:hidden">
+        <LocalizationSwitcher className="w-full justify-between overflow-x-auto" />
+      </div>
     </header>
   );
 }

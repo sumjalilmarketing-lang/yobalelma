@@ -52,7 +52,7 @@ export default async function Page() {
         }
 ]}
       checkpoints={[
-        "Profil client Supabase.",
+        "Profil client actif.",
         "Creation expedition connectee.",
         "Tracking public et prive."
 ]}

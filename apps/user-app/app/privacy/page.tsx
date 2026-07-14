@@ -12,8 +12,8 @@ export default function Page() {
       description="Yobalelma limite les donnees visibles publiquement et separe les informations sensibles par role."
       bullets={[
         "Tracking public sans adresse complete ni donnees KYC.",
-        "Acces prive soumis a session et RLS Supabase.",
-        "Secrets jamais exposes dans le depot."
+        "Acces prive limite au bon compte.",
+        "Informations sensibles protegees."
 ]}
     />
   );

@@ -15,6 +15,7 @@ const config = {
   fullyParallel: false,
   reporter: "list",
   timeout: 60_000,
+  workers: Number(process.env.PLAYWRIGHT_WORKERS ?? 1),
   use: { baseURL, trace: "on-first-retry" },
   projects: [{ name: "chromium", use: { browserName: "chromium", viewport: { width: 1280, height: 720 } } }],
   webServer: process.env.PLAYWRIGHT_SKIP_WEBSERVER === "1" ? undefined : {

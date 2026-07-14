@@ -10,7 +10,7 @@ test.describe("admin manual delivery override", () => {
     await loginAs(page, admin, "/dashboard/admin/delivery-overrides");
     await page.goto("/dashboard/admin/delivery-overrides");
     await expect(page.getByRole("heading", { name: "Overrides livraison" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Override admin audite" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Correction admin" })).toBeVisible();
     await expect(page.getByText("Marquer livre avec preuve alternative")).toBeVisible();
   });
 });
