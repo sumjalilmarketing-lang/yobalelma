@@ -29,12 +29,19 @@ export function getSafeAuthRedirect(nextParam: string | null, fallback = "/dashb
 export function getTrustedAppOrigin(
   requestUrl: string,
   configuredAppUrl = process.env.NEXT_PUBLIC_APP_URL,
+  headers?: Headers,
 ) {
+  const requestOrigin = getRequestOrigin(requestUrl, headers);
+
   if (configuredAppUrl) {
     try {
       const configured = new URL(configuredAppUrl);
 
       if (configured.protocol === "https:" || configured.protocol === "http:") {
+        if (isLocalOrigin(configured.origin) && !isLocalOrigin(requestOrigin)) {
+          return requestOrigin;
+        }
+
         return configured.origin;
       }
     } catch {
@@ -42,12 +49,46 @@ export function getTrustedAppOrigin(
     }
   }
 
-  return new URL(requestUrl).origin;
+  return requestOrigin;
 }
 
 export function buildAuthCallbackUrl(request: Request, nextPath: string) {
-  const callbackUrl = new URL("/auth/callback", getTrustedAppOrigin(request.url));
+  const callbackUrl = new URL(
+    "/auth/callback",
+    getTrustedAppOrigin(request.url, process.env.NEXT_PUBLIC_APP_URL, request.headers),
+  );
   callbackUrl.searchParams.set("next", getSafeAuthRedirect(nextPath));
 
   return callbackUrl.toString();
+}
+
+function getRequestOrigin(requestUrl: string, headers?: Headers) {
+  const url = new URL(requestUrl);
+  const forwardedHost = firstHeaderValue(headers?.get("x-forwarded-host"));
+  const host = forwardedHost ?? firstHeaderValue(headers?.get("host"));
+
+  if (!host) {
+    return url.origin;
+  }
+
+  const forwardedProto = firstHeaderValue(headers?.get("x-forwarded-proto"));
+  const protocol = forwardedProto === "http" || forwardedProto === "https"
+    ? forwardedProto
+    : url.protocol.replace(":", "");
+
+  return `${protocol}://${host}`;
+}
+
+function firstHeaderValue(value: string | null | undefined) {
+  return value?.split(",")[0]?.trim() || undefined;
+}
+
+function isLocalOrigin(origin: string) {
+  try {
+    const { hostname } = new URL(origin);
+
+    return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+  } catch {
+    return false;
+  }
 }

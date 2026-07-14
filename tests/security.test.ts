@@ -135,4 +135,20 @@ describe("auth callback URL building", () => {
       ),
     ).toBe("https://request.yobalelma.test");
   });
+
+  it("uses forwarded staging origin when the configured app URL is local", () => {
+    const headers = new Headers({
+      host: "localhost:43121",
+      "x-forwarded-host": "staging.yobalelma.test",
+      "x-forwarded-proto": "https",
+    });
+
+    expect(
+      getTrustedAppOrigin(
+        "http://localhost:43121/api/auth/sign-in",
+        "http://localhost:43121",
+        headers,
+      ),
+    ).toBe("https://staging.yobalelma.test");
+  });
 });

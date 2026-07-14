@@ -9,10 +9,10 @@ import {
 } from "../../../../tests/e2e/authenticated-helpers";
 
 const screenshotsDir = path.resolve(
-  process.cwd(),
-  process.cwd().endsWith("user-app")
-    ? "../../docs/visual-demo/user-app"
-    : "docs/visual-demo/user-app",
+  process.env.USER_APP_VISUAL_DEMO_DIR ??
+    (process.cwd().endsWith("user-app")
+      ? "../../docs/visual-demo/user-app"
+      : "docs/visual-demo/user-app"),
 );
 
 test.describe.serial("user-app visual demonstration", () => {
