@@ -41,5 +41,11 @@ test.describe.serial("user-app international shipment", () => {
     await page.getByRole("button", { name: "Verifier l'expedition" }).click();
     await expect(page.getByText("International", { exact: true }).first()).toBeVisible();
     await expect(page.getByText("QR retrait")).toBeVisible();
+
+    await page.getByRole("button", { name: "Confirmer et creer l'expedition" }).click();
+    await expect(page.getByText("Expedition creee et confirmee.")).toBeVisible({
+      timeout: 30_000,
+    });
+    await expect(page.getByText("Code de suivi : YBL-")).toBeVisible();
   });
 });

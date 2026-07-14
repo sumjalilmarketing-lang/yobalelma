@@ -42,5 +42,11 @@ test.describe.serial("user-app national shipment", () => {
     await page.getByRole("button", { name: "Verifier l'expedition" }).click();
     await expect(page.getByText("Verification avant creation")).toBeVisible();
     await expect(page.getByText("National", { exact: true })).toBeVisible();
+
+    await page.getByRole("button", { name: "Confirmer et creer l'expedition" }).click();
+    await expect(page.getByText("Expedition creee et confirmee.")).toBeVisible({
+      timeout: 30_000,
+    });
+    await expect(page.getByText("Code de suivi : YBL-")).toBeVisible();
   });
 });
