@@ -8,6 +8,7 @@ import {
   maskRecipientName,
   statusForDeliveryMode,
 } from "@/lib/final-delivery/rules";
+import { shouldExposeTestOtp } from "@/lib/final-delivery/otp-visibility";
 
 describe("final destination delivery rules", () => {
   it("enforces secure OTP policy limits", () => {
@@ -65,5 +66,25 @@ describe("final destination delivery rules", () => {
   it("masks recipient identity for public proof summaries", () => {
     expect(maskRecipientName("Awa Diop")).toBe("A***");
     expect(maskRecipientName(null)).toBeNull();
+  });
+
+  it("exposes generated OTP codes only when the explicit E2E flag is enabled outside production", () => {
+    expect(
+      shouldExposeTestOtp({
+        NODE_ENV: "production",
+        YOBALELMA_EXPOSE_TEST_OTP: "1",
+      }),
+    ).toBe(false);
+    expect(
+      shouldExposeTestOtp({
+        NODE_ENV: "development",
+      }),
+    ).toBe(false);
+    expect(
+      shouldExposeTestOtp({
+        NODE_ENV: "test",
+        YOBALELMA_EXPOSE_TEST_OTP: "1",
+      }),
+    ).toBe(true);
   });
 });

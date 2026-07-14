@@ -1,4 +1,5 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
+import { shouldExposeTestOtp } from "@/lib/final-delivery/otp-visibility";
 import { callSupabaseRpc } from "@/lib/supabase/rpc";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import {
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
 
   return ok("OTP genere et journalise.", {
     expiresAt: otp?.expires_at,
-    otpCodeForTestOnly: process.env.NODE_ENV === "production" ? undefined : otp?.otp_code,
+    otpCodeForTestOnly: shouldExposeTestOtp() ? otp?.otp_code : undefined,
     otpId: otp?.otp_id,
   });
 }

@@ -1,4 +1,5 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
+import { shouldExposeTestOtp } from "@/lib/final-delivery/otp-visibility";
 import {
   buildDigitalParcelTwin,
   estimateShipment,
@@ -92,7 +93,7 @@ export async function POST(request: Request) {
   }
 
   return ok("Expedition creee et confirmee.", {
-    deliveryOtpCode: shipment.delivery_otp_code,
+    deliveryOtpCodeForTestOnly: shouldExposeTestOtp() ? shipment.delivery_otp_code : undefined,
     estimate,
     shipmentId: shipment.id,
     trackingCode: shipment.tracking_code,

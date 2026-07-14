@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { expect, type Page, test } from "playwright/test";
 
@@ -97,13 +96,17 @@ function e2eEmailForRole(role: E2ERole, namespace: string) {
   return `codex.${namespace}.${role}@yobalelma.test`;
 }
 
+function e2ePasswordForRole(role: E2ERole, namespace: string) {
+  return `Yb-${namespace}-${role}-Test!2026`;
+}
+
 async function createOrUpdateE2EUser(
   role: E2ERole,
   namespace: string,
 ): Promise<E2EUser> {
   const supabase = createAdminClient();
   const email = e2eEmailForRole(role, namespace);
-  const password = `Yb-${randomUUID()}-Test!2026`;
+  const password = e2ePasswordForRole(role, namespace);
   const existing = await findUserByEmail(supabase, email);
   const metadata = {
     city: "Paris",

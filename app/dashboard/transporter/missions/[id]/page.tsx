@@ -48,7 +48,7 @@ async function MissionDetail({
 
   const { data, error } = await supabase
     .from("local_delivery_missions")
-    .select("*, shipments(tracking_code, origin_city, origin_country, destination_city, destination_country, status, delivery_otp_code)")
+    .select("*, shipments(tracking_code, origin_city, origin_country, destination_city, destination_country, status)")
     .eq("id", missionId)
     .eq("transporter_id", userId)
     .maybeSingle();
@@ -73,7 +73,7 @@ async function MissionDetail({
             { label: "Score", value: data.score },
             { label: "Depart", value: shipment ? `${shipment.origin_city}, ${shipment.origin_country}` : "Non charge" },
             { label: "Destination", value: shipment ? `${shipment.destination_city}, ${shipment.destination_country}` : "Non charge" },
-            { label: "OTP client", value: shipment?.delivery_otp_code ?? "Non charge" },
+            { label: "OTP client", value: "Saisie requise par destinataire" },
           ]}
         />
       </DataGrid>

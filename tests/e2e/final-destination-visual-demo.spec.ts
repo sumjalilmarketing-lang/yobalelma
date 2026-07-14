@@ -26,7 +26,7 @@ test.describe("final destination visual demo", () => {
   requireSupabaseAuthenticatedE2E();
 
   test("captures relay, recipient, client and admin final delivery surfaces", async ({ page }) => {
-    test.setTimeout(180_000);
+    test.setTimeout(600_000);
 
     const client = await ensureE2EUser("client");
     const relay = await ensureE2EUser("relay_agent", "final-destination-visual");

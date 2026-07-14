@@ -2,19 +2,27 @@ import { YOBALELMA_SUPABASE_URL } from "../env";
 
 const supabaseRealtimeUrl = YOBALELMA_SUPABASE_URL.replace("https://", "wss://");
 
-export const contentSecurityPolicy = [
-  "default-src 'self'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-  "object-src 'none'",
-  "img-src 'self' data: blob: https:",
-  "font-src 'self' data:",
-  "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-  `connect-src 'self' ${YOBALELMA_SUPABASE_URL} ${supabaseRealtimeUrl}`,
-  "upgrade-insecure-requests",
-].join("; ");
+export function buildContentSecurityPolicy(nodeEnv = process.env.NODE_ENV) {
+  const scriptSource = nodeEnv === "development"
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+    : "script-src 'self' 'unsafe-inline'";
+
+  return [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "object-src 'none'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data:",
+    "style-src 'self' 'unsafe-inline'",
+    scriptSource,
+    `connect-src 'self' ${YOBALELMA_SUPABASE_URL} ${supabaseRealtimeUrl}`,
+    "upgrade-insecure-requests",
+  ].join("; ");
+}
+
+export const contentSecurityPolicy = buildContentSecurityPolicy();
 
 export const securityHeaders = [
   {

@@ -1,47 +1,50 @@
-# Production Readiness
+# Yobalelma Production Readiness
 
-Date: 2026-07-12
+Date: 2026-07-14
 
 ## Verdict
 
-Real status: ready for demonstration and technical internal testing. Not ready for pilot or production.
+Current level: Pilot.
 
-## Readiness Matrix
+Yobalelma is ready for demonstration, internal testing and a controlled pilot using test data. It is not ready for national production or international production.
 
-| Level | Status | Evidence |
-| --- | --- | --- |
-| Demonstration | Ready | Build passes, public UX passes visual smoke, Supabase REST validation passes, official logo integrated. |
-| Internal testing | Ready with constraints | Unit/E2E pass, Supabase REST surface is valid, migration history is aligned. Needs seeded users for role sessions. |
-| Pilot | Not ready | Full role-by-role workflows not manually completed, payment/provider integrations incomplete, Storage policy tests incomplete. |
-| Production | Not ready | Needs RLS catalog verification, provider integrations, observability, operational runbooks, load/race tests and complete admin workflows. |
+## Ready
 
-## Current Validation
+- Root app build passes.
+- User app build passes.
+- Supabase connection is verified.
+- 69 database tables checked successfully.
+- 23 migrations checked with 0 pending.
+- 10 private Storage buckets verified.
+- RLS/policy/function audit passed for the checked surface.
+- Root E2E passes 83/83.
+- User app E2E passes 31/31.
+- Unit/integration tests pass 93/93.
+- Visual screenshots are generated under `docs/visual-demo/`.
 
-| Check | Result |
-| --- | --- |
-| Repository | `sumjalilmarketing-lang/yobalelma` |
-| Branch audited | `codex/finish-yobalelma` |
-| Supabase project URL | Expected Yobalelma project only. |
-| `.env.local` | Present, loaded, ignored by Git. |
-| Supabase Auth validation | OK through admin endpoint. |
-| Supabase tables validation | 46/46 expected tables reachable by REST with service role. |
-| Supabase buckets validation | 7/7 expected buckets present. |
-| Supabase CLI migration history | Linked and aligned through `20260712120000`. |
-| Lint | Passed. |
-| Typecheck | Passed. |
-| Unit tests | 62/62 passed. |
-| E2E | 28/28 passed. |
-| Build | Passed, 49 static/dynamic pages generated. |
-| npm audit | 0 vulnerabilities. |
+## Not Ready For Production
 
-## Production Blockers
+- Payment and payout providers are not live production integrations.
+- KYC provider is not live production integration.
+- No proven 100k-user load test has been executed.
+- Observability is not production-grade.
+- Upload malware scanning is not integrated.
+- App-level rate limiting needs hardening beyond provider defaults.
+- Disaster recovery and restore drills are not documented as executed.
 
-- Add SQL-level RLS tests and authenticated seeded role-negative E2E tests.
-- Complete provider integrations for payments, payouts and external notifications.
-- Complete KYC, support, admin and super-admin production workflows.
-- Add operational observability: logs, alerts, incident response, audit review and backup/restore verification.
-- Run load/race tests for dispatch, QR scans, batch capacity reservation, payouts and uploads.
+## Required Before National Production
 
-## Conclusion
+- Production payment/payout contracts and sandbox-to-live switch.
+- Production KYC provider and manual review SOP.
+- Monitoring, alerting and incident response runbooks.
+- Load testing on a disposable staging environment.
+- Backup/restore verification.
+- Security review of uploads, rate limits and provider webhooks.
 
-Yobalelma can be shown as a serious product foundation today. It should not be presented as production-ready until authenticated role workflows, provider integrations and operational hardening are closed.
+## Required Before International Production
+
+- Multi-country legal/compliance review.
+- Customs/prohibited-items policy automation.
+- Multi-currency payment and payout reconciliation.
+- Regional latency and failover plan.
+- Dedicated operational support tooling and SLAs.

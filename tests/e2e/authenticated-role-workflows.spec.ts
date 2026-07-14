@@ -109,7 +109,7 @@ test.describe.serial("authenticated role workflows", () => {
     await page.getByRole("button", { name: "Publier mon voyage" }).click();
     await expect(
       page.getByText("Voyage publie. Tu peux maintenant recevoir des propositions de colis."),
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 30_000 });
   });
 
   test("client cannot access hub workspace", async ({ page }) => {

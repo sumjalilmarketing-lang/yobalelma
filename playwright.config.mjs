@@ -22,6 +22,7 @@ const config = {
   fullyParallel: false,
   reporter: "list",
   timeout: 60_000,
+  workers: Number(process.env.PLAYWRIGHT_WORKERS ?? 1),
   use: {
     baseURL,
     trace: "on-first-retry",

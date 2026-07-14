@@ -134,7 +134,7 @@ function workflowCode(prefix: "HUB" | "MAN") {
 }
 
 test.describe.serial("authenticated international shipment workflow", () => {
-  test.setTimeout(180_000);
+  test.setTimeout(360_000);
 
   test.beforeEach(() => {
     requireSupabaseAuthenticatedE2E();

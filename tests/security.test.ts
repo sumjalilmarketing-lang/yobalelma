@@ -3,6 +3,7 @@ import { z } from "zod";
 import { buildAuthCallbackUrl, getTrustedAppOrigin } from "@/lib/auth/redirect";
 import { parseJsonRequest } from "@/lib/api/responses";
 import {
+  buildContentSecurityPolicy,
   contentSecurityPolicy,
   securityHeaders,
 } from "@/lib/security/headers";
@@ -25,6 +26,13 @@ describe("security headers", () => {
       YOBALELMA_SUPABASE_URL.replace("https://", "wss://"),
     );
     expect(contentSecurityPolicy).toContain("frame-ancestors 'none'");
+    expect(contentSecurityPolicy).not.toContain("'unsafe-eval'");
+  });
+
+  it("allows development-only eval for the Next.js dev server but not production", () => {
+    expect(buildContentSecurityPolicy("development")).toContain("'unsafe-eval'");
+    expect(buildContentSecurityPolicy("production")).not.toContain("'unsafe-eval'");
+    expect(buildContentSecurityPolicy("test")).not.toContain("'unsafe-eval'");
   });
 });
 
