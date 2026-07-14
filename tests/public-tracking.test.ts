@@ -41,6 +41,14 @@ describe("public tracking", () => {
           status: "in_transit",
         },
       ],
+      [
+        {
+          created_at: "2026-07-13T09:00:00.000Z",
+          event_type: "destination_batch_received",
+          id: "delivery-event-1",
+          status: "destination_batch_received",
+        },
+      ],
     );
 
     expect(shipment).toMatchObject({
@@ -50,6 +58,7 @@ describe("public tracking", () => {
       statusLabel: "En transit",
       trackingCode: "YBL-1234ABCD",
     });
+    expect(shipment.events[0].label).toBe("Arrive dans le pays de destination");
     expect(JSON.stringify(shipment)).not.toMatch(/phone|address|otp|declared|sender|recipient/i);
   });
 });

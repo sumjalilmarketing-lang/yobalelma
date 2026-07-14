@@ -29,6 +29,22 @@ const TABLES = [
   "hub_handover_events",
   "system_settings",
   "feature_flags",
+  "final_delivery_orders",
+  "destination_package_checks",
+  "delivery_otps",
+  "otp_attempts",
+  "otp_events",
+  "proof_of_delivery",
+  "proof_of_delivery_summaries",
+  "delivery_signatures",
+  "delivery_photos",
+  "delivery_events",
+  "notification_templates",
+  "notification_events",
+  "notification_deliveries",
+  "user_notification_preferences",
+  "payout_release_events",
+  "manual_corrections",
 ];
 
 const FUNCTIONS = [
@@ -40,6 +56,16 @@ const FUNCTIONS = [
   "reserve_hub_batch_capacity_v2",
   "create_hub_incident",
   "record_hub_handover_event",
+  "confirm_destination_batch_reception",
+  "generate_delivery_otp",
+  "verify_delivery_otp",
+  "revoke_delivery_otp",
+  "set_final_delivery_choice",
+  "create_final_mile_delivery_mission",
+  "record_final_delivery_attempt",
+  "create_manual_correction",
+  "admin_manual_delivery_override",
+  "scan_handover_qr_token",
 ];
 
 function redact(text) {

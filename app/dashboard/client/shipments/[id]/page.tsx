@@ -1,6 +1,7 @@
 import { PageShell } from "@/components/layout/page-shell";
 import { DataCard, DataGrid, EmptyState, ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
+import { loadFinalDeliveryOrderByShipment } from "@/lib/final-delivery/data";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +68,7 @@ async function ShipmentDetail({
         .eq("shipment_id", shipmentId)
         .order("created_at", { ascending: false }),
     ]);
+  const finalDelivery = await loadFinalDeliveryOrderByShipment(shipmentId);
 
   if (shipmentResult.error) {
     return <EmptyState title="Expedition introuvable" description={shipmentResult.error.message} />;
@@ -88,7 +90,7 @@ async function ShipmentDetail({
             { label: "Statut", value: shipment.status },
             { label: "Portee", value: shipment.scope },
             { label: "Mode", value: shipment.fulfillment_method },
-            { label: "OTP livraison", value: shipment.delivery_otp_code ?? "Non genere" },
+            { label: "Remise finale", value: finalDelivery.order?.status ?? "Non receptionnee a destination" },
             {
               label: "Payout",
               value: shipment.payout_eligible_for_release ? "liberable" : shipment.payout_blocked_reason ?? "non liberable",
@@ -118,6 +120,35 @@ async function ShipmentDetail({
           />
         ) : null}
       </DataGrid>
+
+      <section className="grid gap-4">
+        <h2 className="text-xl font-black">Remise finale</h2>
+        <DataGrid>
+          {finalDelivery.order ? (
+            <DataCard
+              title={finalDelivery.order.delivery_mode ?? "Mode a choisir"}
+              subtitle={finalDelivery.order.status}
+              rows={[
+                { label: "Relais", value: finalDelivery.order.relay_points ? `${finalDelivery.order.relay_points.name}, ${finalDelivery.order.relay_points.city}` : "Non renseigne" },
+                { label: "Emplacement", value: finalDelivery.order.storage_location ?? "Non attribue" },
+                { label: "Payout voyageur", value: finalDelivery.order.traveler_payout_eligible ? "liberable" : finalDelivery.order.payout_blocked_reason ?? "non liberable" },
+              ]}
+            />
+          ) : null}
+          {finalDelivery.proofs.map((proof) => (
+            <DataCard
+              key={proof.id}
+              title="Preuve autorisee"
+              subtitle={proof.method}
+              rows={[
+                { label: "Remis le", value: new Date(proof.delivered_at).toLocaleString("fr-FR") },
+                { label: "Lieu", value: proof.location_label ?? "Destination" },
+                { label: "Destinataire", value: proof.recipient_label ?? "Masque" },
+              ]}
+            />
+          ))}
+        </DataGrid>
+      </section>
 
       <section className="grid gap-4">
         <h2 className="text-xl font-black">Adresses</h2>

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { tryCreateSupabaseServiceClient } from "@/lib/supabase/service";
+import { selectFromLooseTable } from "@/lib/supabase/loose-query";
 import {
   isValidTrackingCode,
   normalizeTrackingCode,
@@ -60,8 +61,22 @@ export async function getPublicTrackingState(
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const { data: finalDeliveryEvents } = await selectFromLooseTable<{
+    created_at: string;
+    event_type: string;
+    id: string;
+    status: string;
+  }>(
+    supabase,
+    "delivery_events",
+    "id, status, event_type, created_at",
+  )
+    .eq("shipment_id", shipment.id)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
   return {
-    shipment: toPublicTrackingShipment(shipment, events ?? []),
+    shipment: toPublicTrackingShipment(shipment, events ?? [], finalDeliveryEvents ?? []),
     status: "ready",
   };
 }

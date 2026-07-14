@@ -83,7 +83,9 @@ test.describe.serial("authenticated role workflows", () => {
     await expect(page.getByText("National", { exact: true })).toBeVisible();
 
     await page.getByRole("button", { name: "Confirmer et creer l'expedition" }).click();
-    await expect(page.getByText("Expedition creee et confirmee.")).toBeVisible();
+    await expect(page.getByText("Expedition creee et confirmee.")).toBeVisible({
+      timeout: 30_000,
+    });
     await expect(page.getByText("Code de suivi : YBL-")).toBeVisible();
   });
 

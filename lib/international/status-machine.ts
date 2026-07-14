@@ -175,10 +175,34 @@ export const internationalWorkflowSteps: InternationalWorkflowStep[] = [
   },
   {
     id: "ready_for_final_delivery",
-    label: "Pret retrait destinataire",
-    description: "Le colis peut etre remis au destinataire final.",
+    label: "Pret choix destinataire",
+    description: "Le colis est en stock destination et le destinataire peut choisir retrait ou livraison finale.",
     owner: "destination",
-    requiredEvidence: "Notification, controle identite, OTP ou QR.",
+    requiredEvidence: "Final delivery order, notification et emplacement destination.",
+    mappedStatuses: ["out_for_delivery"],
+  },
+  {
+    id: "recipient_delivery_choice",
+    label: "Choix remise final",
+    description: "Retrait relais ou livraison domicile est selectionne et audite.",
+    owner: "destination",
+    requiredEvidence: "Delivery mode, acteur autorise et audit de modification.",
+    mappedStatuses: ["out_for_delivery"],
+  },
+  {
+    id: "secure_delivery_otp",
+    label: "OTP securise",
+    description: "Un OTP hash en base est genere, expire automatiquement et remplace les codes precedents.",
+    owner: "destination",
+    requiredEvidence: "delivery_otps, otp_events et notification in-app/sandbox.",
+    mappedStatuses: ["out_for_delivery"],
+  },
+  {
+    id: "final_mile_or_counter",
+    label: "Remise comptoir ou dernier kilometre",
+    description: "Le relais remet au comptoir ou declenche une mission relay_to_recipient.",
+    owner: "destination",
+    requiredEvidence: "Mission finale, tentative, signature ou validation digitale.",
     mappedStatuses: ["out_for_delivery"],
   },
   {
@@ -226,6 +250,11 @@ const roleActionMap: Record<
       href: "/dashboard/admin/audit",
       label: "Consulter l'audit",
       description: "Verifier les actions sensibles du parcours international.",
+    },
+    {
+      href: "/dashboard/admin/payout-review",
+      label: "Revue payout",
+      description: "Verifier les eligibilites voyageur et livreur final.",
     },
   ],
   client: [
@@ -294,6 +323,11 @@ const roleActionMap: Record<
       href: "/dashboard/relay/destination-reception",
       label: "Reception destination",
       description: "Scanner le QR destination et rendre le colis disponible.",
+    },
+    {
+      href: "/dashboard/relay/final-delivery",
+      label: "Livraison finale",
+      description: "Gerer OTP, retrait destinataire, dernier kilometre et preuves.",
     },
   ],
   transporter: [

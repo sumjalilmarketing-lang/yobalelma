@@ -64,7 +64,12 @@ export async function loginAs(page: Page, user: E2EUser, nextPath?: string) {
 
   await passwordForm.getByLabel("Email").fill(user.email);
   await passwordForm.getByLabel("Mot de passe").fill(user.password);
-  await passwordForm.getByRole("button", { name: "Se connecter" }).click();
+  await Promise.all([
+    page
+      .waitForURL((url) => url.pathname !== "/auth/sign-in", { timeout: 15_000 })
+      .catch(() => null),
+    passwordForm.getByRole("button", { name: "Se connecter" }).click(),
+  ]);
 }
 
 export function dateFromToday(days: number) {

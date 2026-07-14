@@ -40,9 +40,14 @@ function requireOk<T>(result: ApiCall<T>): asserts result is {
   }
 }
 
-async function postJson<T>(page: Parameters<typeof loginAs>[0], path: string, payload: unknown) {
+async function postJson<T>(
+  page: Parameters<typeof loginAs>[0],
+  path: string,
+  payload: unknown,
+  method = "POST",
+) {
   return page.evaluate(
-    async ({ path: requestPath, payload: requestPayload }) => {
+    async ({ method: requestMethod, path: requestPath, payload: requestPayload }) => {
       const controller = new AbortController();
       const timeout = window.setTimeout(() => controller.abort(), 20_000);
 
@@ -50,7 +55,7 @@ async function postJson<T>(page: Parameters<typeof loginAs>[0], path: string, pa
         const response = await fetch(requestPath, {
           body: JSON.stringify(requestPayload),
           headers: { "Content-Type": "application/json" },
-          method: "POST",
+          method: requestMethod,
           signal: controller.signal,
         });
         const body = (await response.json()) as ApiResult<T>;
@@ -74,7 +79,7 @@ async function postJson<T>(page: Parameters<typeof loginAs>[0], path: string, pa
         window.clearTimeout(timeout);
       }
     },
-    { path, payload },
+    { method, path, payload },
   ) as Promise<ApiCall<T>>;
 }
 
@@ -135,7 +140,7 @@ test.describe.serial("authenticated international shipment workflow", () => {
     requireSupabaseAuthenticatedE2E();
   });
 
-  test("runs relay dropoff, hub batching and destination QR delivery", async ({ page }) => {
+  test("runs relay dropoff, hub batching, destination reception and OTP delivery", async ({ page }) => {
     const [client, relayAgent, operations, traveler] = await Promise.all([
       ensureE2EUser("client", "international"),
       ensureE2EUser("relay_agent", "international"),
@@ -351,8 +356,38 @@ test.describe.serial("authenticated international shipment workflow", () => {
       token: originScan.body.data.result?.next_token,
     });
     requireOk(destinationScan);
+    await expectShipmentStatus(shipment.body.data.shipmentId, "out_for_delivery");
+    await expectBatchStatus(batch.body.data.batchId, "arrived");
+
+    const generatedOtp = await postJson<{
+      expiresAt: string;
+      otpCodeForTestOnly: string;
+      otpId: string;
+    }>(page, "/api/final-delivery/otp", {
+      deliveryMode: "relay_pickup",
+      shipmentId: shipment.body.data.shipmentId,
+      ttlMinutes: 15,
+    });
+    requireOk(generatedOtp);
+    expect(generatedOtp.body.data.otpId).toBeTruthy();
+    expect(generatedOtp.body.data.otpCodeForTestOnly).toMatch(/^[0-9]{6}$/);
+
+    const verifiedOtp = await postJson<{
+      order_id: string;
+      proof_id: string;
+      status: string;
+      verified: boolean;
+    }>(page, "/api/final-delivery/otp", {
+      deliveryMode: "relay_pickup",
+      note: "Retrait destinataire E2E avec OTP.",
+      otpCode: generatedOtp.body.data.otpCodeForTestOnly,
+      recipientName: "Destinataire International",
+      recipientPhoneLast4: "0000",
+      shipmentId: shipment.body.data.shipmentId,
+    }, "PATCH");
+    requireOk(verifiedOtp);
+    expect(verifiedOtp.body.data.verified).toBe(true);
     await expectShipmentStatus(shipment.body.data.shipmentId, "delivered");
-    await expectBatchStatus(batch.body.data.batchId, "closed");
   });
 });
 

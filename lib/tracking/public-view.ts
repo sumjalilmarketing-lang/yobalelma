@@ -21,6 +21,13 @@ export type PublicShipmentEventRow = Pick<
   "created_at" | "id" | "status"
 >;
 
+export type PublicFinalDeliveryEventRow = {
+  created_at: string;
+  event_type: string;
+  id: string;
+  status: string;
+};
+
 export type PublicTrackingEvent = {
   id: string;
   label: string;
@@ -57,6 +64,26 @@ const publicStatusLabels: Record<string, string> = {
   picked_up: "Colis recupere",
 };
 
+const publicFinalDeliveryStatusLabels: Record<string, string> = {
+  awaiting_final_delivery: "Livraison finale programmee",
+  awaiting_recipient_pickup: "Pret pour retrait",
+  delivery_assigned: "Livreur final assigne",
+  delivery_attempted: "Tentative de livraison",
+  delivery_blocked: "Action support requise",
+  delivery_rescheduled: "Livraison reprogrammee",
+  delivered: "Livre",
+  destination_batch_received: "Arrive dans le pays de destination",
+  destination_package_confirmed: "Recu au point relais destination",
+  destination_package_damaged: "Incident ouvert",
+  destination_package_missing: "Incident ouvert",
+  invalid_address: "Adresse a verifier",
+  out_for_delivery: "En cours de livraison",
+  ready_for_recipient: "Pret pour remise",
+  recipient_absent: "Destinataire absent",
+  refused_by_recipient: "Remise refusee",
+  returned_to_relay: "Retourne au relais",
+};
+
 export function normalizeTrackingCode(value: string) {
   const compact = value.trim().toUpperCase().replace(/\s+/g, "");
 
@@ -74,17 +101,28 @@ export function isValidTrackingCode(value: string) {
 export function toPublicTrackingShipment(
   shipment: PublicShipmentRow,
   events: PublicShipmentEventRow[],
+  finalDeliveryEvents: PublicFinalDeliveryEventRow[] = [],
 ): PublicTrackingShipment {
-  return {
-    createdAt: shipment.created_at,
-    destination: `${shipment.destination_city}, ${shipment.destination_country}`,
-    eta: `${shipment.eta_min_days}-${shipment.eta_max_days} jours`,
-    events: events.map((event) => ({
+  const publicEvents = [
+    ...events.map((event) => ({
       id: event.id,
       label: publicStatusLabels[event.status] ?? event.status,
       status: event.status,
       timestamp: event.created_at,
     })),
+    ...finalDeliveryEvents.map((event) => ({
+      id: event.id,
+      label: publicFinalDeliveryStatusLabels[event.status] ?? "Mise a jour destination",
+      status: event.status,
+      timestamp: event.created_at,
+    })),
+  ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+  return {
+    createdAt: shipment.created_at,
+    destination: `${shipment.destination_city}, ${shipment.destination_country}`,
+    eta: `${shipment.eta_min_days}-${shipment.eta_max_days} jours`,
+    events: publicEvents,
     origin: `${shipment.origin_city}, ${shipment.origin_country}`,
     scope: shipment.scope,
     status: shipment.status,

@@ -1,5 +1,6 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
 import { extractHandoverQrToken } from "@/lib/qr/payload";
+import { callSupabaseRpc } from "@/lib/supabase/rpc";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { scanQrTokenSchema } from "@/lib/validation/qr";
 
@@ -32,10 +33,17 @@ export async function POST(request: Request) {
     return fail(error instanceof Error ? error.message : "Payload QR invalide.", 422);
   }
 
-  const { data, error } = await supabase.rpc("scan_handover_qr_token", {
+  const { data, error } = await callSupabaseRpc<
+    Array<{
+      batch_id: string;
+      next_token: string | null;
+      next_token_expires_at: string | null;
+    }>
+  >(supabase, "scan_handover_qr_token", {
     p_expected_token_type: parsed.data.expectedTokenType,
     p_incident_type: parsed.data.incidentType || undefined,
     p_note: parsed.data.note || undefined,
+    p_relay_point_id: parsed.data.relayPointId || undefined,
     p_token: token,
   });
 

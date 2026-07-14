@@ -28,6 +28,7 @@ export function DestinationQrScanForm() {
         expectedTokenType: "destination_dropoff",
         incidentType: formData.get("incidentType") || undefined,
         note: formData.get("note") || undefined,
+        relayPointId: formData.get("relayPointId") || undefined,
         token: formData.get("token"),
       }),
       headers: { "Content-Type": "application/json" },
@@ -50,6 +51,14 @@ export function DestinationQrScanForm() {
       <label className="grid gap-2 text-sm font-semibold">
         Payload QR
         <Textarea name="token" rows={5} required />
+      </label>
+      <label className="grid gap-2 text-sm font-semibold">
+        ID du relais destination
+        <input
+          name="relayPointId"
+          className="flex h-11 w-full rounded-md border border-black/15 bg-white px-3 py-2 text-sm font-semibold text-black shadow-sm outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+          placeholder="UUID du point relais destination"
+        />
       </label>
       <label className="grid gap-2 text-sm font-semibold">
         Incident optionnel

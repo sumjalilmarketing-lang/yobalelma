@@ -1,3 +1,4 @@
+import { DestinationReceptionForm } from "@/components/final-delivery/final-delivery-forms";
 import { DestinationQrScanForm } from "@/components/international/destination-qr-scan-form";
 import { InternationalWorkflowView } from "@/components/international/international-workflow-view";
 import { PageShell } from "@/components/layout/page-shell";
@@ -38,7 +39,10 @@ export default async function RelayDestinationReceptionPage() {
       scene="relay"
     >
       <div className="grid gap-8">
-        <DestinationQrScanForm />
+        <section className="grid gap-6 xl:grid-cols-2">
+          <DestinationQrScanForm />
+          <DestinationReceptionForm />
+        </section>
         <InternationalWorkflowView
           data={await loadInternationalWorkflowData({
             role: state.role,
