@@ -29,6 +29,9 @@ export default async function HubDashboardPage() {
           <JourneyVisualStage scene="hub" />
           <div className="flex flex-wrap gap-3">
             <Button asChild>
+              <Link href="/dashboard/hub/international">Parcours international</Link>
+            </Button>
+            <Button asChild variant="secondary">
               <Link href="/dashboard/hub/batches">Batches</Link>
             </Button>
             <Button asChild variant="secondary">
@@ -48,6 +51,9 @@ export default async function HubDashboardPage() {
             </Button>
             <Button asChild variant="secondary">
               <Link href="/dashboard/hub/scanner">Scanner</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/hub/capacities">Capacites</Link>
             </Button>
             <Button asChild variant="secondary">
               <Link href="/dashboard/hub/anomalies">Anomalies</Link>

@@ -24,6 +24,7 @@ export default async function TravelerDashboardPage() {
           title="Voyages et colis compatibles"
           description="Ton espace voyageur structure les trajets disponibles avant le moteur de matching complet."
           actions={[
+            { href: "/dashboard/traveler/international", label: "Parcours international" },
             { href: "/dashboard/traveler/trips/new", label: "Ajouter un voyage" },
             { href: "/dashboard/traveler/trips", label: "Mes voyages", variant: "secondary" },
             { href: "/dashboard/traveler/tickets", label: "Billets", variant: "secondary" },

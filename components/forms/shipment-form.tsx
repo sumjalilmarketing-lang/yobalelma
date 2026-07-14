@@ -32,6 +32,16 @@ type ReviewState = {
   values: ShipmentInput;
 };
 
+const shipmentCreationSteps = [
+  "Adresses",
+  "Detection",
+  "Colis",
+  "Depart",
+  "Verification",
+  "Paiement",
+  "Tracking",
+];
+
 export function ShipmentForm() {
   const [result, setResult] = useState<ShipmentResult | null>(null);
   const [review, setReview] = useState<ReviewState | null>(null);
@@ -74,6 +84,12 @@ export function ShipmentForm() {
       confirmationAccepted: false,
     },
   });
+  const pickupCountry = form.watch("pickupCountry");
+  const deliveryCountry = form.watch("deliveryCountry");
+  const detectedInternational =
+    pickupCountry.trim().length > 1 &&
+    deliveryCountry.trim().length > 1 &&
+    pickupCountry.trim().toLowerCase() !== deliveryCountry.trim().toLowerCase();
 
   async function onSubmit(values: ShipmentInput) {
     setResult(null);
@@ -108,6 +124,7 @@ export function ShipmentForm() {
       onSubmit={form.handleSubmit(onSubmit)}
       noValidate
     >
+      <ShipmentJourneyGuide detectedInternational={detectedInternational} />
       <Section title="Expediteur et enlevement">
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Nom expediteur" error={form.formState.errors.senderName?.message}>
@@ -312,9 +329,22 @@ export function ShipmentForm() {
 }
 
 function ReviewPanel({ review }: { review: ReviewState }) {
+  const isInternational = review.estimate.scope === "international";
+
   return (
     <section className="rounded-lg border border-primary/40 bg-primary/10 p-5">
       <h3 className="text-xl font-black">Verification avant creation</h3>
+      {isInternational ? (
+        <div className="mt-4 rounded-lg border border-primary/30 bg-white p-4 shadow-line">
+          <p className="text-sm font-black uppercase text-primary">
+            Envoi international detecte automatiquement
+          </p>
+          <p className="mt-2 text-sm font-semibold leading-6 text-black/65">
+            Le parcours activera depot ou enlevement local, relais origine, collecte hub,
+            lot voyageur, QR retrait et reception destination.
+          </p>
+        </div>
+      ) : null}
       <div className="mt-4 grid gap-3 text-sm md:grid-cols-2">
         <Summary label="Trajet" value={`${review.values.pickupCity} -> ${review.values.deliveryCity}`} />
         <Summary
@@ -346,6 +376,38 @@ function ReviewPanel({ review }: { review: ReviewState }) {
       <p className="mt-4 text-sm font-semibold text-black/60">
         Le code de suivi `YBL-XXXXXXXX` sera genere au moment de la confirmation.
       </p>
+    </section>
+  );
+}
+
+function ShipmentJourneyGuide({
+  detectedInternational,
+}: {
+  detectedInternational: boolean;
+}) {
+  return (
+    <section className="rounded-lg border border-black/10 bg-white p-4 shadow-line">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-xs font-black uppercase text-black/45">Creation guidee</p>
+          <h2 className="mt-1 text-xl font-black">
+            {detectedInternational
+              ? "Envoi international detecte automatiquement"
+              : "Le type d'envoi sera detecte automatiquement"}
+          </h2>
+        </div>
+        <span className="rounded-md bg-secondary px-3 py-2 text-xs font-black uppercase text-primary">
+          {detectedInternational ? "International" : "National ou international"}
+        </span>
+      </div>
+      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-7">
+        {shipmentCreationSteps.map((step, index) => (
+          <div key={step} className="rounded-md border border-black/10 bg-black/[0.03] p-3">
+            <p className="text-xs font-black text-primary">{index + 1}</p>
+            <p className="mt-1 text-sm font-black text-black">{step}</p>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

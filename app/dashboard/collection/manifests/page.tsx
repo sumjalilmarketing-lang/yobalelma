@@ -1,4 +1,4 @@
-import { OperationForm } from "@/components/operations/operation-form";
+import { CollectionWorkflowForms } from "@/components/international/collection-workflow-forms";
 import { PageShell } from "@/components/layout/page-shell";
 import { DataCard, DataGrid, EmptyState, ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
@@ -11,7 +11,10 @@ export const metadata = {
 };
 
 export default async function CollectionManifestsPage() {
-  const state = await requireRole(["collection_driver", "collection_manager"], "/dashboard/collection/manifests");
+  const state = await requireRole(
+    ["collection_driver", "collection_manager", "operations_manager", "admin", "super_admin"],
+    "/dashboard/collection/manifests",
+  );
 
   return (
     <PageShell
@@ -21,15 +24,7 @@ export default async function CollectionManifestsPage() {
     >
       {state.status === "ready" ? (
         <div className="grid gap-8">
-          <OperationForm
-            title="Nouveau manifeste"
-            endpoint="/api/collection/manifests"
-            submitLabel="Creer le manifeste"
-            fields={[
-              { name: "routeId", label: "ID tournee", required: true },
-              { name: "code", label: "Code", defaultValue: "MAN-", required: true },
-            ]}
-          />
+          <CollectionWorkflowForms />
           <ManifestList />
         </div>
       ) : (

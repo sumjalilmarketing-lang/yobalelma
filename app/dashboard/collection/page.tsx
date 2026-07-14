@@ -11,7 +11,10 @@ export const metadata = {
 };
 
 export default async function CollectionDashboardPage() {
-  const state = await requireRole(["collection_driver", "collection_manager"], "/dashboard/collection");
+  const state = await requireRole(
+    ["collection_driver", "collection_manager", "operations_manager", "admin", "super_admin"],
+    "/dashboard/collection",
+  );
 
   return (
     <PageShell
@@ -22,6 +25,9 @@ export default async function CollectionDashboardPage() {
       {state.status === "ready" ? (
         <div className="flex flex-wrap gap-3">
           <Button asChild>
+            <Link href="/dashboard/collection/international">Parcours international</Link>
+          </Button>
+          <Button asChild variant="secondary">
             <Link href="/dashboard/collection/routes">Tournees</Link>
           </Button>
           <Button asChild variant="secondary">

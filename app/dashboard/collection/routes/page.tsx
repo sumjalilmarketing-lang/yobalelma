@@ -11,7 +11,10 @@ export const metadata = {
 };
 
 export default async function CollectionRoutesPage() {
-  const state = await requireRole(["collection_driver", "collection_manager"], "/dashboard/collection/routes");
+  const state = await requireRole(
+    ["collection_driver", "collection_manager", "operations_manager", "admin", "super_admin"],
+    "/dashboard/collection/routes",
+  );
 
   return (
     <PageShell

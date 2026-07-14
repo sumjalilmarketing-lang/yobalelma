@@ -24,6 +24,7 @@ export default async function ClientDashboardPage() {
           title="Chaque voyage devient une livraison"
           description="Ton espace client centralise les prochaines actions pour envoyer un colis via Yobalelma."
           actions={[
+            { href: "/dashboard/client/international", label: "Parcours international" },
             { href: "/dashboard/client/shipments/new", label: "Creer une expedition" },
             { href: "/dashboard/client/shipments", label: "Mes expeditions", variant: "secondary" },
             { href: "/dashboard/client/tracking", label: "Tracking", variant: "secondary" },

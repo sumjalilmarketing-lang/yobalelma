@@ -24,6 +24,7 @@ export default async function TransporterDashboardPage() {
           title="Operations locales"
           description="Cet espace servira de base aux missions de collecte, depot relais et livraison finale."
           actions={[
+            { href: "/dashboard/transporter/international", label: "Parcours international" },
             { href: "/dashboard/transporter/missions", label: "Mes missions" },
             { href: "/dashboard/transporter/missions/available", label: "Disponibles", variant: "secondary" },
             { href: "/dashboard/transporter/missions/active", label: "Actives", variant: "secondary" },

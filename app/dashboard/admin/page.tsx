@@ -28,6 +28,7 @@ export default async function AdminDashboardPage() {
           <JourneyVisualStage scene="admin" />
           <div className="flex flex-wrap gap-3">
             {[
+              ["International", "/dashboard/admin/international"],
               ["Utilisateurs", "/dashboard/admin/users"],
               ["KYC", "/dashboard/admin/kyc"],
               ["Expeditions", "/dashboard/admin/shipments"],
