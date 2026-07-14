@@ -1,8 +1,14 @@
 import { RoleDashboard } from "@/components/dashboard/role-dashboard";
 import { PageShell } from "@/components/layout/page-shell";
-import { ConfigurationNotice } from "@/components/operations/status-panels";
+import {
+  AccountAccessNotice,
+  ConfigurationNotice,
+} from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
-import type { PlatformRole } from "@/lib/auth/roles";
+import {
+  getUserAppSpaces,
+  type PlatformRole,
+} from "@/lib/auth/roles";
 import type { JourneyScene } from "@/components/visual/yobalelma-world";
 
 type Action = { href: string; label: string; variant?: "default" | "secondary" | "outline" | "ghost" | "dark" };
@@ -27,18 +33,37 @@ export async function ExternalRoleHome({
   checkpoints: string[];
 }) {
   const state = await requireRole([role], returnTo);
+  const spaces =
+    state.status === "ready" || state.status === "blocked"
+      ? getUserAppSpaces(state.roles).map((space) => ({
+          ...space,
+          current: space.role === role,
+        }))
+      : [];
 
   return (
     <PageShell eyebrow={roleLabel} title={title} description={description} scene={scene}>
       {state.status === "ready" ? (
-        <RoleDashboard
-          email={state.email}
-          roleLabel={roleLabel}
-          title={title}
-          description={description}
-          scene={scene}
-          actions={actions}
-          checkpoints={checkpoints}
+        <div className="grid gap-5">
+          <AccountAccessNotice
+            accountStatus={state.accountStatus}
+            identityStatus={state.identityStatus}
+          />
+          <RoleDashboard
+            email={state.email}
+            roleLabel={roleLabel}
+            title={title}
+            description={description}
+            scene={scene}
+            actions={actions}
+            checkpoints={checkpoints}
+            spaces={spaces}
+          />
+        </div>
+      ) : state.status === "blocked" ? (
+        <AccountAccessNotice
+          accountStatus={state.accountStatus}
+          identityStatus={state.identityStatus}
         />
       ) : (
         <ConfigurationNotice />

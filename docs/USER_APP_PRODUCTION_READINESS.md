@@ -1,20 +1,40 @@
 # User App Production Readiness
 
-## Statut reel
+## Status
 
-- Pret pour demonstration: oui, si les validations passent.
-- Pret pour test interne: partiellement.
-- Pret pour pilote: non.
-- Pret pour production: non.
+- Ready for local demonstration: yes.
+- Ready for internal testing: yes.
+- Ready for staging preview: blocked by missing deployment tooling/credentials.
+- Ready for pilot: partially, after external preview and provider decisions.
+- Ready for production: no.
 
-## Raisons
+## What is ready
 
-- L'application demarre et build independamment apres migration.
-- Les routes sont physiquement presentes.
-- Les workflows principaux reutilisent des API Supabase reelles deja presentes.
-- Certaines pages restent des wrappers legacy.
-- Multirole complet, selection relais avancee, paiement provider et notifications externes restent a terminer.
+- Independent user-app build.
+- Client, transporter, traveler, recipient and public tracking routes.
+- Supabase Auth login/signup/reset surfaces.
+- Server-side route protection.
+- Multirole resolution and space switching.
+- National shipment form and detection.
+- International shipment detection and workflow entry.
+- Traveler trip creation.
+- Transporter operational mission surfaces.
+- Recipient delivery surfaces.
+- Public tracking privacy filtering.
+- Sandbox/manual payment surfaces.
+- In-app notifications surfaces.
+- RLS, buckets and security audit verified.
+- 31/31 user-app Playwright tests passing.
+- 17 visual demo screenshots generated.
+
+## Not production-ready yet
+
+- No external preview URL could be created from this workspace.
+- Real payment providers are not active.
+- Real email, SMS, WhatsApp and push providers are not active.
+- Rate limiting and monitoring need deployment-layer configuration.
+- Pilot runbooks for KYC review, support escalation and payout release need final business approval.
 
 ## Decision
 
-User-app peut servir de base executable pour la phase produit suivante, mais ne doit pas etre annoncee comme terminee production.
+User-app is a stable, executable, tested internal build. It must not be announced as production-ready until external staging, provider integrations, monitoring and operational runbooks are complete.

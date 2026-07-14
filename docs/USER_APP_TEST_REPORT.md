@@ -1,39 +1,44 @@
 # User App Test Report
 
-Ce document doit etre mis a jour apres chaque validation.
+Date: 2026-07-14
 
-## Commandes cible
+## Commands executed
 
-- `npm install`
-- `npm run lint --workspace=user-app`
-- `npm run typecheck --workspace=user-app`
-- `npm run test --workspace=user-app`
-- `npm run build --workspace=user-app`
-- `npm run test:e2e --workspace=user-app`
+- Supabase validation: passed.
+- Supabase migration apply: passed, 1 migration applied.
+- Supabase storage ensure: passed, 10 private buckets already present.
+- Supabase security audit: passed.
+- Workspace lint: passed.
+- Workspace typecheck: passed.
+- User-app unit tests: passed, 2 files, 6 tests.
+- Workspace unit/integration tests: passed, 17 files, 90 tests.
+- Workspace production build: passed.
+- User-app independent production build: passed.
+- User-app E2E: passed, 31/31 tests.
+- User-app visual demo: passed, 17 screenshots generated.
 
-## Couverture ajoutee
+## Playwright specs
 
-- Presence physique des routes user-app.
-- Acces user-app limite aux roles externes.
-- Detection national/international.
-- Smoke E2E routes publiques et protection des routes privees.
+- `user-client-registration.spec.ts` - passed.
+- `user-login-reset.spec.ts` - passed.
+- `user-multi-role-switching.spec.ts` - passed.
+- `user-national-shipment.spec.ts` - passed.
+- `user-international-shipment.spec.ts` - passed.
+- `user-transporter-mission.spec.ts` - passed.
+- `user-traveler-trip.spec.ts` - passed.
+- `user-recipient-delivery.spec.ts` - passed.
+- `user-public-tracking.spec.ts` - passed.
+- `user-app-access-control.spec.ts` - passed.
+- `user-mobile-responsive.spec.ts` - passed.
+- `user-app-visual-demo.spec.ts` - passed.
 
-## Resultats
+## Bugs found and fixed during validation
 
-- `npm install`: reussi, lockfile workspace mis a jour.
-- `npm run lint --workspace=user-app`: reussi.
-- `npm run typecheck --workspace=user-app`: reussi.
-- `npm run test --workspace=user-app`: reussi, 2 fichiers, 3 tests.
-- `npm run build --workspace=user-app`: reussi, 54 routes generees.
-- `npm run test:e2e --workspace=user-app`: reussi, 16 tests Playwright.
-- `npm run validate:supabase`: reussi hors sandbox, Auth OK, 10 buckets OK, 69 tables OK.
-- `npm run audit:supabase-security`: reussi hors sandbox, RLS/policies attendues OK.
-- `npm run lint`: reussi.
-- `npm run typecheck`: reussi.
-- `npm run test`: reussi, 15 fichiers, 77 tests.
-- `npm run build`: reussi.
-- `npm run test:e2e`: reussi, 38 tests Playwright.
+- Vitest user-app config used a directory `new URL` pattern that failed under Windows/esbuild sandbox; fixed with `path.dirname(fileURLToPath(import.meta.url))`.
+- Public tracking form posted to legacy `/suivi`; changed to `/tracking`.
+- Playwright assertions were too strict for duplicated premium headings; tests now use exact headings or first matching visible element.
+- Visual demo needed authenticated captures to reconnect per protected route.
 
 ## Notes
 
-Vitest et Supabase ont necessite une execution hors sandbox a cause de restrictions Windows/esbuild et reseau HTTPS. Aucun secret n'a ete affiche.
+Some commands required execution outside the restricted sandbox because Vitest/esbuild needed parent directory reads, Playwright needed a browser/server, and Supabase validation/migration needed HTTPS access. No secret was printed.

@@ -1,11 +1,15 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Database, Layers3 } from "lucide-react";
+import { AlertTriangle, Database, Layers3, ShieldAlert } from "lucide-react";
 import {
   PremiumEmptyState,
   PremiumKpi,
   PremiumPanel,
 } from "@/components/design-system/premium";
+import type {
+  AccountStatus,
+  IdentityVerificationStatus,
+} from "@/lib/auth/server";
 
 export function ConfigurationNotice({
   label = "Configuration Supabase requise",
@@ -35,6 +39,81 @@ export function EmptyState({
 }) {
   return (
     <PremiumEmptyState title={title} description={description} action={action} />
+  );
+}
+
+export function AccountAccessNotice({
+  accountStatus,
+  identityStatus,
+}: {
+  accountStatus: AccountStatus;
+  identityStatus: IdentityVerificationStatus;
+}) {
+  if (accountStatus === "suspended" || accountStatus === "closed") {
+    return (
+      <PremiumPanel tone="support" className="p-6">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-secondary text-primary">
+            <ShieldAlert className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="text-2xl font-black">
+              {accountStatus === "closed" ? "Compte ferme" : "Compte suspendu"}
+            </h2>
+            <p className="mt-3 max-w-2xl leading-7 text-black/60">
+              L&apos;acces aux donnees privees est bloque cote serveur. Contacte le support
+              Yobalelma pour verifier ton dossier avant de reprendre les operations.
+            </p>
+          </div>
+        </div>
+      </PremiumPanel>
+    );
+  }
+
+  if (identityStatus === "approved") {
+    return null;
+  }
+
+  const copyByStatus: Record<IdentityVerificationStatus, { title: string; description: string }> = {
+    approved: {
+      title: "KYC valide",
+      description: "Ton identite est validee.",
+    },
+    expired: {
+      title: "KYC expire",
+      description: "Ajoute un document a jour pour continuer les operations sensibles.",
+    },
+    needs_more_information: {
+      title: "KYC incomplet",
+      description: "Le dossier necessite une correction avant validation finale.",
+    },
+    pending: {
+      title: "KYC en attente",
+      description: "Complete ton dossier d'identite pour debloquer les actions sensibles.",
+    },
+    rejected: {
+      title: "KYC refuse",
+      description: "Le dossier a ete refuse. Consulte le support pour connaitre les corrections attendues.",
+    },
+    submitted: {
+      title: "KYC soumis",
+      description: "Le dossier est en cours de verification par l'equipe Yobalelma.",
+    },
+  };
+  const copy = copyByStatus[identityStatus];
+
+  return (
+    <PremiumPanel tone="support" className="p-5">
+      <div className="flex items-start gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-amber-100 text-amber-700">
+          <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+        </span>
+        <div>
+          <h2 className="text-xl font-black">{copy.title}</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-black/60">{copy.description}</p>
+        </div>
+      </div>
+    </PremiumPanel>
   );
 }
 

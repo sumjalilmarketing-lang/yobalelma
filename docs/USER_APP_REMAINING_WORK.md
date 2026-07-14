@@ -1,26 +1,27 @@
 # User App Remaining Work
 
-## Critique
+## Critical
 
-- Finaliser le guard multirole avec `user_roles`.
-- Extraire les pages critiques hors wrappers legacy.
-- Valider inscription/confirmation email sur Supabase distant avec comptes de test.
+- Create an external preview/staging deployment once Vercel or another provider is available.
+- Configure production-grade rate limiting and monitoring.
+- Complete provider security reviews before enabling real payment and notification providers.
 
-## Haute
+## High
 
-- Selection relais par ville et stockage du relais choisi.
-- UX pickup planning et frais d'enlevement.
-- Dispatch geographique sandbox complet.
-- Machine a etats stricte exposee dans un package partage.
+- Connect real Orange Money, Wave and card providers when keys and sandbox contracts are available.
+- Configure real email, SMS, WhatsApp and push delivery providers.
+- Finalize operational runbooks for KYC review, payout release, incidents and support escalation.
+- Add more abuse and fraud tests around OTP, tracking, signup and payment retries.
 
-## Moyenne
+## Medium
 
-- Carnet d'adresses dedie.
-- Reviews et notation UX.
-- Preferences notifications.
-- Support avec pieces jointes.
+- Build a dedicated address book table and UX beyond shipment-derived addresses.
+- Add richer relay selection by city, opening hours and capacity.
+- Expand transporter dispatch scoring and geospatial matching.
+- Add support attachments once upload moderation policy is finalized.
 
-## Faible
+## Low
 
-- Enrichissement editorial des pages legal/pricing/security.
-- Optimisation micro-animations propres a user-app.
+- Enrich legal, pricing and security pages.
+- Add more regional visual variants.
+- Tune micro-animations after pilot feedback.

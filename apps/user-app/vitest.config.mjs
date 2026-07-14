@@ -3,8 +3,9 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
-const appDir = fileURLToPath(new URL(".", import.meta.url));
-const rootDir = path.resolve(appDir, "../..");
+const configDir = path.dirname(fileURLToPath(import.meta.url));
+const appDir = configDir;
+const rootDir = path.resolve(configDir, "../..");
 
 export default defineConfig({
   plugins: [react()],

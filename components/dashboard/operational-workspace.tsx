@@ -13,6 +13,7 @@ import {
 } from "@/components/design-system/premium";
 import { PageShell } from "@/components/layout/page-shell";
 import {
+  AccountAccessNotice,
   ConfigurationNotice,
   EmptyState,
 } from "@/components/operations/status-panels";
@@ -76,18 +77,29 @@ export async function OperationalWorkspace({
       scene={config.scene}
     >
       {state.status === "ready" ? (
-        <PermissionGuard
-          role={state.role}
-          anyOf={[config.permission]}
-          fallback={
-            <EmptyState
-              title="Acces limite"
-              description="Ton role est authentifie, mais il ne possede pas la permission operationnelle attendue pour cette section."
-            />
-          }
-        >
-          <WorkspaceContent config={config} userId={state.userId} role={state.role} />
-        </PermissionGuard>
+        <div className="grid gap-5">
+          <AccountAccessNotice
+            accountStatus={state.accountStatus}
+            identityStatus={state.identityStatus}
+          />
+          <PermissionGuard
+            role={state.role}
+            anyOf={[config.permission]}
+            fallback={
+              <EmptyState
+                title="Acces limite"
+                description="Ton role est authentifie, mais il ne possede pas la permission operationnelle attendue pour cette section."
+              />
+            }
+          >
+            <WorkspaceContent config={config} userId={state.userId} role={state.role} />
+          </PermissionGuard>
+        </div>
+      ) : state.status === "blocked" ? (
+        <AccountAccessNotice
+          accountStatus={state.accountStatus}
+          identityStatus={state.identityStatus}
+        />
       ) : (
         <ConfigurationNotice />
       )}

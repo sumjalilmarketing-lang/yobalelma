@@ -1,4 +1,5 @@
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
+import { expectProtectedRedirect, expectPublicPage } from "./user-app-test-utils";
 
 const publicRoutes = [
   "/",
@@ -12,23 +13,30 @@ const publicRoutes = [
   "/terms",
   "/privacy",
   "/auth/login",
-  "/auth/register"
+  "/auth/register",
+  "/recipient/delivery"
 ];
 
-const protectedRoutes = ["/client", "/client/shipments", "/transporter", "/traveler"];
+const protectedRoutes = [
+  "/client",
+  "/client/shipments",
+  "/client/shipments/new",
+  "/transporter",
+  "/transporter/missions",
+  "/traveler",
+  "/traveler/trips/new"
+];
 
 test.describe("user-app routes", () => {
   for (const route of publicRoutes) {
     test(`${route} renders publicly`, async ({ page }) => {
-      const response = await page.goto(route);
-      expect(response?.status()).toBeLessThan(400);
+      await expectPublicPage(page, route);
     });
   }
 
   for (const route of protectedRoutes) {
     test(`${route} is protected`, async ({ page }) => {
-      await page.goto(route);
-      await expect(page).toHaveURL(new RegExp("/auth/login"));
+      await expectProtectedRedirect(page, route);
     });
   }
 });

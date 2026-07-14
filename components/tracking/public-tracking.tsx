@@ -8,7 +8,7 @@ import type { PublicTrackingShipment } from "@/lib/tracking/public-view";
 export function TrackingSearchForm({ defaultValue = "" }: { defaultValue?: string }) {
   return (
     <form
-      action="/suivi"
+      action="/tracking"
       className="grid gap-3 rounded-lg border border-black/10 bg-white p-5 shadow-line md:grid-cols-[1fr_auto]"
     >
       <label className="grid gap-2">
@@ -95,7 +95,7 @@ export function TrackingResult({ shipment }: { shipment: PublicTrackingShipment 
       </section>
 
       <Button asChild variant="secondary" className="w-fit">
-        <Link href={`/suivi/${shipment.trackingCode}`}>Lien public permanent</Link>
+        <Link href={`/tracking/${shipment.trackingCode}`}>Lien public permanent</Link>
       </Button>
     </div>
   );

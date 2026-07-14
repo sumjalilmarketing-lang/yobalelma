@@ -1695,6 +1695,35 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          profile_id: string
+          role_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          profile_id: string
+          role_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          profile_id?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       relay_inventory: {
         Row: {
           checked_in_at: string

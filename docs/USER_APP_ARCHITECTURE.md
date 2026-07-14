@@ -18,11 +18,17 @@
 
 ## Securite
 
-- Middleware dedie pour `/client`, `/transporter`, `/traveler`.
+- Middleware dedie aux redirections legacy user-app.
 - Redirections legacy vers les nouvelles routes user-app.
 - Pages serveur protegees par `requireRole`.
+- `requireRole` lit `profiles`, `role_assignments` et `user_roles`.
+- Les comptes suspendus ou fermes sont bloques avant rendu des donnees privees.
 - RLS Supabase conservees comme barriere de donnees.
 
-## Limite actuelle
+## Multirole
 
-Le multirole complet doit encore lire `user_roles` dans les guards, pas seulement `profiles.primary_role`.
+Le selecteur d'espace user-app affiche uniquement les roles externes reellement attribues:
+
+- Espace client
+- Espace livreur
+- Espace voyageur

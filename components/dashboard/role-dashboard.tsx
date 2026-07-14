@@ -4,6 +4,7 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
+import Link from "next/link";
 import {
   PremiumActionCard,
   PremiumBadge,
@@ -26,6 +27,12 @@ type DashboardAction = {
   variant?: "default" | "secondary" | "outline" | "ghost" | "dark";
 };
 
+type DashboardSpace = {
+  current: boolean;
+  href: string;
+  label: string;
+};
+
 type RoleDashboardProps = {
   email: string;
   roleLabel: string;
@@ -34,6 +41,7 @@ type RoleDashboardProps = {
   actions: DashboardAction[];
   checkpoints: string[];
   scene?: JourneyScene;
+  spaces?: DashboardSpace[];
 };
 
 export function RoleDashboard({
@@ -44,6 +52,7 @@ export function RoleDashboard({
   actions,
   checkpoints,
   scene,
+  spaces = [],
 }: RoleDashboardProps) {
   const resolvedScene = scene ?? resolveJourneyScene(`${roleLabel} ${title}`);
   const summary = sceneSummary(resolvedScene);
@@ -62,6 +71,22 @@ export function RoleDashboard({
             <h2 className="mt-4 max-w-2xl text-3xl font-black leading-tight md:text-4xl">{title}</h2>
             <p className="mt-4 max-w-2xl leading-7 text-white/70">{description}</p>
             <p className="mt-5 text-sm font-bold text-white/70">{email}</p>
+            {spaces.length > 1 ? (
+              <div className="mt-5 flex flex-wrap gap-2" aria-label="Changer d'espace">
+                {spaces.map((space) => (
+                  <Button
+                    key={space.href}
+                    asChild
+                    size="sm"
+                    variant={space.current ? "default" : "outline"}
+                  >
+                    <Link href={space.href} aria-current={space.current ? "page" : undefined}>
+                      {space.label}
+                    </Link>
+                  </Button>
+                ))}
+              </div>
+            ) : null}
             <div className="mt-5 flex flex-wrap gap-2">
               {summary.status.slice(0, 3).map((status) => (
                 <span

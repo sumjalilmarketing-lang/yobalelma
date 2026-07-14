@@ -1,4 +1,5 @@
 export const publicSignupRoles = ["client", "local_transporter", "traveler"] as const;
+export const userAppSpaceRoles = ["client", "local_transporter", "traveler"] as const;
 
 export const platformRoles = [
   "client",
@@ -18,6 +19,7 @@ export const platformRoles = [
 ] as const;
 
 export type PublicSignupRole = (typeof publicSignupRoles)[number];
+export type UserAppSpaceRole = (typeof userAppSpaceRoles)[number];
 export type PlatformRole = (typeof platformRoles)[number];
 
 export const platformPermissions = [
@@ -239,6 +241,92 @@ export function isPublicSignupRole(role: string): role is PublicSignupRole {
 
 export function isPlatformRole(role: string): role is PlatformRole {
   return platformRoles.includes(role as PlatformRole);
+}
+
+export function normalizePlatformRole(role: unknown): PlatformRole | null {
+  if (typeof role !== "string") {
+    return null;
+  }
+
+  if (role === "sender") {
+    return "client";
+  }
+
+  if (role === "both") {
+    return "client";
+  }
+
+  return isPlatformRole(role) ? role : null;
+}
+
+export function expandPlatformRoles(role: unknown): PlatformRole[] {
+  if (typeof role !== "string") {
+    return [];
+  }
+
+  if (role === "sender") {
+    return ["client"];
+  }
+
+  if (role === "both") {
+    return ["client", "traveler"];
+  }
+
+  const normalizedRole = normalizePlatformRole(role);
+
+  return normalizedRole ? [normalizedRole] : [];
+}
+
+export function mergePlatformRoles(...roleGroups: Array<readonly unknown[]>): PlatformRole[] {
+  const roles = new Set<PlatformRole>();
+
+  for (const roleGroup of roleGroups) {
+    for (const role of roleGroup) {
+      for (const expandedRole of expandPlatformRoles(role)) {
+        roles.add(expandedRole);
+      }
+    }
+  }
+
+  return [...roles];
+}
+
+export function selectRoleForAccess(
+  assignedRoles: readonly PlatformRole[],
+  allowedRoles: readonly PlatformRole[],
+) {
+  return assignedRoles.find((role) => allowedRoles.includes(role)) ?? null;
+}
+
+export function isUserAppSpaceRole(role: PlatformRole): role is UserAppSpaceRole {
+  return userAppSpaceRoles.includes(role as UserAppSpaceRole);
+}
+
+export function getUserAppRolePath(role: UserAppSpaceRole) {
+  if (role === "local_transporter") {
+    return "/transporter";
+  }
+
+  if (role === "traveler") {
+    return "/traveler";
+  }
+
+  return "/client";
+}
+
+export function getUserAppSpaces(roles: readonly PlatformRole[]) {
+  return roles
+    .filter(isUserAppSpaceRole)
+    .map((role) => ({
+      href: getUserAppRolePath(role),
+      label:
+        role === "local_transporter"
+          ? "Espace livreur"
+          : role === "traveler"
+            ? "Espace voyageur"
+            : "Espace client",
+      role,
+    }));
 }
 
 export function getRoleDashboardPath(role: PlatformRole) {
