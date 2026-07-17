@@ -27,6 +27,7 @@ describe("Hub staging security", () => {
 
     await expect(verifyHubPickupQrToken(signed)).resolves.toEqual(pickup);
     await expect(verifyHubPickupQrToken(`${signed.slice(0, -1)}x`)).resolves.toBeNull();
+    await expect(verifyHubPickupQrToken(`${signed}.ignored`)).resolves.toBeNull();
   });
 
   it("accepts safe correlation ids and replaces invalid values", () => {

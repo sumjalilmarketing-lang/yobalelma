@@ -50,7 +50,7 @@ export function Panel({
   title?: string;
 }) {
   return (
-    <section className={cn("hub-card-reveal rounded-lg border border-black/10 bg-white p-4 shadow-line", className)}>
+    <section className={cn("hub-card-reveal min-w-0 rounded-lg border border-black/10 bg-white p-4 shadow-line", className)}>
       {title ? (
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-sm font-black uppercase tracking-[0.16em] text-muted-foreground">{title}</h2>

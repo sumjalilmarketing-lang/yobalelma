@@ -15,7 +15,7 @@ function bytesToBase64Url(bytes: Uint8Array) {
   return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/u, "");
 }
 
-function base64UrlToBytes(value: string) {
+function base64UrlToBytes(value: string): Uint8Array<ArrayBuffer> {
   const normalized = value.replaceAll("-", "+").replaceAll("_", "/");
   const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
   const binary = atob(padded);
@@ -91,7 +91,7 @@ export async function verifyHubPickupQrToken(token?: string | null): Promise<Pic
 }
 
 async function verifySignedValue<T>(token?: string | null): Promise<T | null> {
-  if (!token?.includes(".")) {
+  if (!token) {
     return null;
   }
 
@@ -101,9 +101,29 @@ async function verifySignedValue<T>(token?: string | null): Promise<T | null> {
     return null;
   }
 
-  const [payload, signature] = token.split(".");
+  const parts = token.split(".");
+
+  if (parts.length !== 2) {
+    return null;
+  }
+
+  const [payload, signature] = parts;
 
   if (!payload || !signature) {
+    return null;
+  }
+
+  let payloadBytes: Uint8Array<ArrayBuffer>;
+  let signatureBytes: Uint8Array<ArrayBuffer>;
+
+  try {
+    payloadBytes = base64UrlToBytes(payload);
+    signatureBytes = base64UrlToBytes(signature);
+  } catch {
+    return null;
+  }
+
+  if (bytesToBase64Url(payloadBytes) !== payload || bytesToBase64Url(signatureBytes) !== signature) {
     return null;
   }
 
@@ -111,7 +131,7 @@ async function verifySignedValue<T>(token?: string | null): Promise<T | null> {
   const verified = await crypto.subtle.verify(
     "HMAC",
     key,
-    base64UrlToBytes(signature),
+    signatureBytes,
     encoder.encode(payload),
   );
 
@@ -120,7 +140,7 @@ async function verifySignedValue<T>(token?: string | null): Promise<T | null> {
   }
 
   try {
-    return JSON.parse(new TextDecoder().decode(base64UrlToBytes(payload))) as T;
+    return JSON.parse(new TextDecoder().decode(payloadBytes)) as T;
   } catch {
     return null;
   }

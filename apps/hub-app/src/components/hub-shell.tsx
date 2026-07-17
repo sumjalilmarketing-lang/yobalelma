@@ -58,27 +58,47 @@ export function HubShell({
               <p className="mt-2 truncate text-lg font-black">{session.name}</p>
               <p className="truncate text-xs font-bold text-white/65">{session.role}</p>
             </div>
-            <nav className="mt-3 grid gap-1" aria-label="Navigation Hub">
-              {visibleNavigation.map((item) => (
-                <Link
-                  key={item.href}
-                  className={cn(
-                    "rounded-md px-3 py-2 text-sm font-black transition hover:bg-primary hover:text-white",
-                    pathname === item.href || (item.href !== "/hub" && pathname.startsWith(item.href))
-                      ? "bg-black text-white"
-                      : "text-muted-foreground",
-                  )}
-                  href={item.href}
-                >
-                  {navigationLabel(item.labelKey)}
-                </Link>
-              ))}
-            </nav>
+            <details className="mt-3 lg:hidden">
+              <summary className="cursor-pointer rounded-md bg-black px-3 py-2 text-sm font-black text-white">
+                Navigation Hub
+              </summary>
+              <HubNavigation pathname={pathname} visibleNavigation={visibleNavigation} />
+            </details>
+            <div className="hidden lg:block">
+              <HubNavigation pathname={pathname} visibleNavigation={visibleNavigation} />
+            </div>
           </div>
         </aside>
         <main className="min-w-0">{children}</main>
       </div>
     </div>
+  );
+}
+
+function HubNavigation({
+  pathname,
+  visibleNavigation,
+}: {
+  pathname: string;
+  visibleNavigation: typeof hubNavigation;
+}) {
+  return (
+    <nav className="mt-3 grid gap-1" aria-label="Navigation Hub">
+      {visibleNavigation.map((item) => (
+        <Link
+          key={item.href}
+          className={cn(
+            "rounded-md px-3 py-2 text-sm font-black transition hover:bg-primary hover:text-white",
+            pathname === item.href || (item.href !== "/hub" && pathname.startsWith(item.href))
+              ? "bg-black text-white"
+              : "text-muted-foreground",
+          )}
+          href={item.href}
+        >
+          {navigationLabel(item.labelKey)}
+        </Link>
+      ))}
+    </nav>
   );
 }
 

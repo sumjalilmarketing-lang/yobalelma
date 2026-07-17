@@ -31,7 +31,7 @@ export async function signInHub(page: Page, role: E2EHubRole = "hub_agent") {
   await page.getByLabel("Code operateur").fill(account.code);
   await page.getByRole("button", { name: "Entrer dans le Hub" }).click();
   await expect(page).toHaveURL(/\/hub/);
-  await expect(page.getByText("Centre operationnel Hub")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Centre operationnel Hub" })).toBeVisible();
 }
 
 export async function resetHub(page: Page) {
