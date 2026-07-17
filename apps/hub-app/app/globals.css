@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 42 45% 98%;
+  --foreground: 210 12% 7%;
+  --border: 34 18% 84%;
+  --input: 34 18% 84%;
+  --ring: 24 100% 50%;
+  --primary: 24 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 12% 7%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 40 28% 93%;
+  --muted-foreground: 210 8% 35%;
+  --accent: 38 95% 92%;
+  --accent-foreground: 210 12% 7%;
+  --surface: 0 0% 100%;
+  --card: 42 50% 99%;
+  --success: 152 53% 35%;
+  --warning: 42 95% 50%;
+  --error: 0 72% 52%;
+  --info: 202 77% 43%;
+  --destructive: 0 72% 52%;
+  --destructive-foreground: 0 0% 98%;
+  --yb-black: 210 12% 7%;
+  --yb-orange: 24 100% 50%;
+  --yb-white: 0 0% 100%;
+  --yb-sand: 38 53% 82%;
+  --yb-earth: 28 43% 30%;
+  --yb-nature: 152 59% 31%;
+  --yb-sky: 202 72% 56%;
+  --yb-premium-gray: 40 22% 94%;
+  --radius: 0.5rem;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, hsl(var(--accent) / 0.62), transparent 32%),
+    linear-gradient(180deg, hsl(var(--background)), hsl(36 38% 96%));
+  color: hsl(var(--foreground));
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.hub-grid {
+  background-image:
+    linear-gradient(hsl(var(--foreground) / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--foreground) / 0.055) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.hub-pattern {
+  background-image:
+    linear-gradient(45deg, hsl(var(--yb-orange) / 0.08) 25%, transparent 25%),
+    linear-gradient(-45deg, hsl(var(--yb-earth) / 0.08) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, hsl(var(--yb-nature) / 0.08) 75%),
+    linear-gradient(-45deg, transparent 75%, hsl(var(--yb-sky) / 0.08) 75%);
+  background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+  background-size: 24px 24px;
+}
+
+.hub-skyline {
+  background-image:
+    linear-gradient(to top, hsl(var(--foreground) / 0.08) 0 2px, transparent 2px),
+    linear-gradient(to top, hsl(var(--foreground) / 0.06) 0 24%, transparent 24%),
+    linear-gradient(to top, hsl(var(--foreground) / 0.05) 0 38%, transparent 38%);
+  background-position: 0 100%, 0 100%, 18px 100%;
+  background-repeat: repeat-x;
+  background-size: 100% 24px, 42px 80px, 58px 96px;
+}
+
+.hub-card-reveal {
+  animation: hub-card-reveal 460ms ease-out both;
+}
+
+.hub-loader-line {
+  position: relative;
+  overflow: hidden;
+}
+
+.hub-loader-line::after {
+  animation: hub-loader-slide 1.3s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.34), transparent);
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform: translateX(-100%);
+}
+
+@keyframes hub-card-reveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hub-loader-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hub-card-reveal,
+  .hub-loader-line::after {
+    animation: none;
+  }
+}

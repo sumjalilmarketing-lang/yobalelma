@@ -28,8 +28,8 @@ export const yobalelmaApps = [
     id: "hub-app",
     name: "Hub App",
     domain: "hub.yobalelma.com",
-    routePrefixes: ["/dashboard/hub", "/api/hub", "/api/qr"],
-    roles: ["hub_agent", "hub_manager"],
+    routePrefixes: ["/hub", "/dashboard/hub", "/api/hub", "/api/qr"],
+    roles: ["hub_agent", "hub_supervisor", "hub_manager", "operations_manager"],
   },
   {
     id: "collection-app",
