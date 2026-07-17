@@ -13,7 +13,8 @@ export function redirectTo(formData: FormData, fallback = "/hub") {
 export function requestOrigin(request: NextRequest) {
   const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
   const protocol = forwardedProtocol || request.nextUrl.protocol.replace(/:$/u, "") || "http";
-  const host = request.headers.get("host") || request.nextUrl.host;
+  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const host = forwardedHost || request.headers.get("host") || request.nextUrl.host;
 
   return `${protocol}://${host}`;
 }

@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
       return withCorrelation(NextResponse.json({ error: "Authentication required." }, { status: 401 }), requestId);
     }
 
-    const signIn = new URL("/auth/sign-in", request.url);
+    const signIn = new URL("/auth/sign-in", requestOrigin(request));
     signIn.searchParams.set("next", pathname);
     return withCorrelation(NextResponse.redirect(signIn), requestId);
   }
@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
       return withCorrelation(NextResponse.json({ error: "Hub access denied." }, { status: 403 }), requestId);
     }
 
-    return withCorrelation(NextResponse.redirect(new URL("/hub", request.url)), requestId);
+    return withCorrelation(NextResponse.redirect(new URL("/hub", requestOrigin(request))), requestId);
   }
 
   const headers = new Headers(request.headers);
@@ -47,6 +47,17 @@ export async function middleware(request: NextRequest) {
   structuredLog("info", "hub_request_authorized", { method: request.method, path: pathname, requestId, role: session.role });
 
   return withCorrelation(NextResponse.next({ request: { headers } }), requestId);
+}
+
+function requestOrigin(request: NextRequest) {
+  const protocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim()
+    || request.nextUrl.protocol.replace(/:$/u, "")
+    || "http";
+  const host = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim()
+    || request.headers.get("host")
+    || request.nextUrl.host;
+
+  return `${protocol}://${host}`;
 }
 
 function withCorrelation(response: NextResponse, requestId: string) {
