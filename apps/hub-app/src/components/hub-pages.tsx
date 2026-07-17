@@ -33,21 +33,29 @@ import type {
   TravelerTrip,
 } from "../lib/types";
 import { ActionButton, Badge, EmptyState, Field, KpiIcon, PageHeader, Panel, inputClass, selectClass, submitClass } from "./hub-ui";
+import type { EnterpriseHubState } from "../lib/enterprise-types";
+import { EnterpriseDashboard, EnterprisePage } from "./enterprise-pages";
 
 export function HubRoutePage({
   hubState,
+  enterpriseState,
   segments,
   session,
 }: {
   hubState: HubState;
+  enterpriseState: EnterpriseHubState;
   segments?: string[];
   session: HubSession;
 }) {
   const route = resolveRoute(segments ?? []);
 
+  if (["controlTower", "agents", "search", "incidents", "alerts", "stockMonitoring", "forecast", "systemHealth", "audit", "reports", "exports", "documents"].includes(route.kind)) {
+    return <EnterprisePage kind={route.kind as "controlTower" | "agents" | "search" | "incidents" | "alerts" | "stockMonitoring" | "forecast" | "systemHealth" | "audit" | "reports" | "exports" | "documents"} session={session} state={enterpriseState} />;
+  }
+
   switch (route.kind) {
     case "dashboard":
-      return <DashboardPage state={hubState} />;
+      return <DashboardPage enterpriseState={enterpriseState} state={hubState} />;
     case "inbound":
       return <InboundPage state={hubState} />;
     case "inboundDetail":
@@ -123,27 +131,38 @@ function resolveRoute(segments: string[]): { id: string; kind: HubRouteKind } {
   if (first === "anomalies" && second) return { id: second, kind: "anomalyDetail" };
 
   const exact: Record<string, HubRouteKind> = {
+    agents: "agents",
+    alerts: "alerts",
+    audit: "audit",
     anomalies: "anomalies",
     batches: "batches",
     capacities: "capacities",
+    "control-tower": "controlTower",
+    documents: "documents",
+    exports: "exports",
+    forecast: "forecast",
     handover: "handover",
     history: "history",
     inbound: "inbound",
+    incidents: "incidents",
     inspection: "inspection",
     inventory: "inventory",
     notifications: "notifications",
     profile: "profile",
     reports: "reports",
+    search: "search",
     scanner: "scanner",
     settings: "settings",
     storage: "storage",
+    "stock-monitoring": "stockMonitoring",
+    "system-health": "systemHealth",
     trips: "trips",
   };
 
   return { id: "", kind: exact[first] ?? "notFound" };
 }
 
-function DashboardPage({ state }: { state: HubState }) {
+function DashboardPage({ enterpriseState, state }: { enterpriseState: EnterpriseHubState; state: HubState }) {
   const snapshot = getHubSnapshot(state);
 
   return (
@@ -159,6 +178,7 @@ function DashboardPage({ state }: { state: HubState }) {
         subtitle="Vue consolidee des receptions, stocks, capacites voyageurs, lots et anomalies du Hub."
         title="Centre operationnel Hub"
       />
+      <EnterpriseDashboard state={enterpriseState} />
       <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-5">
         {snapshot.kpis.map((kpi) => (
           <Panel key={kpi.key}>

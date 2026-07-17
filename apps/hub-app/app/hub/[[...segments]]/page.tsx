@@ -4,6 +4,7 @@ import { loadLiveHubState } from "@hub-app/src/lib/live-hub-data";
 import { getHubState } from "@hub-app/src/lib/hub-store";
 import { cookies } from "next/headers";
 import { hubPickupQrCookie, verifyHubPickupQrToken } from "@hub-app/src/lib/session-token";
+import { loadEnterpriseHubState } from "@hub-app/src/lib/enterprise-data";
 
 export default async function HubCatchAllPage({
   params,
@@ -14,6 +15,7 @@ export default async function HubCatchAllPage({
   const pathname = `/hub${segments?.length ? `/${segments.join("/")}` : ""}`;
   const session = await requireHubSession(pathname);
   const hubState = (await loadLiveHubState(session)) ?? getHubState();
+  const enterpriseState = await loadEnterpriseHubState(session);
   const cookieStore = await cookies();
   const pickupQr = await verifyHubPickupQrToken(cookieStore.get(hubPickupQrCookie)?.value);
 
@@ -22,5 +24,5 @@ export default async function HubCatchAllPage({
     if (batch) batch.pickupQr = pickupQr;
   }
 
-  return <HubRoutePage hubState={hubState} segments={segments} session={session} />;
+  return <HubRoutePage enterpriseState={enterpriseState} hubState={hubState} segments={segments} session={session} />;
 }

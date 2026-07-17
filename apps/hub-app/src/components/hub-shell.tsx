@@ -24,12 +24,13 @@ export function HubShell({
       <div className="fixed inset-x-0 top-0 z-40 border-b border-black/10 bg-white/88 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1500px] items-center gap-3 px-4">
           <HubLogo />
-          <div className="hidden min-w-0 flex-1 items-center gap-2 rounded-md border border-black/10 bg-muted/50 px-3 py-2 lg:flex">
+          <Link href="/hub/search" className="hidden min-w-0 flex-1 items-center gap-2 rounded-md border border-black/10 bg-muted/50 px-3 py-2 lg:flex">
             <Search className="h-4 w-4 text-primary" />
             <span className="truncate text-xs font-black uppercase tracking-[0.16em] text-muted-foreground">
               Recherche tracking, manifeste, vol, lot ou anomalie
             </span>
-          </div>
+            <kbd className="ml-auto rounded border bg-white px-1.5 py-0.5 text-[10px]">Ctrl K</kbd>
+          </Link>
           <LocalizationSwitcher className="hidden lg:flex" />
           <Link
             aria-label="Notifications"
@@ -84,20 +85,31 @@ export function HubShell({
 function navigationLabel(key: string) {
   const labels: Record<string, string> = {
     anomalies: "Anomalies",
+    alerts: "Alertes",
+    agents: "Performance agents",
+    audit: "Audit",
     batches: "Lots",
     capacities: "Capacites",
     dashboard: "Centre Hub",
+    controlTower: "Control Tower",
+    documents: "Documents",
+    exports: "Exports",
+    forecast: "Prévisions",
     handover: "Remise",
     history: "Historique",
     inbound: "Reception",
     inspection: "Inspection",
+    incidents: "Incidents",
     inventory: "Inventaire",
     notifications: "Notifications",
     profile: "Profil",
     reports: "Rapports",
     scanner: "Scanner",
+    search: "Recherche globale",
     settings: "Parametres",
     storage: "Stockage",
+    stockMonitoring: "Supervision stock",
+    systemHealth: "Santé système",
     trips: "Voyages",
   };
 
