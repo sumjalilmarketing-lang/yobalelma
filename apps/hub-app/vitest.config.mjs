@@ -16,6 +16,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      "server-only": path.resolve(appDir, "tests/server-only.ts"),
       "@": workspaceRoot,
       "@hub-app": appDir,
     },
