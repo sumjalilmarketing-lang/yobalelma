@@ -5,6 +5,7 @@ type HubDictionary = Record<HubMessageKey | "hubTitle" | "hubSubtitle" | "signIn
 
 const fr: HubDictionary = {
   anomalies: "Anomalies",
+  alerts: "Alertes", agents: "Performance agents", audit: "Audit", controlTower: "Control Tower", documents: "Documents", exports: "Exports", forecast: "Prévisions", incidents: "Incidents", search: "Recherche", stockMonitoring: "Supervision stock", systemHealth: "Santé système",
   batches: "Lots",
   capacities: "Capacites",
   dashboard: "Centre Hub",
@@ -28,6 +29,7 @@ const fr: HubDictionary = {
 
 const en: HubDictionary = {
   anomalies: "Anomalies",
+  alerts: "Alerts", agents: "Agent performance", audit: "Audit", controlTower: "Control Tower", documents: "Documents", exports: "Exports", forecast: "Forecast", incidents: "Incidents", search: "Search", stockMonitoring: "Stock monitoring", systemHealth: "System health",
   batches: "Batches",
   capacities: "Capacities",
   dashboard: "Hub Control",

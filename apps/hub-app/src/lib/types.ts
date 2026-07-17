@@ -346,6 +346,17 @@ export type HubRouteKind =
   | "notifications"
   | "profile"
   | "settings"
+  | "controlTower"
+  | "agents"
+  | "search"
+  | "incidents"
+  | "alerts"
+  | "stockMonitoring"
+  | "forecast"
+  | "systemHealth"
+  | "audit"
+  | "exports"
+  | "documents"
   | "notFound";
 
 export type HubMessageKey =
@@ -364,7 +375,18 @@ export type HubMessageKey =
   | "reports"
   | "notifications"
   | "profile"
-  | "settings";
+  | "settings"
+  | "controlTower"
+  | "agents"
+  | "search"
+  | "incidents"
+  | "alerts"
+  | "stockMonitoring"
+  | "forecast"
+  | "systemHealth"
+  | "audit"
+  | "exports"
+  | "documents";
 
 export function isHubRole(role: PlatformRole | string | undefined): role is HubRole {
   return (

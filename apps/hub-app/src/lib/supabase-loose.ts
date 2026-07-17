@@ -10,6 +10,7 @@ type PostgrestResult<T> = PromiseLike<{
 type LooseSelectQuery<T> = PostgrestResult<T[]> & {
   eq(column: string, value: unknown): LooseSelectQuery<T>;
   limit(count: number): LooseSelectQuery<T>;
+  order(column: string, options?: { ascending?: boolean }): LooseSelectQuery<T>;
   maybeSingle(): PostgrestResult<T>;
   single(): PostgrestResult<T>;
 };
@@ -32,8 +33,13 @@ type LooseTable = {
 
 type LooseSupabaseClient = {
   from(table: string): LooseTable;
+  rpc<T = Record<string, unknown>[]>(name: string, params?: Record<string, unknown>): PostgrestResult<T>;
 };
 
 export function fromSupabaseTable(client: unknown, table: string) {
   return (client as LooseSupabaseClient).from(table);
+}
+
+export function callSupabaseRpc<T = Record<string, unknown>[]>(client: unknown, name: string, params?: Record<string, unknown>) {
+  return (client as LooseSupabaseClient).rpc<T>(name, params);
 }
