@@ -1,22 +1,44 @@
 # Hub App Production Readiness
 
-## Demonstration
+## Deployment
 
-Ready for local demonstration. The app builds independently, Hub workflows are implemented, E2E tests pass, and visual screenshots are generated.
+The Hub is deployed on Vercel at <https://yobalelma-hub.vercel.app> from the
+`codex/hub-enterprise-upgrade` branch. The Vercel monorepo build runs the
+`@yobalelma/hub-app` workspace and publishes `apps/hub-app/.next`.
 
-## Internal Test
+Supabase Auth uses the Yobalelma project
+`https://rgcgtcycbiuhcaoaadbh.supabase.co`. The production origin and its Auth
+callback, sign-in and reset-password URLs are present in the Supabase allow
+list.
 
-Ready for controlled internal testing with non-production accounts. Unit, integration, Hub E2E tests and production builds pass locally. Supabase Auth sessions are accepted for internal Hub roles, and write APIs attempt live Supabase mutations before falling back to the local demo store.
+## Validation (2026-07-18)
 
-## Pilot
+- Vercel production build: green.
+- HTTPS health endpoint: `status: ok`, Supabase: `ok`, 27 Hub routes reported.
+- Environment variables: Yobalelma Supabase URL and keys, service role,
+  production app URL, pilot password and Hub session secret configured for
+  Production and Preview.
+- Real Supabase sessions: `hub_agent`, `hub_supervisor` and `hub_manager`
+  validated; a non-Hub account is denied.
+- Security validation: RLS denies unauthorized writes and RPC calls, protected
+  documents are not exposed, capacity and QR replay protections pass.
+- Route audit: all 27 static Hub pages render through the production HTTPS
+  origin with a real manager session.
+- E2E pilot: 2/2 scenarios pass, including inbound receipt, scanning,
+  inspection, inventory movement, capacity, batch, pickup QR, traveler
+  handover, anomalies, notifications, profile and responsive views.
+- Local regression: lint and strict TypeScript pass; 4 test files and 23 tests
+  pass.
+- HTTP hardening: CSP, HSTS and `X-Frame-Options` are present.
 
-Not ready. Remote migrations, RLS and private Storage were validated during this phase. Authenticated Hub sessions use a Supabase-backed read model, four non-production Hub accounts are provisioned, and the health endpoint checks Supabase connectivity. The independent Hub app still needs external HTTPS staging and deployment-level observability before pilot traffic.
+## Demonstration evidence
 
-## Production
+The production-backed screenshots are stored in
+`docs/visual-demo/hub-app-staging/` (sign-in plus desktop, mobile and tablet
+workflow views).
 
-Not ready.
+## Operational follow-up
 
-Required before production:
-
-- external HTTPS staging;
-- monitoring, rate limiting and production observability.
+The deployed Hub is ready for a controlled pilot. Before increasing public
+traffic, add an explicit distributed rate limiter and external alert routing;
+Vercel runtime logs and observability remain the current operational baseline.

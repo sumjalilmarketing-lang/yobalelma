@@ -289,6 +289,21 @@ async function seedOperationalFixtures() {
     shipments.push(shipment);
   }
 
+  // Keep the staging workflow repeatable. A previous pilot run may have stopped
+  // after reserving a shipment, which would otherwise block the next batch.
+  const pilotShipmentIds = shipments.map((shipment) => shipment.id);
+  const releasedAt = new Date().toISOString();
+  await assertResult(supabase.from("hub_batch_shipments").update({
+    removed_at: releasedAt,
+    status: "removed",
+  }).in("shipment_id", pilotShipmentIds).is("removed_at", null), "old pilot batch assignments");
+  await assertResult(supabase.from("capacity_reservations").update({
+    status: "cancelled",
+  }).in("shipment_id", pilotShipmentIds).in("status", ["reserved", "loaded"]), "old pilot capacity reservations");
+  await assertResult(supabase.from("hub_inventory").update({
+    current_batch_id: null,
+  }).in("shipment_id", pilotShipmentIds).eq("active", true), "old pilot inventory batch links");
+
   let { data: route, error: routeError } = await supabase.from("collection_routes")
     .select("id").eq("name", "Collecte Hub staging pilote").eq("route_date", dateFromToday(0)).maybeSingle();
   if (routeError) throw routeError;
