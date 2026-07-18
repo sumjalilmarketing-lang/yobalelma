@@ -19,6 +19,7 @@ const supabase = createClient(supabaseUrl, serviceKey, { auth: { autoRefreshToke
 const accounts = [
   { email: "pilot.collection-driver@yobalelma.test", name: "Ibrahima Diagne", role: "collection_driver" },
   { email: "pilot.collection-manager@yobalelma.test", name: "Fatou Ndiaye", role: "collection_manager" },
+  { email: "pilot.collection-supervisor@yobalelma.test", name: "Awa Fall", role: "operations_manager" },
 ];
 const users = new Map();
 for (const account of accounts) {

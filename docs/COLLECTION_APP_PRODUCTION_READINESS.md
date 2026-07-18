@@ -43,17 +43,25 @@ The Yobalelma project is exclusively `https://rgcgtcycbiuhcaoaadbh.supabase.co`.
 - TypeScript strict: pass.
 - Next.js production build: pass.
 - Unit/integration: 9/9 pass.
-- Core E2E desktop, mobile, and tablet: pass.
-- 28 driver pages audited on desktop, mobile, and tablet: pass.
+- Production E2E desktop, mobile, and tablet: 7 passed, 2 intentionally skipped outside the mobile project.
+- 28 driver pages audited against the HTTPS production deployment on desktop, mobile, and tablet: pass.
 - Manager settings access and driver denial: pass.
-- Visual regression capture generation: 10/10 pass.
-- Real Supabase Auth/RLS/RPC security suite: pass (driver isolation, manager visibility, client/anonymous denial, GPS ownership, direct-assignment denial, offline idempotency, conflict resolution).
+- Visual demonstration capture generation from production: 10/10 pass.
+- Real Supabase Auth/RLS/RPC security suite: pass (driver isolation, manager and operations-manager visibility, client/anonymous denial, GPS ownership, direct-assignment denial, offline idempotency, conflict resolution).
 - Supabase platform validation: Auth 200, 69 baseline tables and 10 Storage buckets checked without failure.
+- Controlled production load test: 100 requests at concurrency 20, 0 failures, 303 ms average, 944 ms p95.
+- Production health: HTTP 200, 31 routes, Supabase `ok`, optimizer enabled, offline enabled.
+- Security headers: CSP present, HSTS `max-age=63072000; includeSubDomains; preload`, `X-Frame-Options: DENY`.
 
 ## Demonstration evidence
 
-Screenshots are stored in `docs/visual-demo/collection-app/` for dashboard, missions, navigation, scanner, inventory, vehicle, AI anomalies, offline mode, mobile, and tablet.
+Screenshots generated from the HTTPS production deployment are stored in `docs/visual-demo/collection-app/` for dashboard, missions, navigation, scanner, inventory, vehicle, AI anomalies, offline mode, mobile, and tablet.
 
 ## Deployment
 
-Vercel production URL, environment verification, Supabase Auth redirect URLs, real HTTPS login, remote E2E, security headers, health check, and remote load-test results are completed during the deployment phase and recorded in the final delivery.
+Collection App is deployed on Vercel at <https://yobalelma-collection.vercel.app> from production commit `face877`.
+
+- Build status: Ready (Next.js production build completed in 1 min 28 s).
+- Required runtime variables are configured for Production and Preview; no Supabase service-role key is exposed to the application runtime.
+- Supabase Auth redirect URLs include the Collection origin, sign-in, callback, and password-reset paths. The existing Hub `site_url` remains unchanged.
+- Permanent HTTPS domain: `yobalelma-collection.vercel.app`; the initial Vercel domain redirects to it.

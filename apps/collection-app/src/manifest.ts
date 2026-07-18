@@ -1,7 +1,7 @@
 export const collectionAppManifest = {
   domain: "collecte.yobalelma.com",
   id: "collection-app",
-  ownedRoutePrefixes: ["/dashboard/collection", "/api/collection"],
-  roles: ["collection_driver", "collection_manager"],
-  status: "planned",
+  ownedRoutePrefixes: ["/collection", "/api/collection"],
+  roles: ["collection_driver", "collection_manager", "operations_manager"],
+  status: "production",
 } as const;
