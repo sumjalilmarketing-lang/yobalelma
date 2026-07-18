@@ -1,0 +1,1 @@
+import type {MetadataRoute} from "next";export default function manifest():MetadataRoute.Manifest{return{name:"Yobalelma Relay",short_name:"Relay",description:"Opérations des points relais Yobalelma",start_url:"/relay",display:"standalone",background_color:"#fcfaf5",theme_color:"#ff6600",icons:[{src:"/brand/yobalelma-mark.svg",sizes:"any",type:"image/svg+xml"}]}}
