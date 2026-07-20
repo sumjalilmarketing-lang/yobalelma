@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
+import { toUserFacingMessage } from "@/lib/presentation/user-facing-copy";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 
 const signedUploadSchema = z.object({
@@ -12,7 +13,10 @@ const signedUploadSchema = z.object({
     "dispute-evidence",
     "hub-inspection-images",
   ]),
-  path: z.string().trim().min(3).max(500),
+  fileName: z.string().trim().min(1).max(180).optional(),
+  path: z.string().trim().min(3).max(500).optional(),
+}).refine((value) => value.path || value.fileName, {
+  message: "Sélectionne un fichier à ajouter.",
 });
 
 export async function POST(request: Request) {
@@ -37,18 +41,24 @@ export async function POST(request: Request) {
   }
 
   const expectedPrefix = `${user.id}/`;
+  const safeFileName = parsed.data.fileName
+    ?.normalize("NFKD")
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 120);
+  const path = parsed.data.path ?? `${expectedPrefix}${crypto.randomUUID()}-${safeFileName || "document"}`;
 
-  if (!parsed.data.path.startsWith(expectedPrefix)) {
-    return fail("Le chemin du fichier doit commencer par ton identifiant utilisateur.", 403);
+  if (!path.startsWith(expectedPrefix)) {
+    return fail("Ce document ne peut pas être ajouté à ton dossier.", 403);
   }
 
   const { data, error } = await supabase.storage
     .from(parsed.data.bucket)
-    .createSignedUploadUrl(parsed.data.path);
+    .createSignedUploadUrl(path);
 
   if (error) {
-    return fail(error.message, 400);
+    return fail(toUserFacingMessage(error.message), 400);
   }
 
-  return ok("URL signee creee.", data);
+  return ok("Le document est prêt à être ajouté.", { ...data, path });
 }

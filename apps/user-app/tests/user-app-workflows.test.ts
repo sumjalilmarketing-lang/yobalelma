@@ -6,6 +6,8 @@ import {
   selectRoleForAccess,
 } from "@/lib/auth/roles";
 import { detectShipmentScope, detectShipmentType } from "@/lib/shipments/estimation";
+import { getWorkspaceConfig } from "@/lib/dashboard/workspace-configs";
+import { DEFAULT_USER_ERROR, toUserFacingMessage } from "@/lib/presentation/user-facing-copy";
 
 const externalRoles = ["client", "local_transporter", "traveler"];
 
@@ -44,5 +46,61 @@ describe("user-app workflow rules", () => {
       { href: "/client", label: "Espace client", role: "client" },
       { href: "/traveler", label: "Espace voyageur", role: "traveler" },
     ]);
+  });
+
+  it("never exposes technical errors in a visible message", () => {
+    expect(toUserFacingMessage('relation "shipments" does not exist')).toBe(DEFAULT_USER_ERROR);
+    expect(toUserFacingMessage("Invalid login credentials")).toBe(
+      "L’adresse e-mail ou le mot de passe est incorrect.",
+    );
+    expect(toUserFacingMessage("Ton profil a été mis à jour.")).toBe(
+      "Ton profil a été mis à jour.",
+    );
+  });
+
+  it("keeps external workspaces free of implementation vocabulary", () => {
+    const keys = [
+      "client/tracking",
+      "client/payments",
+      "client/messages",
+      "client/support",
+      "client/addresses",
+      "client/profile",
+      "client/notifications",
+      "transporter/earnings",
+      "transporter/kyc",
+      "transporter/ratings",
+      "transporter/support",
+      "transporter/profile",
+      "transporter/notifications",
+      "traveler/tickets",
+      "traveler/capacity",
+      "traveler/assignments",
+      "traveler/earnings",
+      "traveler/payments",
+      "traveler/history",
+      "traveler/support",
+      "traveler/profile",
+      "traveler/notifications",
+    ];
+    const visibleCopy = keys.flatMap((key) => {
+      const config = getWorkspaceConfig(key);
+
+      expect(config, key).not.toBeNull();
+      return config
+        ? [
+            config.title,
+            config.description,
+            config.emptyTitle ?? "",
+            ...config.checkpoints,
+            ...config.actions.map((action) => action.label),
+            ...config.metrics.map((metric) => metric.label),
+          ]
+        : [];
+    });
+
+    expect(visibleCopy.join(" ")).not.toMatch(
+      /supabase|database|backend|postgres|bucket|rpc|sql|sandbox|requester_id|recipient_id|shipment_status|local_delivery|provider|trigger/i,
+    );
   });
 });

@@ -52,9 +52,9 @@ export default async function Page() {
         }
 ]}
       checkpoints={[
-        "KYC voyageur.",
-        "Billet et extraction sandbox.",
-        "Capacite visible pour le hub."
+        "Identité vérifiée avant la première remise.",
+        "Billet contrôlé par l’équipe Yobalelma.",
+        "Capacité disponible clairement indiquée."
 ]}
     />
   );

@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
+import { SecureUploadField } from "@/components/forms/secure-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -60,22 +61,38 @@ export function KycForm() {
           <Input type="date" {...form.register("expiresOn")} />
         </Field>
       </div>
+      <input type="hidden" {...form.register("frontFilePath")} />
+      <input type="hidden" {...form.register("backFilePath")} />
+      <input type="hidden" {...form.register("selfieFilePath")} />
+      <input type="hidden" {...form.register("passportFilePath")} />
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Chemin fichier recto" error={form.formState.errors.frontFilePath?.message}>
-          <Input placeholder="kyc/user/document-front.jpg" {...form.register("frontFilePath")} />
-        </Field>
-        <Field label="Chemin fichier verso" error={form.formState.errors.backFilePath?.message}>
-          <Input placeholder="kyc/user/document-back.jpg" {...form.register("backFilePath")} />
-        </Field>
-        <Field label="Chemin selfie" error={form.formState.errors.selfieFilePath?.message}>
-          <Input placeholder="kyc/user/selfie.jpg" {...form.register("selfieFilePath")} />
-        </Field>
-        <Field label="Chemin passeport" error={form.formState.errors.passportFilePath?.message}>
-          <Input placeholder="kyc/user/passport.jpg" {...form.register("passportFilePath")} />
-        </Field>
+        <SecureUploadField
+          accept="image/*,application/pdf"
+          bucket="kyc-documents"
+          label="Recto du document"
+          onUploaded={(path) => form.setValue("frontFilePath", path, { shouldValidate: true })}
+        />
+        <SecureUploadField
+          accept="image/*,application/pdf"
+          bucket="kyc-documents"
+          label="Verso du document"
+          onUploaded={(path) => form.setValue("backFilePath", path, { shouldValidate: true })}
+        />
+        <SecureUploadField
+          accept="image/*"
+          bucket="kyc-documents"
+          label="Photo de vérification"
+          onUploaded={(path) => form.setValue("selfieFilePath", path, { shouldValidate: true })}
+        />
+        <SecureUploadField
+          accept="image/*,application/pdf"
+          bucket="kyc-documents"
+          label="Passeport, si nécessaire"
+          onUploaded={(path) => form.setValue("passportFilePath", path, { shouldValidate: true })}
+        />
       </div>
       <Button type="submit" disabled={form.formState.isSubmitting}>
-        {form.formState.isSubmitting ? "Soumission..." : "Soumettre le KYC"}
+        {form.formState.isSubmitting ? "Envoi…" : "Envoyer pour vérification"}
       </Button>
       <FormMessage
         message={result?.message}

@@ -161,7 +161,7 @@ export default function Home() {
             </h2>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {roleWorldCards.map((card) => {
+            {roleWorldCards.slice(0, 3).map((card) => {
               const Icon = card.icon;
 
               return (
@@ -189,16 +189,15 @@ export default function Home() {
       <section className="bg-secondary py-12 text-white md:py-16">
         <div className="container grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-sm font-bold uppercase text-primary">Pilotage</p>
+            <p className="text-sm font-bold uppercase text-primary">Expérience Yobalelma</p>
             <h2 className="mt-3 text-3xl font-black leading-tight md:text-4xl">
-              La meme qualite visuelle pour le terrain, les airs et le back-office.
+              Une expérience claire, du premier envoi jusqu’à la remise.
             </h2>
             <p className="mt-4 max-w-xl leading-7 text-white/70">
-              Les tableaux de bord gardent les routes, les statuts, les QR et les
-              preuves visibles au moment ou l&apos;action se decide.
+              Tes trajets, étapes et preuves restent faciles à retrouver au moment où tu en as besoin.
             </p>
           </div>
-          <JourneyVisualStage scene="operations" />
+          <JourneyVisualStage scene="client" />
         </div>
       </section>
     </main>

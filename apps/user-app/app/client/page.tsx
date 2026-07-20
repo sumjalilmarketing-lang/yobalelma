@@ -27,7 +27,7 @@ export default async function Page() {
         },
         {
                 "href": "/client/tracking",
-                "label": "Tracking prive",
+                "label": "Suivi privé",
                 "variant": "secondary"
         },
         {
@@ -52,9 +52,9 @@ export default async function Page() {
         }
 ]}
       checkpoints={[
-        "Profil client actif.",
-        "Creation expedition connectee.",
-        "Tracking public et prive."
+        "Profil client personnel et sécurisé.",
+        "Création guidée de chaque expédition.",
+        "Suivi public et privé de tes colis."
 ]}
     />
   );

@@ -9,12 +9,12 @@ export default function Page() {
     <UserAppInfoPage
       eyebrow="Relais"
       title="Points relais"
-      description="Les relais disponibles permettent de deposer un colis ou de recevoir une expedition avec controle et scan."
+      description="Les points relais Yobalelma permettent de déposer ou de recevoir un colis dans un cadre simple et sécurisé."
       bullets={[
-        "Recherche par ville a finaliser avec les donnees relay_points.",
-        "Instructions de depot generees lors de la creation.",
-        "Reseaux relais configurables sans partenaire code en dur."
-]}
+        "Trouve rapidement un point relais adapté à ta ville.",
+        "Reçois des instructions claires pour chaque dépôt.",
+        "Suis ton colis à chaque étape de son passage au relais."
+      ]}
     />
   );
 }

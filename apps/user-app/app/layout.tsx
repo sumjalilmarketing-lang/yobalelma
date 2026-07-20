@@ -8,9 +8,9 @@ import {
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Yobalelma User App",
+  title: "Yobalelma | Envoyer, suivre et voyager",
   description: "Chaque voyage devient une livraison.",
-  applicationName: "Yobalelma User App",
+  applicationName: "Yobalelma",
   icons: { icon: "/brand/yobalelma-mark.svg" }
 };
 

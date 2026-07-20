@@ -41,9 +41,9 @@ export function FlightTicketExtractor() {
   return (
     <section className="grid gap-4 rounded-lg border border-black/10 bg-white p-5">
       <div>
-        <h2 className="text-xl font-black">FlightTicketExtractor</h2>
+        <h2 className="text-xl font-black">Lecture assistée du billet</h2>
         <p className="mt-1 text-sm font-medium leading-6 text-black/60">
-          Extraction sandbox controlee avec correction manuelle obligatoire par le formulaire de document.
+          Yobalelma prépare les informations du trajet. Vérifie-les toujours avant de confirmer.
         </p>
       </div>
       <label className="grid gap-2 text-sm font-semibold">
@@ -51,11 +51,11 @@ export function FlightTicketExtractor() {
         <Input
           value={filePath}
           onChange={(event) => setFilePath(event.target.value)}
-          placeholder="flight-tickets/user-id/CDGDSS-ticket.pdf"
+          placeholder="Nom ou référence du billet"
         />
       </label>
       <Button type="button" onClick={extract}>
-        Extraire
+        Préparer les informations
       </Button>
       <div className="grid gap-3 rounded-md bg-black p-4 text-sm text-white md:grid-cols-2">
         <Summary label="Confiance" value={confidenceLabel} />

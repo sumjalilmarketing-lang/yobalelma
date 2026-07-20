@@ -68,7 +68,7 @@ const scenes: Record<JourneyScene, SceneConfig> = {
     metrics: [
       { label: "Routes actives", value: "48" },
       { label: "Zones suivies", value: "12" },
-      { label: "Confiance", value: "KYC" },
+      { label: "Confiance", value: "Vérifiée" },
     ],
     status: ["Matching", "Depot", "Suivi", "Remise"],
   },

@@ -11,9 +11,9 @@ export default function Page() {
       title="Confidentialite"
       description="Yobalelma limite les donnees visibles publiquement et separe les informations sensibles par role."
       bullets={[
-        "Tracking public sans adresse complete ni donnees KYC.",
-        "Acces prive limite au bon compte.",
-        "Informations sensibles protegees."
+        "Le suivi public n’affiche ni adresse complète ni document d’identité.",
+        "L’accès privé reste limité au compte concerné.",
+        "Les informations sensibles sont protégées."
 ]}
     />
   );

@@ -9,7 +9,7 @@ const navItems = [
   { href: "/suivi", label: "Suivi" },
   { href: "/livreur", label: "Livreur" },
   { href: "/voyager", label: "Voyager" },
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/dashboard", label: "Mes espaces" },
 ];
 
 export function SiteHeader() {
@@ -17,10 +17,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-black/10 bg-white/90 shadow-line backdrop-blur-xl">
       <div className="container flex min-h-16 items-center justify-between gap-4">
         <Link href="/" aria-label="Accueil Yobalelma" className="shrink-0">
-          <span className="flex items-center gap-2">
-            <YobalelmaLogo variant="official" className="hidden sm:inline-flex" />
-            <YobalelmaLogo />
-          </span>
+          <YobalelmaLogo variant="wordmark" />
         </Link>
         <nav className="hidden items-center gap-1 rounded-md border border-black/10 bg-muted/70 p-1 text-sm font-bold text-black/70 md:flex">
           {navItems.map((item) => (
@@ -34,7 +31,7 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <LocalizationSwitcher className="hidden lg:flex" />
+          <LocalizationSwitcher className="hidden lg:flex" showLocale={false} />
           <Button asChild size="sm">
             <Link href="/auth/sign-in">
               <LogIn className="h-4 w-4" aria-hidden="true" />
@@ -55,7 +52,7 @@ export function SiteHeader() {
         ))}
       </nav>
       <div className="container pb-3 lg:hidden">
-        <LocalizationSwitcher className="w-full justify-between overflow-x-auto" />
+        <LocalizationSwitcher className="w-full justify-between overflow-x-auto" showLocale={false} />
       </div>
     </header>
   );

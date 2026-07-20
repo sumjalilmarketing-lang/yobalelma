@@ -39,8 +39,8 @@ export function PaymentIntentForm() {
 
   return (
     <form className="grid gap-4 rounded-lg border border-black/10 p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-      <h2 className="text-xl font-black">Paiement sandbox</h2>
-      <Field label="ID expedition" error={form.formState.errors.shipmentId?.message}>
+      <h2 className="text-xl font-black">Préparer un paiement</h2>
+      <Field label="Référence de l’expédition" error={form.formState.errors.shipmentId?.message}>
         <Input {...form.register("shipmentId")} />
       </Field>
       <Field label="Montant (centimes)" error={form.formState.errors.amountCents?.message}>
@@ -53,10 +53,10 @@ export function PaymentIntentForm() {
           <option value="USD">USD</option>
         </Select>
       </Field>
-      <Button type="submit" disabled={form.formState.isSubmitting}>Creer l&apos;intention</Button>
+      <Button type="submit" disabled={form.formState.isSubmitting}>Préparer le paiement</Button>
       {result?.ok && result.data?.paymentIntentId ? (
         <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
-          Payment intent ID : {result.data.paymentIntentId}
+          Paiement préparé : {result.data.paymentIntentId}
         </p>
       ) : null}
       <FormMessage message={result?.message} tone={result ? (result.ok ? "success" : "error") : "info"} />
@@ -84,7 +84,7 @@ export function SupportTicketForm() {
   return (
     <form className="grid gap-4 rounded-lg border border-black/10 p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <h2 className="text-xl font-black">Ticket support</h2>
-      <Field label="ID expedition" error={form.formState.errors.shipmentId?.message}>
+      <Field label="Référence de l’expédition" error={form.formState.errors.shipmentId?.message}>
         <Input {...form.register("shipmentId")} />
       </Field>
       <div className="grid gap-4 md:grid-cols-2">
@@ -92,7 +92,7 @@ export function SupportTicketForm() {
           <Select {...form.register("category")}>
             <option value="shipment">Expedition</option>
             <option value="payment">Paiement</option>
-            <option value="kyc">KYC</option>
+            <option value="kyc">Vérification d’identité</option>
             <option value="damage">Dommage</option>
             <option value="delay">Retard</option>
             <option value="other">Autre</option>
@@ -116,7 +116,7 @@ export function SupportTicketForm() {
       <Button type="submit" disabled={form.formState.isSubmitting}>Ouvrir le ticket</Button>
       {result?.ok && result.data?.ticketId ? (
         <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
-          Ticket ID : {result.data.ticketId}
+          Demande enregistrée : {result.data.ticketId}
         </p>
       ) : null}
       <FormMessage message={result?.message} tone={result ? (result.ok ? "success" : "error") : "info"} />
@@ -141,7 +141,7 @@ export function SupportMessageForm() {
   return (
     <form className="grid gap-4 rounded-lg border border-black/10 p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <h2 className="text-xl font-black">Reponse support</h2>
-      <Field label="ID ticket" error={form.formState.errors.ticketId?.message}>
+      <Field label="Référence de la demande" error={form.formState.errors.ticketId?.message}>
         <Input {...form.register("ticketId")} />
       </Field>
       <Field label="Message" error={form.formState.errors.message?.message}>

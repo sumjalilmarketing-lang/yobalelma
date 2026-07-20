@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
+import { SecureUploadField } from "@/components/forms/secure-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -265,15 +266,13 @@ export function ShipmentForm() {
             {...form.register("packageDescription")}
           />
         </Field>
-        <Field
-          label="Photo du colis (chemin Storage signe)"
-          error={form.formState.errors.packagePhotoPath?.message}
-        >
-          <Input
-            placeholder="shipment-images/user-id/photo.webp"
-            {...form.register("packagePhotoPath")}
-          />
-        </Field>
+        <input type="hidden" {...form.register("packagePhotoPath")} />
+        <SecureUploadField
+          accept="image/*"
+          bucket="shipment-images"
+          label="Photo du colis (facultatif)"
+          onUploaded={(path) => form.setValue("packagePhotoPath", path, { shouldValidate: true })}
+        />
         <label className="flex items-start gap-3 text-sm font-semibold">
           <input type="checkbox" className="mt-1" {...form.register("fragile")} />
           Colis fragile
