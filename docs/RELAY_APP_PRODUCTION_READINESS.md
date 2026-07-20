@@ -57,4 +57,4 @@ Les profils pilotes utilisent un secret temporaire généré en mémoire. Sa val
 
 ## Déploiement
 
-Relay App doit rester dans le projet Vercel séparé `yobalelma-relay`, avec `apps/relay-app` comme répertoire racine. L’URL et le commit de production sont consignés dans le rapport final après validation distante.
+Relay App reste dans le projet Vercel séparé `yobalelma-relay`, avec `apps/relay-app` comme répertoire racine. La branche de production est `codex/hub-enterprise-upgrade` et le domaine durable est `https://yobalelma-relay.vercel.app`.
