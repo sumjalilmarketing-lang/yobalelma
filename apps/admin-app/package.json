@@ -4,10 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "node scripts/next-with-root-env.mjs dev --hostname 127.0.0.1 --port 43124",
+    "build": "node scripts/next-with-root-env.mjs build",
+    "lint": "eslint . --ignore-pattern .next/** --ignore-pattern next-env.d.ts --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --config vitest.config.mjs",
+    "test:e2e": "node scripts/run-e2e.mjs",
+    "seed:pilot": "node scripts/seed-pilot-users.mjs",
+    "validate:security": "node scripts/validate-security.mjs",
     "check": "node ../../scripts/check-five-apps-architecture.mjs admin-app"
   },
   "yobalelma": {
     "domain": "admin.yobalelma.com",
-    "migrationStatus": "planned"
+    "migrationStatus": "active"
   }
 }

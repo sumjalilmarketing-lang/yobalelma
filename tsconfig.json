@@ -23,7 +23,8 @@
       "@hub-app/*": ["./apps/hub-app/*"],
       "@user-app/*": ["./apps/user-app/*"],
       "@relay-app/*": ["./apps/relay-app/*"],
-      "@collection-app/*": ["./apps/collection-app/*"]
+      "@collection-app/*": ["./apps/collection-app/*"],
+      "@admin-app/*": ["./apps/admin-app/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
