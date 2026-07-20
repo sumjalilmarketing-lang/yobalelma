@@ -2,17 +2,20 @@
 
 ## Target
 
-Future domain: `hub.yobalelma.com`.
+Durable production domain: <https://yobalelma-hub.vercel.app>.
+
+Future custom domain: `hub.yobalelma.com`.
 
 ## Current Status
 
-No HTTPS external staging URL was created in this phase because no deploy connector, Vercel token or approved tunnel execution is available in the current environment.
+The dedicated Vercel project deploys only `apps/hub-app` from
+`codex/hub-enterprise-upgrade`. The durable HTTPS deployment was verified on
+2026-07-20:
 
-Local pilot preview verified on 2026-07-17:
-
-- URL: `http://localhost:43122/hub`;
+- health endpoint: `200`;
 - Supabase health: `ok`;
-- browser login: passed with the signed local `hub_agent` demo session;
+- real Supabase authentication and Hub role enforcement: passed;
+- full authenticated pilot workflow: 2/2 scenarios passed;
 - four Supabase pilot accounts provisioned for Hub `DSS-DAKAR`.
 
 ## Local Preview

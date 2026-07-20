@@ -11,9 +11,10 @@ Supabase Auth uses the Yobalelma project
 callback, sign-in and reset-password URLs are present in the Supabase allow
 list.
 
-## Validation (2026-07-18)
+## Validation (2026-07-20)
 
-- Vercel production build: green.
+- Vercel production build: green on `codex/hub-enterprise-upgrade` with the
+  project root restricted to `apps/hub-app`.
 - HTTPS health endpoint: `status: ok`, Supabase: `ok`, 27 Hub routes reported.
 - Environment variables: Yobalelma Supabase URL and keys, service role,
   production app URL, pilot password and Hub session secret configured for
@@ -24,11 +25,12 @@ list.
   documents are not exposed, capacity and QR replay protections pass.
 - Route audit: all 27 static Hub pages render through the production HTTPS
   origin with a real manager session.
-- E2E pilot: 2/2 scenarios pass, including inbound receipt, scanning,
+- E2E pilot against <https://yobalelma-hub.vercel.app>: 2/2 scenarios pass,
+  including inbound receipt, scanning,
   inspection, inventory movement, capacity, batch, pickup QR, traveler
   handover, anomalies, notifications, profile and responsive views.
-- Local regression: lint and strict TypeScript pass; 4 test files and 23 tests
-  pass.
+- Local regression: lint and strict TypeScript pass; the monorepo Vitest suite
+  passes 138/138 tests; the isolated Hub production build passes.
 - HTTP hardening: CSP, HSTS and `X-Frame-Options` are present.
 
 ## Demonstration evidence

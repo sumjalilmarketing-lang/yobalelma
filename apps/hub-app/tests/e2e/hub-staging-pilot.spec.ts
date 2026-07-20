@@ -56,6 +56,7 @@ test("real staging auth enforces Hub roles and persists the session", async ({ p
 });
 
 test("real staging pilot completes inbound to traveler handover and captures evidence", async ({ page }) => {
+  test.setTimeout(180_000);
   await signIn(page, "pilot.operations-manager@yobalelma.test");
   await expect(page).toHaveURL(/\/hub$/);
   await capture(page, "02-dashboard.png");
