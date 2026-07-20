@@ -14,5 +14,5 @@ export const viewport: Viewport = { themeColor: "#ff6600", width: "device-width"
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const requestHeaders = await headers();
   const settings = resolveLocaleSettings({ acceptLanguage: requestHeaders.get("accept-language"), countryHeader: detectCountryFromHeaders(requestHeaders), timeZone: requestHeaders.get("x-vercel-ip-timezone") ?? requestHeaders.get("x-timezone") });
-  return <html lang={settings.locale} dir={settings.direction} suppressHydrationWarning><body><LocalizationProvider initialSettings={settings}><OfflineAgent />{children}</LocalizationProvider></body></html>;
+  return <html lang={settings.locale} dir={settings.direction} suppressHydrationWarning><body data-yb-product="collection"><LocalizationProvider initialSettings={settings}><OfflineAgent />{children}</LocalizationProvider></body></html>;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, CloudOff, LogOut, Menu, Moon, Navigation, Search, Sun, Wifi } from "lucide-react";
@@ -17,9 +18,9 @@ export function CollectionShell({ children, session }: { children: React.ReactNo
   useEffect(() => { const stored = localStorage.getItem("yobalelma.collection.theme") === "dark"; setDark(stored); document.documentElement.classList.toggle("dark", stored); }, []);
   const navigation = useMemo(() => collectionNavigation.filter((item) => canAccessCollectionNavigation(session.role, item)), [session.role]);
   const toggleTheme = () => setDark((current) => { const next = !current; localStorage.setItem("yobalelma.collection.theme", next ? "dark" : "light"); document.documentElement.classList.toggle("dark", next); return next; });
-  return <div className="min-h-screen bg-background">
-    <header className="fixed inset-x-0 top-0 z-50 border-b bg-background/88 backdrop-blur-xl"><div className="mx-auto flex h-16 max-w-[1600px] items-center gap-3 px-3 md:px-5">
-      <Link href="/collection" className="flex items-center gap-2"><span className="grid h-10 w-10 place-items-center rounded-xl bg-black text-xl font-black text-primary">Y</span><span className="hidden sm:block"><strong className="block leading-none">Yobalelma</strong><small className="font-black uppercase tracking-[.16em] text-primary">Collection</small></span></Link>
+  return <div className="yb-app-shell">
+    <header className="yb-topbar fixed inset-x-0 top-0 z-50"><div className="mx-auto flex h-16 max-w-[1600px] items-center gap-3 px-3 md:px-5">
+      <Link href="/collection" className="flex items-center gap-2"><Image src="/brand/yobalelma-mark.svg" alt="Yobalelma" width={40} height={40} priority /><span className="hidden sm:block"><strong className="block leading-none">Yobalelma</strong><small className="font-black uppercase tracking-[.16em] text-primary">Collection</small></span></Link>
       <Link href="/collection/scanner" className="ml-auto hidden flex-1 items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2 lg:flex"><Search className="h-4 w-4 text-primary" /><span className="text-xs font-black uppercase tracking-[.14em] text-muted-foreground">Rechercher mission, lot ou colis</span></Link>
       <div aria-label={online ? "Statut réseau : synchronisé" : "Statut réseau : hors ligne"} className={cn("flex items-center gap-1 rounded-full px-2 py-1 text-xs font-black", online ? "bg-success/10 text-success" : "bg-warning/15 text-foreground")}>{online ? <Wifi className="h-3.5 w-3.5" /> : <CloudOff className="h-3.5 w-3.5" />}<span className="hidden md:inline">{online ? "Synchronisé" : "Hors ligne"}</span></div>
       <LocalizationSwitcher className="hidden xl:flex" />

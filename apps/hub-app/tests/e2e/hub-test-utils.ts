@@ -26,7 +26,7 @@ export async function signInHub(page: Page, role: E2EHubRole = "hub_agent") {
   const account = accounts[role];
 
   await page.goto("/auth/sign-in");
-  await page.getByLabel("Compte test").selectOption(account.email);
+  await page.getByLabel("Profil de formation").selectOption(account.email);
   await page.getByLabel("Role").selectOption(role);
   await page.getByLabel("Code operateur").fill(account.code);
   await page.getByRole("button", { name: "Entrer dans le Hub" }).click();

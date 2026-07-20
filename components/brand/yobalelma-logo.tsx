@@ -4,10 +4,16 @@ import { cn } from "@/lib/utils";
 type YobalelmaLogoProps = {
   className?: string;
   compact?: boolean;
-  variant?: "mark" | "wordmark" | "lockup" | "official";
+  variant?: "mark" | "wordmark" | "lockup" | "official" | "light";
 };
 
 const logoAssets = {
+  light: {
+    src: "/brand/yobalelma-official-wordmark.jpeg",
+    width: 1210,
+    height: 230,
+    className: "h-10 w-[210px] p-1.5 sm:h-11 sm:w-[232px]",
+  },
   official: {
     src: "/brand/yobalelma-official.jpeg",
     width: 1280,

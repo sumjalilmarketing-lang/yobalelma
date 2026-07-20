@@ -14,7 +14,7 @@ async function signIn(page: Page, email: string) {
   await page.goto("/auth/sign-in");
   await page.getByLabel("Email professionnel").fill(email);
   await page.getByLabel("Mot de passe").fill(password!);
-  await page.getByRole("button", { name: "Entrer avec Supabase" }).click();
+  await page.getByRole("button", { name: "Ouvrir ma session" }).click();
 }
 
 async function capture(page: Page, fileName: string) {

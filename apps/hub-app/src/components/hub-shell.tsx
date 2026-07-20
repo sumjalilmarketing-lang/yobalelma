@@ -20,8 +20,8 @@ export function HubShell({
   const visibleNavigation = hubNavigation.filter((item) => canAccessHubNavigation(session.role, item));
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="fixed inset-x-0 top-0 z-40 border-b border-black/10 bg-white/88 backdrop-blur-xl">
+    <div className="yb-app-shell">
+      <div className="yb-topbar fixed inset-x-0 top-0 z-40">
         <div className="mx-auto flex h-16 max-w-[1500px] items-center gap-3 px-4">
           <HubLogo />
           <Link href="/hub/search" className="hidden min-w-0 flex-1 items-center gap-2 rounded-md border border-black/10 bg-muted/50 px-3 py-2 lg:flex">
@@ -52,8 +52,8 @@ export function HubShell({
       </div>
       <div className="mx-auto grid max-w-[1500px] gap-5 px-4 pb-8 pt-20 lg:grid-cols-[260px_1fr]">
         <aside className="lg:sticky lg:top-20 lg:h-[calc(100vh-6rem)]">
-          <div className="hub-pattern rounded-lg border border-black/10 bg-white p-3 shadow-line">
-            <div className="rounded-lg bg-black p-4 text-white">
+          <div className="yb-sidebar hub-pattern p-3">
+            <div className="yb-brand-panel p-4">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Session Hub</p>
               <p className="mt-2 truncate text-lg font-black">{session.name}</p>
               <p className="truncate text-xs font-bold text-white/65">{session.role}</p>
@@ -88,7 +88,7 @@ function HubNavigation({
         <Link
           key={item.href}
           className={cn(
-            "rounded-md px-3 py-2 text-sm font-black transition hover:bg-primary hover:text-white",
+            "yb-nav-item",
             pathname === item.href || (item.href !== "/hub" && pathname.startsWith(item.href))
               ? "bg-black text-white"
               : "text-muted-foreground",

@@ -24,7 +24,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang={settings.locale} dir={settings.direction} suppressHydrationWarning>
-      <body>
+      <body data-yb-product="hub">
         <LocalizationProvider initialSettings={settings}>{children}</LocalizationProvider>
       </body>
     </html>

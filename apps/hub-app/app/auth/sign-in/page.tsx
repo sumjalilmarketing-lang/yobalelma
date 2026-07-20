@@ -34,15 +34,15 @@ export default async function HubSignInPage({
           />
           <div className="max-w-2xl py-12">
             <p className="text-xs font-black uppercase tracking-[0.24em] text-primary">Hub logistique</p>
-            <h1 className="mt-4 text-4xl font-black tracking-normal md:text-6xl">Controler chaque colis avant le voyage.</h1>
+            <h1 className="mt-4 text-4xl font-black tracking-normal md:text-6xl">Contrôler chaque colis avant le voyage.</h1>
             <p className="mt-5 text-base font-semibold text-white/70 md:text-lg">
-              Reception, inspection, inventaire, capacite, lots et remise voyageur avec tracabilite complete.
+              Réception, inspection, inventaire, capacité, lots et remise voyageur avec une traçabilité complète.
             </p>
           </div>
           <div className="grid gap-3 text-sm font-bold text-white/70 md:grid-cols-3">
-            <span>QR opaque</span>
-            <span>Audit logs</span>
-            <span>RLS preparee</span>
+            <span>Scans sécurisés</span>
+            <span>Décisions traçables</span>
+            <span>Accès maîtrisés</span>
           </div>
         </div>
       </section>
@@ -50,7 +50,7 @@ export default async function HubSignInPage({
         <div className="w-full max-w-lg rounded-lg border border-black/10 bg-white p-6 shadow-panel">
           <div className="mb-5 flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Acces protege</p>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Accès protégé</p>
               <h2 className="mt-2 text-3xl font-black">Connexion Hub</h2>
             </div>
             <LocalizationSwitcher />
@@ -68,39 +68,39 @@ export default async function HubSignInPage({
             <Field label="Mot de passe">
               <input className={inputClass} name="password" type="password" autoComplete="current-password" />
             </Field>
-            <button className={submitClass} type="submit">Entrer avec Supabase</button>
+            <button className={submitClass} type="submit">Ouvrir ma session</button>
           </form>
 
           {demoAuthEnabled ? <><div className="my-5 flex items-center gap-3 text-xs font-black uppercase tracking-[0.16em] text-muted-foreground">
             <span className="h-px flex-1 bg-black/10" />
-            Mode demonstration
+            Accès de formation
             <span className="h-px flex-1 bg-black/10" />
           </div>
 
           <form action="/api/auth/hub-sign-in" className="grid gap-4" method="post">
             <input name="returnTo" type="hidden" value={nextPath} />
-            <Field label="Compte test">
+            <Field label="Profil de formation">
               <select className={selectClass} name="email" defaultValue={demoHubAccounts[0].email}>
                 {demoHubAccounts.map((account) => (
                   <option key={account.email} value={account.email}>{account.name} - {account.email}</option>
                 ))}
               </select>
             </Field>
-            <Field label="Role">
+            <Field label="Responsabilité">
               <select className={selectClass} name="role" defaultValue="hub_agent">
-                <option value="hub_agent">hub_agent</option>
-                <option value="hub_supervisor">hub_supervisor</option>
-                <option value="hub_manager">hub_manager</option>
-                <option value="operations_manager">operations_manager</option>
+                <option value="hub_agent">Agent Hub</option>
+                <option value="hub_supervisor">Superviseur Hub</option>
+                <option value="hub_manager">Responsable Hub</option>
+                <option value="operations_manager">Responsable des opérations</option>
               </select>
             </Field>
-            <Field label="Code operateur">
+            <Field label="Identifiant de formation">
               <input className={inputClass} name="code" defaultValue="HUB-AGENT" />
             </Field>
             <button className={submitClass} type="submit">Entrer dans le Hub</button>
           </form>
           <div className="mt-5 rounded-md bg-muted p-3 text-xs font-bold text-muted-foreground">
-            Comptes fictifs uniquement: HUB-AGENT, HUB-SUPERVISOR, HUB-MANAGER, OPS-READ.
+            Ces profils sont réservés à la découverte et à la formation des équipes Yobalelma.
           </div>
           </> : null}
         </div>
