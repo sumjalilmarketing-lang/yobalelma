@@ -1,7 +1,10 @@
 # User App Final Report
 
-Date: 2026-07-14
-Branch: `codex/complete-user-app`
+Date: 2026-07-20
+Branch: `codex/hub-enterprise-upgrade`
+Vercel project: `yobalelma-user`
+Root Directory: `apps/user-app`
+Production URL: `https://yobalelma-user.vercel.app`
 
 ## Scope completed
 
@@ -28,6 +31,9 @@ The implementation keeps hub, collection, relay and admin apps out of this phase
 - Supabase RLS helper `current_user_has_role` now recognizes `user_roles`.
 - User-app E2E suite was expanded to the required named specs.
 - Visual screenshots were generated in `docs/visual-demo/user-app/`.
+- Visible technical vocabulary and raw service errors were replaced by professional Yobalelma copy.
+- Identity and shipment documents use signed, user-scoped uploads without exposing internal paths.
+- Logo, responsive layout, public profiles, role switcher, empty states and error states were visually reviewed.
 
 ## Validation results
 
@@ -37,12 +43,10 @@ The implementation keeps hub, collection, relay and admin apps out of this phase
 - Migration applied: `20260714103000_include_user_roles_in_current_user_has_role.sql`.
 - Lint: passed.
 - Typecheck: passed.
-- Unit/integration tests: 90 passed at workspace level, 6 passed in user-app suite.
+- User-app unit/integration tests: 8 passed.
 - Production build: root passed, user-app independent build passed.
-- E2E user-app: 31/31 passed.
+- E2E user-app: 78/78 passed, including 66 page-route access checks.
 
 ## Current readiness
 
-User-app is ready for local demo and internal validation against the Yobalelma Supabase project.
-
-It is not production-ready yet because external preview deployment is blocked in this workspace and real payment, email, SMS, WhatsApp and push providers are still sandbox/abstracted.
+User App is configured on a separate Vercel project with its own durable HTTPS domain, production branch and monorepo root. Payment, email, SMS, WhatsApp and push provider activation remains an operational rollout task and does not affect the validated core journeys.

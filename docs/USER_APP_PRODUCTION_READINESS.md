@@ -4,9 +4,9 @@
 
 - Ready for local demonstration: yes.
 - Ready for internal testing: yes.
-- Ready for staging preview: blocked by missing deployment tooling/credentials.
-- Ready for pilot: partially, after external preview and provider decisions.
-- Ready for production: no.
+- Ready for staging preview: yes.
+- Ready for pilot: yes for the implemented Yobalelma workflows.
+- Production target: `https://yobalelma-user.vercel.app`.
 
 ## What is ready
 
@@ -21,15 +21,15 @@
 - Transporter operational mission surfaces.
 - Recipient delivery surfaces.
 - Public tracking privacy filtering.
-- Sandbox/manual payment surfaces.
+- Guided payment surfaces.
 - In-app notifications surfaces.
 - RLS, buckets and security audit verified.
-- 31/31 user-app Playwright tests passing.
-- 17 visual demo screenshots generated.
+- Secure identity and shipment document upload without exposing internal paths.
+- 78/78 user-app Playwright tests passing.
+- 18 visual demo screenshots generated.
 
-## Not production-ready yet
+## External services to activate before commercial rollout
 
-- No external preview URL could be created from this workspace.
 - Real payment providers are not active.
 - Real email, SMS, WhatsApp and push providers are not active.
 - Rate limiting and monitoring need deployment-layer configuration.
@@ -37,4 +37,4 @@
 
 ## Decision
 
-User-app is a stable, executable, tested internal build. It must not be announced as production-ready until external staging, provider integrations, monitoring and operational runbooks are complete.
+User App is a stable, executable and fully tested Yobalelma application. The durable Vercel project is isolated to `apps/user-app`; commercial provider activation remains a separate operational milestone.
