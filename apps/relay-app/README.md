@@ -2,12 +2,12 @@
 
 Application autonome des agents de points relais Yobalelma.
 
-- Domaine : `relais.yobalelma.com`
+- URL de production : `https://yobalelma-relay.vercel.app`
 - Routes : `/relay/*`
 - Rôles : `relay_agent`, `relay_manager`, `operations_manager`
 - Périmètre : réception, contrôle, stockage, inventaire, remise transporteur et remise destinataire par OTP
-- Continuité : PWA hors ligne avec synchronisation idempotente
-- International : français, anglais, espagnol, allemand, italien, portugais, arabe, russe et chinois
+- Continuité : interface terrain disponible en cas de coupure et opérations protégées contre les doublons
+- Interface : français, formats régionaux Yobalelma et responsive ordinateur/tablette/mobile
 
 ## Validation
 

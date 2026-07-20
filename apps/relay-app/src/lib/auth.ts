@@ -6,6 +6,7 @@ import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { assertRelayAccess } from "./permissions";
 import { relaySessionCookie, createRelaySessionToken, verifyRelaySessionToken } from "./session-token";
 import { isRelayRole, type RelayRole, type RelaySession } from "./types";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const demoRelayAccounts: Array<{ email: string; code: string; name: string; role: RelayRole }> = [
   { email: "agent.relay@yobalelma.test", code: "RLY-AGENT", name: "Aminata Cissé", role: "relay_agent" },
@@ -42,5 +43,13 @@ async function getSupabaseRelaySession(): Promise<RelaySession | null> {
   const profile = profileResult.data;
   const role = [profile?.primary_role, profile?.role, ...(roleResult.data?.map((row) => row.role_id) ?? [])].find(isRelayRole);
   if (!role) return null;
-  return { email: profile?.email || user.email || "", expiresAt: sessionData.session?.expires_at ? sessionData.session.expires_at * 1000 : Date.now() + 3_600_000, name: profile?.full_name || user.user_metadata?.name || user.email || "Agent relais", role, sessionId: sessionData.session?.access_token.slice(0, 16) ?? user.id, source: "supabase", userId: user.id };
+  const relayClient = supabase as SupabaseClient;
+  const { data: membership } = await relayClient
+    .from("relay_point_members")
+    .select("relay_point_id")
+    .eq("profile_id", user.id)
+    .eq("active", true)
+    .limit(1)
+    .maybeSingle();
+  return { email: profile?.email || user.email || "", expiresAt: sessionData.session?.expires_at ? sessionData.session.expires_at * 1000 : Date.now() + 3_600_000, name: profile?.full_name || user.user_metadata?.name || user.email || "Agent relais", role, sessionId: sessionData.session?.access_token.slice(0, 16) ?? user.id, source: "supabase", userId: user.id, relayPointId: typeof membership?.relay_point_id === "string" ? membership.relay_point_id : undefined };
 }

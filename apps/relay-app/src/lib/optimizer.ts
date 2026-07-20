@@ -1,7 +1,7 @@
 import type { RelayPackage, RelayState, StorageLocation } from "./types";
 
 export function locationUtilization(location: StorageLocation) {
-  return Math.round(location.occupied / location.capacity * 100);
+  return location.capacity > 0 ? Math.round(location.occupied / location.capacity * 100) : 0;
 }
 
 export function suggestBestLocation(pkg: RelayPackage, locations: StorageLocation[]) {
@@ -26,8 +26,10 @@ export function detectRelayAnomalies(state: RelayState, reference = new Date()) 
 export function forecastCapacity(state: RelayState) {
   const capacity = state.locations.reduce((sum, item) => sum + item.capacity, 0);
   const occupied = state.locations.reduce((sum, item) => sum + item.occupied, 0);
-  const expectedToday = state.packages.filter((item) => item.status === "expected").length + 9;
-  const departuresToday = state.packages.filter((item) => item.status === "awaiting_carrier" || item.status === "awaiting_recipient").length + 4;
+  const expectedToday = state.packages.filter((item) => item.status === "expected").length;
+  const departuresToday = state.packages.filter((item) => item.status === "awaiting_carrier" || item.status === "awaiting_recipient").length;
   const projected = occupied + expectedToday - departuresToday;
-  return { capacity, occupied, projected, utilization: Math.round(occupied / capacity * 100), projectedUtilization: Math.round(projected / capacity * 100), remaining: Math.max(0, capacity - projected), risk: projected / capacity >= .9 ? "high" : projected / capacity >= .75 ? "medium" : "low" } as const;
+  const utilization = capacity > 0 ? Math.round(occupied / capacity * 100) : 0;
+  const projectedUtilization = capacity > 0 ? Math.round(projected / capacity * 100) : 0;
+  return { capacity, occupied, projected, utilization, projectedUtilization, remaining: Math.max(0, capacity - projected), risk: projectedUtilization >= 90 ? "high" : projectedUtilization >= 75 ? "medium" : "low" } as const;
 }

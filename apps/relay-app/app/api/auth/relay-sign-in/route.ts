@@ -16,4 +16,4 @@ export async function POST(request: NextRequest) {
 }
 function safePath(value: FormDataEntryValue | null) { return typeof value === "string" && value.startsWith("/") && !value.startsWith("//") ? value : "/relay"; }
 function isSecureRequest(request: NextRequest) { return (request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() ?? request.nextUrl.protocol.replace(":", "")) === "https"; }
-function fail(request: NextRequest, error: unknown) { const url = new URL("/auth/sign-in", requestOrigin(request)); url.searchParams.set("error", error instanceof Error ? error.message : "Connexion refusée."); return NextResponse.redirect(url, { status: 303 }); }
+function fail(request: NextRequest, error: unknown) { void error; const url = new URL("/auth/sign-in", requestOrigin(request)); url.searchParams.set("error", "Les informations de connexion sont incorrectes."); return NextResponse.redirect(url, { status: 303 }); }

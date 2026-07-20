@@ -22,7 +22,7 @@ export const relayNavigation: RelayNavigationItem[] = [
   { href: "/relay/history", label: "Historique", permission: "relay:audit", group: "handover" },
   { href: "/relay/search", label: "Recherche", permission: "relay:read", group: "handover" },
   { href: "/relay/incidents", label: "Incidents", permission: "relay:write", group: "account" },
-  { href: "/relay/anomalies", label: "Anomalies IA", permission: "relay:read", group: "account" },
+  { href: "/relay/anomalies", label: "Points à vérifier", permission: "relay:read", group: "account" },
   { href: "/relay/refused", label: "Colis refusés", permission: "relay:read", group: "account" },
   { href: "/relay/pending", label: "Colis en attente", permission: "relay:read", group: "account" },
   { href: "/relay/notifications", label: "Notifications", permission: "relay:read", group: "account" },

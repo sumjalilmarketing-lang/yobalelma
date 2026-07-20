@@ -1,52 +1,60 @@
 # Relay App — rapport de préparation production
 
-Date de validation : 18 juillet 2026.
+Date de validation : 20 juillet 2026.
 
-## Livraison
+## Périmètre livré
 
-Relay App est une application Next.js autonome destinée aux agents de points relais Orange et partenaires. Elle conserve l’identité Yobalelma, fonctionne sur mobile, tablette et desktop, propose les modes clair et sombre, et reste utilisable hors ligne.
+Relay App est une application Next.js autonome réservée aux équipes des points relais Yobalelma. Elle utilise le logo officiel, le Design System commun et une interface responsive sur ordinateur, tablette et mobile.
 
-## Fonctionnalités
+Les parcours opérationnels suivants sont raccordés aux données Yobalelma :
 
-- Tableau de bord, réception, contrôle qualité, QR, code-barres, pesée, dimensions et photos.
-- Inventaire, stockage intelligent, emplacements, rayonnages, casiers et recherche globale.
-- Remise au transporteur interne, remise au destinataire, OTP, signature, étiquettes et reçus.
-- Historique, incidents, anomalies, refus, attentes, notifications, support, profil et paramètres.
-- PWA hors ligne, cache applicatif, file locale et synchronisation idempotente.
-- Assistance : détection des retards, colis oubliés, écarts de poids et erreurs de rangement ; recommandation d’emplacement et prévision de capacité.
-- Localisation : neuf langues, RTL arabe, fuseaux horaires, devises, formats de date et unités locales.
+- authentification réelle et droits `relay_agent`, `relay_manager`, `operations_manager` ;
+- chargement du point relais, de l’inventaire, des emplacements et de l’historique autorisés ;
+- réception d’un colis avec contrôle d’origine, limitation de débit et idempotence ;
+- contrôle poids, dimensions, conformité et justificatifs avec décision enregistrée ;
+- affectation d’un emplacement compatible et actualisation de l’inventaire ;
+- remise au transporteur avec identité et justificatif signé ;
+- remise au destinataire après vérification réelle du code à usage unique ;
+- recherche, incidents, points à vérifier, notifications, profil et paramètres ;
+- continuité d’interface lorsque le terminal perd sa connexion.
+
+Le mode de démonstration reste limité aux environnements non productifs. En production, les écrans ne remplacent jamais silencieusement les données réelles par des données simulées.
+
+## Qualité de l’interface
+
+- logo officiel sur la connexion et la navigation ;
+- libellés professionnels pour les rôles, états, événements, emplacements et erreurs ;
+- aucune erreur brute ni mention d’infrastructure affichée à l’utilisateur ;
+- états vides explicites pour inventaire, historique, alertes et emplacements ;
+- commandes désactivées lorsque les informations obligatoires manquent ;
+- tableaux défilables et navigation mobile dédiée ;
+- thèmes clair et sombre conservés.
 
 ## Sécurité
 
-- Supabase Auth et rôles `relay_agent`, `relay_manager`, `operations_manager`.
-- RLS cloisonnée par point relais ; un manager ne peut pas administrer un autre établissement.
-- RPC de remise avec OTP obligatoire pour le destinataire, signature et idempotence.
-- Validation Zod, contrôle same-origin/CSRF, limitation de débit et journaux structurés corrélés.
-- CSP, HSTS, X-Frame-Options, nosniff et politique de permissions via les en-têtes partagés.
-- Aucun secret stocké dans le dépôt ; seul le projet Supabase Yobalelma est autorisé.
+- sessions serveur et profils autorisés par rôle ;
+- cloisonnement des données par point relais ;
+- validation Zod, contrôle d’origine, limitation de débit et identifiants d’opération uniques ;
+- code de remise vérifié côté serveur avant la sortie du colis ;
+- justificatif de remise signé et journalisé ;
+- messages d’erreur normalisés sans divulgation interne ;
+- aucun secret ni fichier `.env` ajouté au dépôt.
 
-## Résultats de validation
+## Résultats locaux
 
 | Contrôle | Résultat |
 |---|---:|
-| TypeScript strict | Vert |
-| ESLint | Vert, 0 avertissement |
+| ESLint | Réussi, 0 avertissement |
+| TypeScript strict | Réussi |
 | Tests unitaires | 9/9 |
-| Build Next.js production | Vert |
-| Auth/RLS réels | 8 contrôles verts |
-| E2E desktop/mobile/tablette | 9 réussis, 6 scénarios non applicables ignorés |
-| Audit des 30 pages | Vert |
-| Captures de démonstration | 10 générées |
+| Build Next.js production | Réussi |
+| E2E desktop, mobile et tablette | 9 réussis, 6 scénarios non applicables ignorés |
+| Parcours réception → contrôle → rangement → remise | Réussi |
+| Authentification réelle et toutes les routes agent | Réussi |
+| Captures visuelles | 10 générées et contrôlées |
 
-Les données pilotes utilisent le point Orange Plateau et un second point partenaire pour valider l’isolation RLS. Les mots de passe de validation ont été générés et rotatés hors dépôt.
+Les profils pilotes utilisent un secret temporaire généré en mémoire. Sa valeur n’est ni affichée, ni écrite sur disque, ni commitée.
 
-## Parcours de démonstration
+## Déploiement
 
-1. Ouvrir le tableau de bord du point Orange Plateau.
-2. Réceptionner `YBL-SN-2607-0202` par scan et contrôler sa conformité.
-3. Accepter la recommandation d’emplacement et vérifier l’inventaire.
-4. Préparer un lot pour le transporteur interne et signer le manifeste.
-5. Remettre un colis au destinataire après OTP à six chiffres, signature et reçu.
-6. Consulter les anomalies IA, puis basculer hors ligne et vérifier la reprise de synchronisation.
-
-Les captures se trouvent dans `docs/visual-demo/relay-app/`.
+Relay App doit rester dans le projet Vercel séparé `yobalelma-relay`, avec `apps/relay-app` comme répertoire racine. L’URL et le commit de production sont consignés dans le rapport final après validation distante.
