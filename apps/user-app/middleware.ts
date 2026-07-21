@@ -32,7 +32,10 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    return NextResponse.next();
+    return NextResponse.json(
+      { message: "Ce service Yobalelma est momentanément indisponible." },
+      { status: 503 },
+    );
   }
 
   let response = NextResponse.next({ request });

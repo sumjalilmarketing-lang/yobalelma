@@ -57,7 +57,7 @@ export default async function Page() {
         }
 ]}
       checkpoints={[
-        "Profil livreur personnel et sécurisé.",
+        "Coordonnées professionnelles à jour.",
         "Identité et véhicule vérifiés avant activation.",
         "Acceptation claire de chaque mission."
 ]}

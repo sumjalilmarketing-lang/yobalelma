@@ -23,6 +23,18 @@ export async function POST(request: Request) {
     return fail("Connecte-toi pour soumettre une verification d'identite.", 401);
   }
 
+  const documentPaths = [
+    parsed.data.frontFilePath,
+    parsed.data.backFilePath,
+    parsed.data.selfieFilePath,
+    parsed.data.passportFilePath,
+  ].filter((path): path is string => Boolean(path));
+  const expectedPathPrefix = `${user.id}/`;
+
+  if (documentPaths.some((path) => !path.startsWith(expectedPathPrefix))) {
+    return fail("Un document sélectionné ne peut pas être rattaché à ton dossier.", 403);
+  }
+
   const { data: verification, error } = await supabase
     .from("identity_verifications")
     .insert({

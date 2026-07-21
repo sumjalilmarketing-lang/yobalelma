@@ -191,13 +191,22 @@ test.describe.serial("authenticated international shipment workflow", () => {
     await expectShipmentStatus(shipment.body.data.shipmentId, "confirmed");
 
     const trip = await createTravelerTrip(page, traveler);
+    const ticketPath = `${traveler.id}/e2e/${runId}/ticket.pdf`;
+    const { error: ticketUploadError } = await createAdminClient().storage
+      .from("flight-tickets")
+      .upload(ticketPath, Buffer.from("%PDF-1.4 Yobalelma E2E ticket"), {
+        contentType: "application/pdf",
+        upsert: true,
+      });
+    expect(ticketUploadError).toBeNull();
+
     const document = await postJson<{ documentId: string }>(page, "/api/travel-documents", {
       arrivalAirport: "DSS",
       arrivalDate: dateFromToday(9),
       departureAirport: "CDG",
       departureDate: dateFromToday(8),
       documentNumber: `E2E-${runId}`,
-      filePath: `travel/e2e/${runId}/ticket.pdf`,
+      filePath: ticketPath,
       issuingCountry: "France",
       travelerName: "Codex Traveler",
       tripId: trip.tripId,

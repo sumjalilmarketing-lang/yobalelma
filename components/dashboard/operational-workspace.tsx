@@ -127,7 +127,7 @@ async function WorkspaceContent({
               <ShieldCheck className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
-              <PremiumBadge tone={tone}>Parcours sécurisé</PremiumBadge>
+              <PremiumBadge tone={tone}>À faire</PremiumBadge>
               <h2 className="text-xl font-black">Tes actions disponibles</h2>
               <p className="mt-2 max-w-2xl leading-7 text-black/60">
                 Chaque action est adaptée à ton profil et à l’avancement de tes dossiers.
@@ -177,8 +177,8 @@ async function WorkspaceContent({
 
       <section className="grid gap-4 lg:grid-cols-[1fr_360px]">
         <div>
-          <PremiumBadge tone={tone}>Controle du flux</PremiumBadge>
-          <h2 className="mt-2 text-2xl font-black">Etapes attendues</h2>
+          <PremiumBadge tone={tone}>Repères</PremiumBadge>
+          <h2 className="mt-2 text-2xl font-black">Prochaines étapes</h2>
           <SignalTimeline scene={config.scene ?? "operations"} items={config.checkpoints} className="mt-5" />
         </div>
       </section>

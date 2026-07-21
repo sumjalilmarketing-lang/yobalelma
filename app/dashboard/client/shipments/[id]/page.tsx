@@ -3,6 +3,7 @@ import { DataCard, DataGrid, EmptyState, ConfigurationNotice } from "@/component
 import { requireRole } from "@/lib/auth/server";
 import { loadFinalDeliveryOrderByShipment } from "@/lib/final-delivery/data";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
+import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -71,7 +72,7 @@ async function ShipmentDetail({
   const finalDelivery = await loadFinalDeliveryOrderByShipment(shipmentId);
 
   if (shipmentResult.error) {
-    return <EmptyState title="Expedition introuvable" description={shipmentResult.error.message} />;
+    return <EmptyState title="Expédition indisponible" description="Cette expédition ne peut pas être affichée pour le moment." />;
   }
 
   const shipment = shipmentResult.data;
@@ -87,13 +88,13 @@ async function ShipmentDetail({
           title={shipment.tracking_code}
           subtitle={`${shipment.origin_city}, ${shipment.origin_country} -> ${shipment.destination_city}, ${shipment.destination_country}`}
           rows={[
-            { label: "Statut", value: shipment.status },
-            { label: "Portee", value: shipment.scope },
-            { label: "Mode", value: shipment.fulfillment_method },
-            { label: "Remise finale", value: finalDelivery.order?.status ?? "Non receptionnee a destination" },
+            { label: "Statut", value: toBusinessStatusLabel(shipment.status) },
+            { label: "Trajet", value: shipment.scope === "international" ? "International" : "National" },
+            { label: "Départ", value: shipment.fulfillment_method === "pickup" ? "Enlèvement à domicile" : "Dépôt en point relais" },
+            { label: "Remise finale", value: finalDelivery.order ? toBusinessStatusLabel(finalDelivery.order.status) : "En attente de réception à destination" },
             {
-              label: "Payout",
-              value: shipment.payout_eligible_for_release ? "liberable" : shipment.payout_blocked_reason ?? "non liberable",
+              label: "Clôture financière",
+              value: shipment.payout_eligible_for_release ? "Prête" : "En attente",
             },
           ]}
         />
@@ -110,12 +111,11 @@ async function ShipmentDetail({
         ) : null}
         {pickupResult.data ? (
           <DataCard
-            title="Pickup request"
-            subtitle={pickupResult.data.status}
+            title="Demande d’enlèvement"
+            subtitle={toBusinessStatusLabel(pickupResult.data.status)}
             rows={[
               { label: "Date", value: pickupResult.data.requested_for },
-              { label: "Mission", value: pickupResult.data.mission_id ?? "Non assignee" },
-              { label: "Livreur", value: pickupResult.data.assigned_transporter_id ?? "Non assigne" },
+              { label: "Affectation", value: pickupResult.data.assigned_transporter_id ? "Livreur affecté" : "En attente d’un livreur" },
             ]}
           />
         ) : null}
@@ -126,12 +126,12 @@ async function ShipmentDetail({
         <DataGrid>
           {finalDelivery.order ? (
             <DataCard
-              title={finalDelivery.order.delivery_mode ?? "Mode a choisir"}
-              subtitle={finalDelivery.order.status}
+              title={finalDelivery.order.delivery_mode === "home_delivery" ? "Livraison à domicile" : "Retrait en point relais"}
+              subtitle={toBusinessStatusLabel(finalDelivery.order.status)}
               rows={[
                 { label: "Relais", value: finalDelivery.order.relay_points ? `${finalDelivery.order.relay_points.name}, ${finalDelivery.order.relay_points.city}` : "Non renseigne" },
                 { label: "Emplacement", value: finalDelivery.order.storage_location ?? "Non attribue" },
-                { label: "Payout voyageur", value: finalDelivery.order.traveler_payout_eligible ? "liberable" : finalDelivery.order.payout_blocked_reason ?? "non liberable" },
+                { label: "Clôture du trajet", value: finalDelivery.order.traveler_payout_eligible ? "Prête" : "En attente" },
               ]}
             />
           ) : null}
@@ -174,12 +174,11 @@ async function ShipmentDetail({
           {(missionsResult.data ?? []).map((mission) => (
             <DataCard
               key={mission.id}
-              title={mission.id}
-              subtitle={mission.status}
+              title="Mission de livraison"
+              subtitle={toBusinessStatusLabel(mission.status)}
               rows={[
-                { label: "Livreur", value: mission.transporter_id },
-                { label: "Score", value: mission.score },
-                { label: "Acceptee", value: mission.accepted_at ?? "Non" },
+                { label: "Affectation", value: mission.transporter_id ? "Livreur affecté" : "En attente" },
+                { label: "Acceptée", value: mission.accepted_at ? new Date(mission.accepted_at).toLocaleString("fr-FR") : "Pas encore" },
               ]}
             />
           ))}
@@ -192,11 +191,11 @@ async function ShipmentDetail({
           {(eventsResult.data ?? []).map((event) => (
             <DataCard
               key={event.id}
-              title={event.status}
+              title={toBusinessStatusLabel(event.status)}
               subtitle={new Date(event.created_at).toLocaleString("fr-FR")}
               rows={[
                 { label: "Note", value: event.note ?? "Sans note" },
-                { label: "Acteur", value: event.actor_id ?? "Systeme" },
+                { label: "Mise à jour", value: event.actor_id ? "Équipe Yobalelma" : "Automatique" },
               ]}
             />
           ))}

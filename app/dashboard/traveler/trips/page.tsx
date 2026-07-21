@@ -4,6 +4,7 @@ import { DataCard, DataGrid, EmptyState, ConfigurationNotice } from "@/component
 import { Button } from "@/components/ui/button";
 import { requireRole } from "@/lib/auth/server";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
+import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +45,7 @@ async function Trips({ userId }: { userId: string }) {
     .order("departure_date", { ascending: true });
 
   if (error) {
-    return <EmptyState title="Chargement impossible" description={error.message} />;
+    return <EmptyState title="Chargement impossible" description="Vos voyages ne sont pas disponibles pour le moment. Réessayez dans quelques instants." />;
   }
 
   if (!data?.length) {
@@ -63,7 +64,7 @@ async function Trips({ userId }: { userId: string }) {
         <DataCard
           key={trip.id}
           title={`${trip.origin_city} -> ${trip.destination_city}`}
-          subtitle={trip.status}
+          subtitle={toBusinessStatusLabel(trip.status)}
           href={`/dashboard/traveler/trips/${trip.id}`}
           rows={[
             { label: "Depart", value: `${trip.departure_date} (${trip.origin_country})` },

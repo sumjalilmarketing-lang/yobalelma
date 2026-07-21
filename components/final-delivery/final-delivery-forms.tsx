@@ -164,9 +164,9 @@ export function DeliveryOtpPanel({
           Canal
           <Select name="channel" defaultValue="in_app">
             <option value="in_app">In-app</option>
-            <option value="email">Email sandbox</option>
-            <option value="sms">SMS sandbox</option>
-            <option value="whatsapp">WhatsApp sandbox</option>
+            <option value="email">E-mail</option>
+            <option value="sms">SMS</option>
+            <option value="whatsapp">WhatsApp</option>
           </Select>
         </label>
         <SubmitButton submitting={generate.submitting} label="Generer l'OTP" />

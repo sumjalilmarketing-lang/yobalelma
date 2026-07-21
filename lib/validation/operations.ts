@@ -2,9 +2,7 @@ import { z } from "zod";
 
 export const paymentIntentSchema = z.object({
   shipmentId: z.string().trim().uuid("Expedition invalide."),
-  amountCents: z.coerce.number().int().positive("Montant invalide.").max(10_000_000),
-  currency: z.enum(["EUR", "XOF", "USD"]).default("EUR"),
-});
+}).strict();
 
 export const supportTicketSchema = z.object({
   shipmentId: z.string().trim().uuid("Expedition invalide.").optional().or(z.literal("")),

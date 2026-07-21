@@ -14,6 +14,8 @@ const signedUploadSchema = z.object({
     "hub-inspection-images",
   ]),
   fileName: z.string().trim().min(1).max(180).optional(),
+  contentType: z.string().trim().min(3).max(120),
+  size: z.number().int().positive().max(15 * 1024 * 1024),
   path: z.string().trim().min(3).max(500).optional(),
 }).refine((value) => value.path || value.fileName, {
   message: "Sélectionne un fichier à ajouter.",
@@ -41,6 +43,14 @@ export async function POST(request: Request) {
   }
 
   const expectedPrefix = `${user.id}/`;
+  const uploadRule = uploadRules[parsed.data.bucket];
+
+  if (
+    parsed.data.size > uploadRule.maxBytes ||
+    !uploadRule.contentTypes.some((contentType: string) => contentType === parsed.data.contentType)
+  ) {
+    return fail("Ce format ou cette taille de fichier n’est pas accepté.", 422);
+  }
   const safeFileName = parsed.data.fileName
     ?.normalize("NFKD")
     .replace(/[^a-zA-Z0-9._-]+/g, "-")
@@ -62,3 +72,15 @@ export async function POST(request: Request) {
 
   return ok("Le document est prêt à être ajouté.", { ...data, path });
 }
+
+const imageTypes = ["image/jpeg", "image/png", "image/webp"] as const;
+const documentTypes = [...imageTypes, "application/pdf"] as const;
+const uploadRules = {
+  avatars: { contentTypes: imageTypes, maxBytes: 5 * 1024 * 1024 },
+  "shipment-images": { contentTypes: imageTypes, maxBytes: 10 * 1024 * 1024 },
+  "kyc-documents": { contentTypes: documentTypes, maxBytes: 10 * 1024 * 1024 },
+  "flight-tickets": { contentTypes: documentTypes, maxBytes: 10 * 1024 * 1024 },
+  "proof-of-delivery": { contentTypes: documentTypes, maxBytes: 15 * 1024 * 1024 },
+  "dispute-evidence": { contentTypes: documentTypes, maxBytes: 15 * 1024 * 1024 },
+  "hub-inspection-images": { contentTypes: imageTypes, maxBytes: 10 * 1024 * 1024 },
+} as const;

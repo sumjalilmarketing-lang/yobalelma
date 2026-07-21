@@ -52,7 +52,7 @@ export default async function Page() {
         }
 ]}
       checkpoints={[
-        "Profil client personnel et sécurisé.",
+        "Coordonnées personnelles à jour.",
         "Création guidée de chaque expédition.",
         "Suivi public et privé de tes colis."
 ]}

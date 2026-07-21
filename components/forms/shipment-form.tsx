@@ -336,7 +336,7 @@ function ReviewPanel({ review }: { review: ReviewState }) {
       {isInternational ? (
         <div className="mt-4 rounded-lg border border-primary/30 bg-white p-4 shadow-line">
           <p className="text-sm font-black uppercase text-primary">
-            Envoi international detecte automatiquement
+            Envoi international
           </p>
           <p className="mt-2 text-sm font-semibold leading-6 text-black/65">
             Le parcours activera depot ou enlevement local, relais origine, collecte hub,
@@ -391,8 +391,8 @@ function ShipmentJourneyGuide({
           <p className="text-xs font-black uppercase text-black/45">Creation guidee</p>
           <h2 className="mt-1 text-xl font-black">
             {detectedInternational
-              ? "Envoi international detecte automatiquement"
-              : "Le type d'envoi sera detecte automatiquement"}
+              ? "Prépare ton envoi international"
+              : "Prépare ton envoi"}
           </h2>
         </div>
         <span className="rounded-md bg-secondary px-3 py-2 text-xs font-black uppercase text-primary">

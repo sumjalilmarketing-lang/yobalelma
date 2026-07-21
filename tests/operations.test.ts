@@ -15,17 +15,15 @@ import {
 } from "@/lib/validation/operations";
 
 describe("operations validation", () => {
-  it("accepts a sandbox payment intent", () => {
+  it("accepts a payment request for an owned shipment", () => {
     const result = paymentIntentSchema.parse({
-      amountCents: 2500,
-      currency: "EUR",
       shipmentId: "00000000-0000-4000-8000-000000000001",
     });
 
-    expect(result.amountCents).toBe(2500);
+    expect(result.shipmentId).toBe("00000000-0000-4000-8000-000000000001");
   });
 
-  it("rejects zero payment amounts", () => {
+  it("rejects client-controlled payment amounts", () => {
     expect(() =>
       paymentIntentSchema.parse({
         amountCents: 0,

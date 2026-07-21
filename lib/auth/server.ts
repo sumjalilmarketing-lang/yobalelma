@@ -37,7 +37,7 @@ export type AuthState =
   | { status: "signed-out" }
   | ReadyAuthState
   | (Omit<ReadyAuthState, "status"> & {
-      reason: "suspended" | "closed";
+      reason: "pending_email_confirmation" | "suspended" | "closed";
       status: "blocked";
     });
 
@@ -91,7 +91,7 @@ export async function getAuthState(): Promise<AuthState> {
     userId: user.id,
   };
 
-  if (accountStatus === "suspended" || accountStatus === "closed") {
+  if (accountStatus !== "active") {
     return {
       ...baseState,
       reason: accountStatus,
@@ -141,7 +141,7 @@ function normalizeAccountStatus(status: unknown): AccountStatus {
     return status;
   }
 
-  return "active";
+  return "pending_email_confirmation";
 }
 
 function normalizeIdentityStatus(status: unknown): IdentityVerificationStatus {

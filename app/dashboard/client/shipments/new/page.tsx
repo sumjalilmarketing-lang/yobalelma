@@ -16,7 +16,7 @@ export default async function NewShipmentPage() {
     <PageShell
       eyebrow="Client"
       title="Creer une expedition"
-      description="Le serveur detecte automatiquement national ou international selon les pays saisis."
+      description="Renseigne le départ, la destination et les informations utiles pour préparer ton envoi."
     >
       {state.status === "ready" ? <ShipmentForm /> : <ConfigurationNotice />}
     </PageShell>

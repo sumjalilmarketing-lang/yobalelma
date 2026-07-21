@@ -2,11 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
+import { SecureUploadField } from "@/components/forms/secure-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import type { ApiResult } from "@/lib/api/responses";
 import {
   travelDocumentSchema,
@@ -14,8 +16,11 @@ import {
   type TravelDocumentInput,
 } from "@/lib/validation/hub";
 
-export function TravelDocumentForm() {
+type TripOption = { id: string; label: string };
+
+export function TravelDocumentForm({ initialTripId = "" }: { initialTripId?: string }) {
   const [result, setResult] = useState<ApiResult<{ documentId?: string }> | null>(null);
+  const [trips, setTrips] = useState<TripOption[]>([]);
   const form = useForm<TravelDocumentFormInput, unknown, TravelDocumentInput>({
     resolver: zodResolver(travelDocumentSchema),
     defaultValues: {
@@ -27,9 +32,23 @@ export function TravelDocumentForm() {
       filePath: "",
       issuingCountry: "",
       travelerName: "",
-      tripId: "",
+      tripId: initialTripId,
     },
   });
+
+  useEffect(() => {
+    let active = true;
+    void fetch("/api/trips")
+      .then((response) => response.json() as Promise<ApiResult<{ trips: TripOption[] }>>)
+      .then((payload) => {
+        if (!active || !payload.ok) return;
+        setTrips(payload.data?.trips ?? []);
+        if (!form.getValues("tripId") && payload.data?.trips[0]) {
+          form.setValue("tripId", payload.data.trips[0].id, { shouldValidate: true });
+        }
+      });
+    return () => { active = false; };
+  }, [form]);
 
   async function onSubmit(values: TravelDocumentInput) {
     const response = await fetch("/api/travel-documents", {
@@ -43,8 +62,13 @@ export function TravelDocumentForm() {
   return (
     <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <h2 className="text-xl font-black">Document de voyage</h2>
-      <Field label="ID trajet" error={form.formState.errors.tripId?.message}>
-        <Input {...form.register("tripId")} />
+      <Field label="Voyage concerné" error={form.formState.errors.tripId?.message}>
+        <Select {...form.register("tripId")} disabled={Boolean(initialTripId)}>
+          {initialTripId && !trips.some((trip) => trip.id === initialTripId) ? (
+            <option value={initialTripId}>Voyage en cours</option>
+          ) : null}
+          {trips.map((trip) => <option key={trip.id} value={trip.id}>{trip.label}</option>)}
+        </Select>
       </Field>
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Nom voyageur" error={form.formState.errors.travelerName?.message}>
@@ -55,9 +79,6 @@ export function TravelDocumentForm() {
         </Field>
         <Field label="Pays emetteur" error={form.formState.errors.issuingCountry?.message}>
           <Input {...form.register("issuingCountry")} />
-        </Field>
-        <Field label="Fichier billet/document" error={form.formState.errors.filePath?.message}>
-          <Input placeholder="travel/user/ticket.pdf" {...form.register("filePath")} />
         </Field>
         <Field label="Aeroport depart" error={form.formState.errors.departureAirport?.message}>
           <Input placeholder="CDG" {...form.register("departureAirport")} />
@@ -72,12 +93,17 @@ export function TravelDocumentForm() {
           <Input type="date" {...form.register("arrivalDate")} />
         </Field>
       </div>
-      <Button type="submit" disabled={form.formState.isSubmitting}>Soumettre le document</Button>
-      {result?.ok && result.data?.documentId ? (
-        <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
-          Document ID : {result.data.documentId}
-        </p>
+      <input type="hidden" {...form.register("filePath")} />
+      <SecureUploadField
+        accept="image/jpeg,image/png,image/webp,application/pdf"
+        bucket="flight-tickets"
+        label="Billet ou justificatif de voyage"
+        onUploaded={(path) => form.setValue("filePath", path, { shouldValidate: true })}
+      />
+      {form.formState.errors.filePath ? (
+        <span className="text-sm text-red-700">Ajoute le billet ou le justificatif du voyage.</span>
       ) : null}
+      <Button type="submit" disabled={form.formState.isSubmitting}>Soumettre le document</Button>
       <FormMessage message={result?.message} tone={result ? (result.ok ? "success" : "error") : "info"} />
     </form>
   );

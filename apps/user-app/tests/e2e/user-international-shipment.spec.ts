@@ -37,7 +37,7 @@ test.describe.serial("user-app international shipment", () => {
     await page.locator('input[name="prohibitedItemsConfirmed"]').check();
     await page.locator('input[name="confirmationAccepted"]').check();
 
-    await expect(page.getByText("Envoi international detecte automatiquement").first()).toBeVisible();
+    await expect(page.getByText("Prépare ton envoi international").first()).toBeVisible();
     await page.getByRole("button", { name: "Verifier l'expedition" }).click();
     await expect(page.getByText("International", { exact: true }).first()).toBeVisible();
     await expect(page.getByText("QR retrait")).toBeVisible();

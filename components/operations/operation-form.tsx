@@ -8,14 +8,16 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApiResult } from "@/lib/api/responses";
+import { SecureUploadField } from "@/components/forms/secure-upload-field";
 
 export type OperationField = {
   name: string;
   label: string;
-  type?: "text" | "number" | "date" | "time" | "textarea" | "select" | "hidden";
+  type?: "text" | "number" | "date" | "time" | "textarea" | "select" | "hidden" | "secure-upload";
   defaultValue?: string | number;
   options?: { label: string; value: string }[];
   required?: boolean;
+  uploadBucket?: "proof-of-delivery" | "dispute-evidence";
 };
 
 export function OperationForm({
@@ -80,8 +82,24 @@ export function OperationForm({
 }
 
 function Field({ field }: { field: OperationField }) {
+  const [uploadedPath, setUploadedPath] = useState("");
+
   if (field.type === "hidden") {
     return <input type="hidden" name={field.name} value={field.defaultValue ?? ""} />;
+  }
+
+  if (field.type === "secure-upload" && field.uploadBucket) {
+    return (
+      <>
+        <SecureUploadField
+          accept="image/jpeg,image/png,image/webp,application/pdf"
+          bucket={field.uploadBucket}
+          label={field.label}
+          onUploaded={setUploadedPath}
+        />
+        <input type="hidden" name={field.name} value={uploadedPath} />
+      </>
+    );
   }
 
   if (field.type === "textarea") {

@@ -4,6 +4,7 @@ import { PageShell } from "@/components/layout/page-shell";
 import { requireRole } from "@/lib/auth/server";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +45,7 @@ async function ShipmentList({ userId }: { userId: string }) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    return <EmptyState title="Chargement impossible" description={error.message} />;
+    return <EmptyState title="Chargement impossible" description="Vos expéditions ne sont pas disponibles pour le moment. Réessayez dans quelques instants." />;
   }
 
   if (!data?.length) {
@@ -66,9 +67,9 @@ async function ShipmentList({ userId }: { userId: string }) {
           subtitle={`${shipment.origin_city}, ${shipment.origin_country} -> ${shipment.destination_city}, ${shipment.destination_country}`}
           href={`/dashboard/client/shipments/${shipment.id}`}
           rows={[
-            { label: "Statut", value: shipment.status },
-            { label: "Portee", value: shipment.scope },
-            { label: "Depart", value: shipment.fulfillment_method },
+            { label: "Statut", value: toBusinessStatusLabel(shipment.status) },
+            { label: "Trajet", value: shipment.scope === "international" ? "International" : "National" },
+            { label: "Départ", value: shipment.fulfillment_method === "pickup" ? "Enlèvement à domicile" : "Dépôt en point relais" },
             {
               label: "Prix",
               value: `${(shipment.estimated_price_cents / 100).toFixed(2)} ${shipment.currency}`,

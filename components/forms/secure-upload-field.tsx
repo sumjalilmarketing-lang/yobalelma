@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FormMessage } from "@/components/forms/form-message";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import type { ApiResult } from "@/lib/api/responses";
+import { toUserFacingMessage } from "@/lib/presentation/user-facing-copy";
 
 type UploadPreparation = {
   path: string;
@@ -18,7 +19,12 @@ export function SecureUploadField({
   onUploaded,
 }: {
   accept: string;
-  bucket: "kyc-documents" | "shipment-images" | "flight-tickets";
+  bucket:
+    | "kyc-documents"
+    | "shipment-images"
+    | "flight-tickets"
+    | "proof-of-delivery"
+    | "dispute-evidence";
   label: string;
   onUploaded: (path: string) => void;
 }) {
@@ -38,7 +44,12 @@ export function SecureUploadField({
       const preparationResponse = await fetch("/api/storage/signed-upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bucket, fileName: file.name }),
+        body: JSON.stringify({
+          bucket,
+          contentType: file.type || "application/octet-stream",
+          fileName: file.name,
+          size: file.size,
+        }),
       });
       const preparation = (await preparationResponse.json()) as ApiResult<UploadPreparation>;
 
@@ -57,7 +68,7 @@ export function SecureUploadField({
 
       if (error) {
         setTone("error");
-        setMessage(error.message);
+        setMessage(toUserFacingMessage(error.message));
         return;
       }
 
@@ -66,7 +77,7 @@ export function SecureUploadField({
       setMessage("Document ajouté en toute sécurité.");
     } catch (error) {
       setTone("error");
-      setMessage(error instanceof Error ? error.message : undefined);
+      setMessage(toUserFacingMessage(error instanceof Error ? error.message : undefined));
     } finally {
       setUploading(false);
     }

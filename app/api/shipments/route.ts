@@ -7,6 +7,43 @@ import {
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { shipmentSchema } from "@/lib/validation/shipment";
 
+export async function GET() {
+  const supabase = await tryCreateSupabaseServerClient();
+
+  if (!supabase) {
+    return fail("Le service Yobalelma n'est pas encore disponible.", 503);
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return fail("Connecte-toi pour consulter tes expéditions.", 401);
+  }
+
+  const { data, error } = await supabase
+    .from("shipments")
+    .select("id, tracking_code, origin_city, destination_city, estimated_price_cents, currency, status")
+    .eq("sender_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (error) {
+    return fail(error.message, 400);
+  }
+
+  return ok("Expéditions chargées.", {
+    shipments: (data ?? []).map((shipment) => ({
+      id: shipment.id,
+      label: `${shipment.tracking_code} · ${shipment.origin_city} → ${shipment.destination_city}`,
+      amountCents: shipment.estimated_price_cents,
+      currency: shipment.currency,
+      status: shipment.status,
+    })),
+  });
+}
+
 export async function POST(request: Request) {
   const parsed = await parseJsonRequest(request, shipmentSchema);
 
@@ -26,6 +63,13 @@ export async function POST(request: Request) {
 
   if (!user) {
     return fail("Connecte-toi pour creer une expedition.", 401);
+  }
+
+  if (
+    parsed.data.packagePhotoPath &&
+    !parsed.data.packagePhotoPath.startsWith(`${user.id}/`)
+  ) {
+    return fail("Cette photo ne peut pas être rattachée à ton envoi.", 403);
   }
 
   const estimate = estimateShipment(parsed.data);

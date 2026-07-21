@@ -56,6 +56,24 @@ export function AccountAccessNotice({
   accountStatus: AccountStatus;
   identityStatus: IdentityVerificationStatus;
 }) {
+  if (accountStatus === "pending_email_confirmation") {
+    return (
+      <PremiumPanel tone="support" className="p-6">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-amber-100 text-amber-700">
+            <ShieldAlert className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="text-2xl font-black">Adresse e-mail à confirmer</h2>
+            <p className="mt-3 max-w-2xl leading-7 text-black/60">
+              Consulte le message envoyé par Yobalelma et confirme ton adresse avant d’accéder à tes dossiers.
+            </p>
+          </div>
+        </div>
+      </PremiumPanel>
+    );
+  }
+
   if (accountStatus === "suspended" || accountStatus === "closed") {
     return (
       <PremiumPanel tone="support" className="p-6">

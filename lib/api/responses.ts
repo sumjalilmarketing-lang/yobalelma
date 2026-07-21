@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z, ZodError } from "zod";
+import { toUserFacingMessage } from "@/lib/presentation/user-facing-copy";
 
 export const DEFAULT_JSON_BODY_LIMIT_BYTES = 256 * 1024;
 
@@ -13,7 +14,7 @@ export function ok<T>(message: string, data?: T) {
 
 export function fail(message: string, status = 400, fieldErrors?: Record<string, string>) {
   return NextResponse.json<ApiResult>(
-    { ok: false, message, fieldErrors },
+    { ok: false, message: toUserFacingMessage(message), fieldErrors },
     { status },
   );
 }

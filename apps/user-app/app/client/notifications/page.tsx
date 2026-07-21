@@ -1,11 +1,1 @@
-import { UserSectionPage } from "@/apps/user-app/src/components/user-section-page";
-
-export const dynamic = "force-dynamic";
-
-export const metadata = {
-  title: "Client notifications | Yobalelma",
-};
-
-export default function Page() {
-  return <UserSectionPage area="client" section="notifications" />;
-}
+export { default, dynamic, metadata } from "@/app/dashboard/client/notifications/page";

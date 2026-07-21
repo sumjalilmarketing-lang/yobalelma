@@ -16,13 +16,9 @@ export async function POST(request: Request) {
     return fail("Le service Yobalelma n'est pas encore disponible.", 503);
   }
 
-  const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
+  await supabase.auth.resetPasswordForEmail(parsed.data.email, {
     redirectTo: buildAuthCallbackUrl(request, "/auth/reset-password"),
   });
 
-  if (error) {
-    return fail(error.message, 400);
-  }
-
-  return ok("Email de reinitialisation envoye si le compte existe.");
+  return ok("Si un compte correspond à cette adresse, un lien de réinitialisation sera envoyé.");
 }

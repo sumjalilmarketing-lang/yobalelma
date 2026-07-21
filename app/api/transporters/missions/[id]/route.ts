@@ -27,6 +27,10 @@ export async function PATCH(
     return fail("Connecte-toi pour mettre a jour la mission.", 401);
   }
 
+  if (parsed.data.proofPath && !parsed.data.proofPath.startsWith(`${user.id}/`)) {
+    return fail("Cette preuve ne peut pas être rattachée à ta mission.", 403);
+  }
+
   if (parsed.data.action === "accept") {
     const { data, error } = await supabase.rpc("accept_local_delivery_mission", {
       p_mission_id: id,

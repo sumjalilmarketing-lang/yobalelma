@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import type { ApiResult } from "@/lib/api/responses";
+import { getSafeAuthRedirect } from "@/lib/auth/redirect";
 import {
   forgotPasswordSchema,
   resetPasswordSchema,
@@ -42,7 +43,7 @@ export function PasswordSignInForm() {
 
     if (payload.ok) {
       const next = new URLSearchParams(window.location.search).get("next");
-      router.push(next ?? payload.data?.next ?? "/dashboard");
+      router.push(getSafeAuthRedirect(next, payload.data?.next ?? "/dashboard"));
     }
   }
 

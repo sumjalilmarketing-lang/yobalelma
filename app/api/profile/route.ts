@@ -23,18 +23,17 @@ export async function PUT(request: Request) {
     return fail("Connecte-toi pour enregistrer ton profil.", 401);
   }
 
-  const { error } = await supabase.from("profiles").upsert({
-    id: user.id,
-    email: user.email ?? "",
-    full_name: parsed.data.fullName,
-    phone: parsed.data.phone,
-    city: parsed.data.city,
-    country: parsed.data.country,
-    address_line1: parsed.data.address,
-    primary_role: parsed.data.role,
-    role: parsed.data.role,
-    preferred_language: parsed.data.preferredLanguage,
-  });
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      full_name: parsed.data.fullName,
+      phone: parsed.data.phone,
+      city: parsed.data.city,
+      country: parsed.data.country,
+      address_line1: parsed.data.address,
+      preferred_language: parsed.data.preferredLanguage,
+    })
+    .eq("id", user.id);
 
   if (error) {
     return fail(error.message, 400);
