@@ -54,4 +54,13 @@ describe("user-app security hardening", () => {
     expect(source).toContain('process.env.NODE_ENV === "production"');
     expect(source).toContain("Aucune somme n’a été débitée");
   });
+
+  it("uses unpredictable credentials for isolated E2E accounts", async () => {
+    const source = await readFile(
+      path.resolve(process.cwd(), "tests/e2e/authenticated-helpers.ts"),
+      "utf8",
+    );
+    expect(source).toContain("randomBytes(24)");
+    expect(source).not.toContain("Test!2026");
+  });
 });

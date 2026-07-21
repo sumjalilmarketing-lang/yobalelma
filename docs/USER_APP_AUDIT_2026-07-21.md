@@ -2,13 +2,15 @@
 
 ## Statut de la phase
 
-La User App est en cours de durcissement. Le build local de production est valide, mais cette version ne doit pas être déclarée « entièrement validée » avant son déploiement, les tests authentifiés sur l’URL de production et la levée des dépendances externes listées ci-dessous.
+La User App durcie est déployée et ses parcours disponibles ont été testés sur l’URL de production. Elle ne doit toutefois pas être déclarée « entièrement validée » avant la levée des dépendances externes et fonctionnalités manquantes listées ci-dessous.
 
 - Application : User App uniquement
 - Projet Vercel : **africrm/yobalelma-user**
 - URL durable actuelle : **https://yobalelma-user.vercel.app**
 - Répertoire Vercel : **apps/user-app**
 - Branche de travail : **codex/hub-enterprise-upgrade**
+- Commit applicatif déployé : **472fc3b**
+- Déploiement Vercel : **dpl_HKoPZbkJ8AqPaZ2JeA89V1PdDTgR**
 - Projet d’identité et de données autorisé : **https://rgcgtcycbiuhcaoaadbh.supabase.co**
 
 ## Matrice de vérité
@@ -53,6 +55,7 @@ La User App est en cours de durcissement. Le build local de production est valid
 | UA-SEC-10 | Élevée | Le mode de paiement simulé pouvait être appelé en production | Blocage explicite en production jusqu’à un prestataire réel | Test source anti-régression |
 | UA-SEC-11 | Élevée | Un statut de compte inconnu pouvait être assimilé à actif | Valeur inconnue considérée en attente, accès bloqué | Tests d’authentification |
 | UA-SEC-12 | Moyenne | La récupération de mot de passe pouvait relayer une erreur du fournisseur | Réponse uniforme et non énumérable | Revue du handler |
+| UA-SEC-13 | Élevée | Les comptes E2E utilisaient un mot de passe dérivable du rôle | Secret aléatoire distinct généré en mémoire à chaque compte | Test source anti-régression |
 
 ## Validation locale du lot
 
@@ -62,6 +65,8 @@ La User App est en cours de durcissement. Le build local de production est valid
 - Suite complète du monorepo : 161 réussis, 0 échec.
 - Build Next.js de production User App : réussi, 55 pages générées.
 - Build Next.js complet du monorepo : réussi, 76 pages générées.
+- Tests navigateur en production : 78 réussis, 0 échec.
+- Comptes E2E à mot de passe anciennement dérivable : 23 mots de passe remplacés par des secrets aléatoires non conservés.
 - Audit des dépendances de production : 0 vulnérabilité connue lors du contrôle du 21 juillet 2026.
 
 Le build signale un avertissement connu lié à l’utilisation d’une API Node par la bibliothèque cliente dans le middleware Edge. Il ne bloque pas la compilation, mais doit être éliminé lors de l’évolution du middleware.
@@ -73,9 +78,7 @@ Le build signale un avertissement connu lié à l’utilisation d’une API Node
 3. Ajouter une limitation distribuée sur les opérations sensibles.
 4. Ajouter observabilité, alertes et procédure d’incident.
 5. Terminer le carnet d’adresses, la gestion des sessions, l’export et la suppression de compte.
-6. Déployer ce lot sur le projet Vercel User App uniquement.
-7. Exécuter sur l’URL HTTPS les scénarios authentifiés client, voyageur, livreur et multirôle, y compris les refus de routes.
-8. Réaliser un test de sécurité externe avant toute qualification de production définitive.
+6. Réaliser un test de sécurité externe avant toute qualification de production définitive.
 
 ## Décision
 

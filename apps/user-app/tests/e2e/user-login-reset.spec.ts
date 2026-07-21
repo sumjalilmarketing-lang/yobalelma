@@ -19,8 +19,20 @@ test.describe.serial("user-app login and password reset", () => {
     await page.waitForURL((url) => url.pathname === "/client");
     await expect(page.getByRole("heading", { exact: true, name: "Espace client Yobalelma" }).first()).toBeVisible();
 
+    await page.reload();
+    await expect(page.getByRole("heading", { exact: true, name: "Espace client Yobalelma" }).first()).toBeVisible();
+
+    await page.getByRole("button", { name: "Deconnexion" }).click();
+    await page.waitForURL((url) => url.pathname === "/");
+    await page.goto("/client");
+    await page.waitForURL((url) => url.pathname === "/auth/login");
+
     await expectPublicPage(page, "/auth/forgot-password", "Reinitialiser ton mot de passe");
-    await expect(page.getByRole("button", { name: "Envoyer le lien" })).toBeVisible();
+    await page.getByLabel("Email").fill(user.email);
+    await page.getByRole("button", { name: "Envoyer le lien" }).click();
+    await expect(
+      page.getByText("Si un compte correspond à cette adresse, un lien de réinitialisation sera envoyé."),
+    ).toBeVisible();
     await expectPublicPage(page, "/auth/reset-password", "Choisir un nouveau mot de passe");
     await expect(page.getByRole("button", { name: "Mettre a jour" })).toBeVisible();
   });
