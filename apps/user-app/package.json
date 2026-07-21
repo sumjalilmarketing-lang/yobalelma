@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --config vitest.config.mjs",
     "test:e2e": "node scripts/run-e2e.mjs",
+    "seed:pilot": "node scripts/seed-pilot-users.mjs",
     "health": "node scripts/health-check.mjs",
     "check": "node ../../scripts/check-five-apps-architecture.mjs user-app"
   },

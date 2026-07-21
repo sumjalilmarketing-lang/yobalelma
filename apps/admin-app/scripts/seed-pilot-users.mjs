@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import nextEnv from "@next/env";
+import { loadPilotCredentials, passwordFor } from "../../../scripts/pilot-credentials.mjs";
 
 const { loadEnvConfig } = nextEnv;
 const appDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -9,20 +10,25 @@ loadEnvConfig(path.resolve(appDir, "../.."), true);
 const expected = "https://rgcgtcycbiuhcaoaadbh.supabase.co";
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const password = process.env.ADMIN_PILOT_PASSWORD;
 if (url !== expected || !key) throw new Error("Yobalelma service credentials are required.");
-if (!password || password.length < 16) throw new Error("ADMIN_PILOT_PASSWORD must contain at least 16 characters.");
+const credentialBundle = await loadPilotCredentials(path.resolve(appDir, "../.."));
 const supabase = createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
 const accounts = [
   { email: "pilot.command@yobalelma.test", name: "Awa Ndiaye", role: "super_admin", direction: "executive", service: "platform_governance" },
+  { email: "pilot.admin@yobalelma.test", name: "Mame Diop", role: "admin", direction: "executive", service: "platform_governance" },
+  { email: "pilot.country-sn@yobalelma.test", name: "Alioune Ndiaye", role: "country_manager", direction: "executive", service: "platform_governance" },
   { email: "pilot.operations@yobalelma.test", name: "Moussa Fall", role: "operations_manager", direction: "operations", service: "central_operations" },
+  { email: "pilot.admin-hub@yobalelma.test", name: "Aminata Ba", role: "hub_manager", direction: "operations", service: "hub_operations" },
+  { email: "pilot.admin-relay@yobalelma.test", name: "Ousmane Sow", role: "relay_manager", direction: "operations", service: "relay_operations" },
+  { email: "pilot.admin-collection@yobalelma.test", name: "Khady Kane", role: "collection_manager", direction: "operations", service: "collection_operations" },
+  { email: "pilot.local-delivery@yobalelma.test", name: "Ibrahima Faye", role: "local_delivery_manager", direction: "operations", service: "local_delivery" },
   { email: "pilot.travelers@yobalelma.test", name: "Fatou Sarr", role: "traveler_manager", direction: "travelers", service: "traveler_management" },
+  { email: "pilot.customs@yobalelma.test", name: "Mamadou Ba", role: "customs_manager", direction: "customs", service: "customs_operations" },
   { email: "pilot.compliance@yobalelma.test", name: "Ibrahima Ba", role: "compliance_manager", direction: "customs", service: "compliance" },
   { email: "pilot.finance@yobalelma.test", name: "Mariama Diallo", role: "finance_manager", direction: "finance", service: "finance_control" },
   { email: "pilot.support@yobalelma.test", name: "Khady Diop", role: "customer_support_manager", direction: "customer_service", service: "customer_support" },
   { email: "pilot.security@yobalelma.test", name: "Ousmane Kane", role: "security_manager", direction: "security", service: "security_control" },
-  { email: "pilot.partners@yobalelma.test", name: "Sokhna Gueye", role: "partner_manager", direction: "partners", service: "partner_management" },
-  { email: "pilot.hub-agent.command@yobalelma.test", name: "Mame Faye", role: "hub_agent", direction: "operations", service: "hub_operations" },
+  { email: "pilot.auditor@yobalelma.test", name: "Sokhna Fall", role: "auditor", direction: "security", service: "internal_audit" },
 ];
 const { data: organization, error: organizationError } = await supabase.from("governance_organizations").select("id").eq("code", "YB-SN").single();
 if (organizationError) throw organizationError;
@@ -38,6 +44,6 @@ for (const account of accounts) {
 console.log(JSON.stringify({ ok: true, accounts: accounts.map(({ email, role }) => ({ email, role })), directions: 8 }));
 
 function baseRole(role) { return ["super_admin", "admin", "operations_manager", "hub_manager", "hub_supervisor", "hub_agent", "relay_manager", "relay_agent", "collection_manager", "collection_driver", "finance_agent", "support_agent"].includes(role) ? role : "client"; }
-async function createOrUpdateUser(account) { const existing = await findUser(account.email); const attrs = { app_metadata: { yobalelma_admin_pilot: true }, email_confirm: true, password, user_metadata: { full_name: account.name } }; const { data, error } = existing ? await supabase.auth.admin.updateUserById(existing.id, attrs) : await supabase.auth.admin.createUser({ ...attrs, email: account.email }); if (error || !data.user) throw error ?? new Error("User missing"); return data.user; }
+async function createOrUpdateUser(account) { const existing = await findUser(account.email); const attrs = { app_metadata: { yobalelma_admin_pilot: true }, email_confirm: true, password: passwordFor(credentialBundle, account.email), user_metadata: { full_name: account.name, password_change_required: true } }; const { data, error } = existing ? await supabase.auth.admin.updateUserById(existing.id, attrs) : await supabase.auth.admin.createUser({ ...attrs, email: account.email }); if (error || !data.user) throw error ?? new Error("User missing"); return data.user; }
 async function findUser(email) { for (let page = 1; page <= 20; page += 1) { const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 100 }); if (error) throw error; const user = data.users.find((item) => item.email?.toLowerCase() === email); if (user || data.users.length < 100) return user ?? null; } return null; }
 async function ok(operation, label) { const { error } = await operation; if (error) throw new Error(`${label}: ${error.message}`); }

@@ -67,6 +67,7 @@ export const governanceServices = [
 export const governanceRoles = [
   role("super_admin", "Super Admin", "executive", "platform_governance", "executive"),
   role("admin", "Administrateur plateforme", "executive", "platform_governance", "executive"),
+  role("country_manager", "Responsable pays", "executive", "platform_governance", "manager"),
   role("operations_manager", "Responsable des opérations", "operations", "central_operations", "manager"),
   role("hub_manager", "Responsable Hub", "operations", "hub_operations", "manager"),
   role("hub_supervisor", "Superviseur Hub", "operations", "hub_operations", "supervisor"),

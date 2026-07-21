@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import nextEnv from "@next/env";
+import { loadPilotCredentials, passwordFor } from "../../../scripts/pilot-credentials.mjs";
 
 const { loadEnvConfig } = nextEnv;
 const appDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -12,16 +13,13 @@ loadEnvConfig(workspaceRoot, false);
 const EXPECTED_SUPABASE_URL = "https://rgcgtcycbiuhcaoaadbh.supabase.co";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const password = process.env.HUB_PILOT_PASSWORD;
 const hubCode = process.env.HUB_PILOT_HUB_CODE ?? "DSS-DAKAR";
 
 if (supabaseUrl !== EXPECTED_SUPABASE_URL || !serviceRoleKey) {
   throw new Error("Yobalelma Supabase service credentials are required.");
 }
 
-if (!password || password.length < 16) {
-  throw new Error("HUB_PILOT_PASSWORD must contain at least 16 characters.");
-}
+const credentialBundle = await loadPilotCredentials(workspaceRoot);
 
 const supabase = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
@@ -93,10 +91,11 @@ async function createOrUpdateUser(account) {
   const attributes = {
     app_metadata: { yobalelma_pilot: true },
     email_confirm: true,
-    password,
+    password: passwordFor(credentialBundle, account.email),
     user_metadata: {
       full_name: account.name,
       primary_role: account.role,
+      password_change_required: true,
       yobalelma_pilot: true,
     },
   };

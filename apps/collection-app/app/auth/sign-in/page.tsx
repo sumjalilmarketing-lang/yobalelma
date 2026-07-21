@@ -4,7 +4,7 @@ import { LocalizationSwitcher } from "@/components/i18n/localization-switcher";
 import { demoCollectionAccounts, getCollectionSession } from "@collection-app/src/lib/auth";
 
 const input = "yb-field text-sm font-semibold";
-const roleLabels = { collection_driver: "Agent de collecte", collection_manager: "Responsable Collection", operations_manager: "Responsable des opérations" } as const;
+const roleLabels = { collection_driver: "Agent de collecte", collection_supervisor: "Superviseur Collection", collection_manager: "Responsable Collection", operations_manager: "Responsable des opérations" } as const;
 
 export default async function SignIn({ searchParams }: { searchParams: Promise<{ error?: string; next?: string }> }) {
   const session = await getCollectionSession();

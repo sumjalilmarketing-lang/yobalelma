@@ -1,6 +1,6 @@
 import type { PlatformRole } from "@/lib/auth/roles";
 
-export type CollectionRole = "collection_driver" | "collection_manager" | "operations_manager";
+export type CollectionRole = "collection_driver" | "collection_supervisor" | "collection_manager" | "operations_manager";
 export type CollectionPermission = "collection:read" | "collection:write" | "collection:manage" | "collection:audit";
 export type Tone = "neutral" | "success" | "warning" | "danger" | "info";
 export type MissionStatus = "assigned" | "accepted" | "en_route" | "at_stop" | "loading" | "in_transit" | "unloading" | "completed" | "incident";
@@ -39,5 +39,5 @@ export type CollectionState = {
 };
 
 export function isCollectionRole(role: PlatformRole | string | undefined): role is CollectionRole {
-  return role === "collection_driver" || role === "collection_manager" || role === "operations_manager";
+  return role === "collection_driver" || role === "collection_supervisor" || role === "collection_manager" || role === "operations_manager";
 }

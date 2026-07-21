@@ -26,6 +26,7 @@ tsconfig.tsbuildinfo
 .env.*.local
 .env*.local
 .supabase-cli-home/
+.pilot-access/
 
 # logs
 npm-debug.log*

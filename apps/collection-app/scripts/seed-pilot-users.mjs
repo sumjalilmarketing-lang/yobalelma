@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import nextEnv from "@next/env";
+import { loadPilotCredentials, passwordFor } from "../../../scripts/pilot-credentials.mjs";
 
 const { loadEnvConfig } = nextEnv;
 const appDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -11,20 +12,20 @@ loadEnvConfig(workspaceRoot, true);
 const expectedUrl = "https://rgcgtcycbiuhcaoaadbh.supabase.co";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const password = process.env.COLLECTION_PILOT_PASSWORD ?? process.env.HUB_PILOT_PASSWORD;
 if (supabaseUrl !== expectedUrl || !serviceKey) throw new Error("Yobalelma Supabase service credentials are required.");
-if (!password || password.length < 16) throw new Error("COLLECTION_PILOT_PASSWORD must contain at least 16 characters.");
+const credentialBundle = await loadPilotCredentials(workspaceRoot);
 const supabase = createClient(supabaseUrl, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
 
 const accounts = [
   { email: "pilot.collection-driver@yobalelma.test", name: "Ibrahima Diagne", role: "collection_driver" },
   { email: "pilot.collection-manager@yobalelma.test", name: "Fatou Ndiaye", role: "collection_manager" },
-  { email: "pilot.collection-supervisor@yobalelma.test", name: "Awa Fall", role: "operations_manager" },
+  { email: "pilot.collection-supervisor@yobalelma.test", name: "Awa Fall", role: "collection_supervisor" },
 ];
 const users = new Map();
 for (const account of accounts) {
   const user = await createOrUpdateUser(account); users.set(account.role, user);
-  await assertResult(supabase.from("profiles").upsert({ id: user.id, account_status: "active", city: "Dakar", country: "Senegal", email: account.email, full_name: account.name, is_verified: true, preferred_language: "fr", primary_role: account.role, role: account.role }), "profile");
+  const profileRole = account.role === "collection_supervisor" ? "collection_manager" : account.role;
+  await assertResult(supabase.from("profiles").upsert({ id: user.id, account_status: "active", city: "Dakar", country: "Senegal", email: account.email, full_name: account.name, is_verified: true, preferred_language: "fr", primary_role: profileRole, role: profileRole }), "profile");
   await assertResult(supabase.from("user_roles").upsert({ profile_id: user.id, role_id: account.role }), "role assignment");
 }
 const denied = { email: "pilot.collection-denied@yobalelma.test", name: "Collection Access Denied", role: "client" };
@@ -53,7 +54,7 @@ await assertResult(supabase.from("collection_route_stops").insert(relays.map((re
 console.log(JSON.stringify({ accounts: accounts.map(({email,role})=>({email,role})), denied: {email:denied.email,role:denied.role}, fixtures: {routeId:route.id,vehicleId:vehicle.id,relayCount:relays.length}, ok:true }));
 
 async function createOrUpdateUser(account) {
-  const existing=await findUser(account.email); const attributes={ app_metadata:{yobalelma_collection_pilot:true}, email_confirm:true, password, user_metadata:{full_name:account.name,primary_role:account.role,yobalelma_collection_pilot:true} };
+  const existing=await findUser(account.email); const attributes={ app_metadata:{yobalelma_collection_pilot:true}, email_confirm:true, password:passwordFor(credentialBundle,account.email), user_metadata:{full_name:account.name,primary_role:account.role,yobalelma_collection_pilot:true,password_change_required:true} };
   const {data,error}=existing?await supabase.auth.admin.updateUserById(existing.id,attributes):await supabase.auth.admin.createUser({...attributes,email:account.email});
   if(error||!data.user) throw error??new Error(`User ${account.email} missing.`); return data.user;
 }

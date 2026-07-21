@@ -36,6 +36,7 @@ export const collectionNavigation: CollectionNavigationItem[] = [
 
 const grants: Record<CollectionRole, CollectionPermission[]> = {
   collection_driver: ["collection:read", "collection:write", "collection:audit"],
+  collection_supervisor: ["collection:read", "collection:write", "collection:manage", "collection:audit"],
   collection_manager: ["collection:read", "collection:write", "collection:manage", "collection:audit"],
   operations_manager: ["collection:read", "collection:write", "collection:manage", "collection:audit"],
 };

@@ -42,6 +42,7 @@ export const platformRoles = [
   "airline_partner_manager",
   "admin",
   "super_admin",
+  "country_manager",
 ] as const;
 
 export type PublicSignupRole = (typeof publicSignupRoles)[number];
@@ -131,6 +132,7 @@ export const roleDashboardPath: Record<PlatformRole, string> = {
   airline_partner_manager: "/command",
   admin: "/dashboard/admin",
   super_admin: "/dashboard/admin",
+  country_manager: "/command",
 };
 
 export const rolePermissions: Record<PlatformRole, PlatformPermission[]> = {
@@ -321,6 +323,7 @@ export const rolePermissions: Record<PlatformRole, PlatformPermission[]> = {
     "operations:write",
   ],
   super_admin: [...platformPermissions],
+  country_manager: ["admin:read", "operations:read", "operations:write", "shipment:read", "shipment:track", "finance:read", "support:read", "kyc:read"],
 };
 
 export function isPublicSignupRole(role: string): role is PublicSignupRole {

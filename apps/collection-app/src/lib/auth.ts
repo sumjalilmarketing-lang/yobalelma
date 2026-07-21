@@ -40,7 +40,7 @@ async function getSupabaseCollectionSession(): Promise<CollectionSession | null>
     supabase.from("user_roles").select("role_id").eq("profile_id", user.id),
   ]);
   const profile = profileResult.data;
-  const role = [profile?.primary_role, profile?.role, ...(roleResult.data?.map((row) => row.role_id) ?? [])].find(isCollectionRole);
+  const role = [...(roleResult.data?.map((row) => row.role_id) ?? []), profile?.primary_role, profile?.role].find(isCollectionRole);
   if (!role) return null;
   return { email: profile?.email || user.email || "", expiresAt: sessionData.session?.expires_at ? sessionData.session.expires_at * 1000 : Date.now() + 3_600_000, name: profile?.full_name || user.user_metadata?.name || user.email || "Transporteur", role, sessionId: sessionData.session?.access_token.slice(0, 16) ?? user.id, source: "supabase", userId: user.id };
 }
