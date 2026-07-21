@@ -20,9 +20,11 @@ export default function HubError({
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-2xl rounded-lg border border-error/30 bg-white p-6 shadow-panel">
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-error">Hub error</p>
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-error">Continuité des opérations</p>
         <h1 className="mt-2 text-3xl font-black">Operation interrompue</h1>
-        <p className="mt-3 text-sm text-muted-foreground">{error.message}</p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Cette action ne peut pas être finalisée pour le moment. Vérifiez vos autorisations ou réessayez dans quelques instants.
+        </p>
         <button
           className="mt-5 rounded-md bg-primary px-4 py-2 text-sm font-black text-primary-foreground"
           onClick={reset}
