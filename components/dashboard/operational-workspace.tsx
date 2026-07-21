@@ -129,7 +129,7 @@ async function WorkspaceContent({
             <div>
               <PremiumBadge tone={tone}>À faire</PremiumBadge>
               <h2 className="text-xl font-black">Tes actions disponibles</h2>
-              <p className="mt-2 max-w-2xl leading-7 text-black/60">
+              <p className="mt-2 max-w-2xl leading-7 text-black/75">
                 Chaque action est adaptée à ton profil et à l’avancement de tes dossiers.
               </p>
             </div>
@@ -154,10 +154,10 @@ async function WorkspaceContent({
         </PremiumPanel>
 
         <PremiumPanel tone={tone} className="p-5">
-          <p className="text-sm font-bold uppercase text-black/50">Aperçu du compte</p>
+          <p className="text-sm font-bold uppercase text-black/65">Aperçu du compte</p>
           <p className="mt-2 text-2xl font-black">{config.emptyTitle ?? "Espace prêt"}</p>
-          <p className="mt-2 text-sm leading-6 text-black/60">
-            Les indicateurs se mettent a jour des qu&apos;une activite est visible.
+          <p className="mt-2 text-sm leading-6 text-black/75">
+            Les indicateurs se mettent à jour dès qu&apos;une activité est disponible.
           </p>
         </PremiumPanel>
       </section>
@@ -170,7 +170,7 @@ async function WorkspaceContent({
             value={metric.count}
             icon={Gauge}
             tone={tone}
-            description={metric.error ? "Donnee temporairement indisponible." : "Activite visible pour ce compte."}
+            description={metric.error ? "Donnée temporairement indisponible." : "Activité disponible pour ce compte."}
           />
         ))}
       </section>

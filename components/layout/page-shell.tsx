@@ -28,10 +28,11 @@ export function PageShell({ eyebrow, title, description, children, scene }: Page
     <main className="min-h-screen yb-soft-canvas text-foreground">
       <SiteHeader />
       <section className="relative isolate overflow-hidden border-b border-black/10 yb-premium-canvas py-12 text-white md:py-16">
-        <SceneBackdrop scene={resolvedScene} className="opacity-80" />
-        <div className="absolute inset-0 yb-modern-kente opacity-[0.16]" aria-hidden />
+        <SceneBackdrop scene={resolvedScene} className="opacity-55 md:opacity-70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/20" aria-hidden />
+        <div className="absolute inset-0 yb-modern-kente opacity-[0.07]" aria-hidden />
         <div className="absolute inset-x-0 bottom-0 h-28 yb-skyline opacity-30" aria-hidden />
-        <div className="container relative grid gap-8 lg:grid-cols-[1fr_390px] lg:items-end">
+        <div className="container relative z-10 grid gap-8 lg:grid-cols-[1fr_390px] lg:items-end">
           <div className="max-w-5xl">
             {eyebrow ? (
               <PremiumBadge tone={tone} className="border-white/20 bg-white/10 text-white">
@@ -41,7 +42,7 @@ export function PageShell({ eyebrow, title, description, children, scene }: Page
             <h1 className="mt-4 max-w-4xl text-4xl font-black leading-tight tracking-normal md:text-5xl">
               {title}
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-white/70">{description}</p>
+            <p className="mt-5 max-w-2xl text-base font-medium leading-7 text-white/90 sm:text-lg sm:leading-8">{description}</p>
           </div>
           <div className="hidden overflow-hidden rounded-lg border border-white/20 bg-white/10 shadow-line backdrop-blur lg:block">
             <div className="relative h-72">
@@ -65,7 +66,7 @@ export function PageShell({ eyebrow, title, description, children, scene }: Page
                   <div className="grid grid-cols-3 gap-2">
                     {summary.metrics.map((metric) => (
                       <div key={metric.label} className="rounded-md border border-white/15 bg-white/10 p-3">
-                        <p className="text-[10px] font-black uppercase text-white/50">{metric.label}</p>
+                        <p className="text-[11px] font-black uppercase text-white/80">{metric.label}</p>
                         <p className="mt-1 text-sm font-black text-white">{metric.value}</p>
                       </div>
                     ))}

@@ -13,7 +13,7 @@ export default async function Page() {
       returnTo="/client"
       title="Espace client Yobalelma"
       roleLabel="Espace client"
-      description="Prepare tes envois, suis tes colis, consulte tes paiements et contacte le support."
+      description="Prépare tes envois, suis tes colis, consulte tes paiements et contacte l’assistance."
       scene="client"
       actions={[
         {
@@ -22,7 +22,7 @@ export default async function Page() {
         },
         {
                 "href": "/client/shipments",
-                "label": "Mes expeditions",
+                "label": "Mes expéditions",
                 "variant": "secondary"
         },
         {

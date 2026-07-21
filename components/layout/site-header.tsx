@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { LogIn } from "lucide-react";
+import { LogIn, LogOut, UserRound } from "lucide-react";
 import { YobalelmaLogo } from "@/components/brand/yobalelma-logo";
 import { Button } from "@/components/ui/button";
+import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 
 const navItems = [
   { href: "/envoyer", label: "Envoyer" },
@@ -11,14 +12,18 @@ const navItems = [
   { href: "/dashboard", label: "Mes espaces" },
 ];
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const supabase = await tryCreateSupabaseServerClient();
+  const { data } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const isAuthenticated = Boolean(data.user);
+
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 bg-white/90 shadow-line backdrop-blur-xl">
       <div className="container flex min-h-16 items-center justify-between gap-4">
         <Link href="/" aria-label="Accueil Yobalelma" className="shrink-0">
-          <YobalelmaLogo variant="wordmark" />
+          <YobalelmaLogo variant="wordmark" className="w-[176px] sm:w-[210px] lg:w-[232px]" />
         </Link>
-        <nav className="hidden items-center gap-1 rounded-md border border-black/10 bg-muted/70 p-1 text-sm font-bold text-black/70 md:flex">
+        <nav aria-label="Navigation principale" className="hidden items-center gap-1 rounded-md border border-black/10 bg-muted/70 p-1 text-sm font-bold text-black/80 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -29,16 +34,33 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
-          <Button asChild size="sm">
-            <Link href="/auth/sign-in">
-              <LogIn className="h-4 w-4" aria-hidden="true" />
-              Connexion
-            </Link>
-          </Button>
+        <div className="flex items-center gap-1 sm:gap-2">
+          {isAuthenticated ? (
+            <>
+              <Button asChild size="sm" variant="secondary">
+                <Link href="/dashboard">
+                  <UserRound className="h-4 w-4" aria-hidden="true" />
+                  Mon espace
+                </Link>
+              </Button>
+              <form action="/api/auth/sign-out" method="post" className="hidden sm:block">
+                <Button type="submit" size="sm" variant="ghost" aria-label="Se déconnecter">
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden lg:inline">Déconnexion</span>
+                </Button>
+              </form>
+            </>
+          ) : (
+            <Button asChild size="sm">
+              <Link href="/auth/sign-in">
+                <LogIn className="h-4 w-4" aria-hidden="true" />
+                Connexion
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
-      <nav className="container flex gap-2 overflow-x-auto pb-3 text-sm font-bold text-black/70 md:hidden">
+      <nav aria-label="Navigation mobile" className="container flex gap-2 overflow-x-auto pb-3 text-sm font-bold text-black/80 md:hidden">
         {navItems.map((item) => (
           <Link
             key={item.href}

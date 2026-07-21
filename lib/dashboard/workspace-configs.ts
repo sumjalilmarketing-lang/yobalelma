@@ -7,7 +7,7 @@ export const workspaceConfigs = {
   "client/tracking": {
     allowedRoles: ["client"],
     actions: [
-      { href: "/dashboard/client/shipments", label: "Mes expeditions", permission: "shipment:read" },
+      { href: "/dashboard/client/shipments", label: "Mes expéditions", permission: "shipment:read" },
       { href: "/dashboard/client/support", label: "Ouvrir un ticket", permission: "support:write" },
     ],
     checkpoints: [
@@ -19,8 +19,8 @@ export const workspaceConfigs = {
     emptyTitle: "Suivi de mes colis",
     eyebrow: "Client",
     metrics: [
-      { label: "Expeditions", table: "shipments", userColumn: "sender_id" },
-      { label: "Evenements", table: "shipment_status_events" },
+      { label: "Expéditions", table: "shipments", userColumn: "sender_id" },
+      { label: "Événements", table: "shipment_status_events" },
       { label: "Preuves", table: "delivery_proofs" },
     ],
     permission: "shipment:track",
@@ -30,7 +30,7 @@ export const workspaceConfigs = {
   "client/payments": {
     allowedRoles: ["client"],
     actions: [
-      { href: "/dashboard/client/shipments/new", label: "Nouvelle expedition", permission: "shipment:write" },
+      { href: "/dashboard/client/shipments/new", label: "Nouvelle expédition", permission: "shipment:write" },
       { href: "/dashboard/client/support", label: "Support paiement", permission: "support:write" },
     ],
     checkpoints: [
@@ -43,7 +43,7 @@ export const workspaceConfigs = {
     eyebrow: "Client",
     metrics: [
       { label: "Paiements", table: "payment_intents", userColumn: "payer_id" },
-      { label: "Expeditions payables", table: "shipments", userColumn: "sender_id" },
+      { label: "Expéditions payables", table: "shipments", userColumn: "sender_id" },
       { label: "Litiges", table: "shipment_disputes", userColumn: "opened_by" },
     ],
     permission: "payment:read",
@@ -61,7 +61,7 @@ export const workspaceConfigs = {
       "Tes échanges sont conservés dans une conversation unique.",
       "Un conseiller Yobalelma peut reprendre les demandes prioritaires.",
     ],
-    description: "Messages et conversations liees aux expeditions.",
+    description: "Messages et conversations liés à tes expéditions.",
     emptyTitle: "Messagerie support",
     eyebrow: "Client",
     metrics: [
@@ -107,12 +107,12 @@ export const workspaceConfigs = {
       "Ton adresse principale peut être réutilisée depuis ton profil.",
       "Vérifie toujours les coordonnées avant de confirmer un envoi.",
     ],
-    description: "Adresses utilisees par les expeditions et profil client.",
+    description: "Retrouve les adresses utilisées pour tes expéditions.",
     emptyTitle: "Adresses",
     eyebrow: "Client",
     metrics: [
-      { label: "Adresses expeditions", table: "shipment_addresses" },
-      { label: "Expeditions", table: "shipments", userColumn: "sender_id" },
+      { label: "Adresses d’expédition", table: "shipment_addresses" },
+      { label: "Expéditions", table: "shipments", userColumn: "sender_id" },
     ],
     permission: "client:read",
     scene: "client",
@@ -129,7 +129,7 @@ export const workspaceConfigs = {
       "Tes coordonnées peuvent être mises à jour à tout moment.",
       "Ta photo aide les équipes à reconnaître ton dossier.",
     ],
-    description: "Identite, adresse, avatar et statut du compte client.",
+    description: "Gère ton identité, tes coordonnées et les informations de ton compte.",
     emptyTitle: "Profil client",
     eyebrow: "Client",
     metrics: [
@@ -143,7 +143,7 @@ export const workspaceConfigs = {
   "client/notifications": {
     allowedRoles: ["client"],
     actions: [
-      { href: "/dashboard/client/shipments", label: "Expeditions", permission: "shipment:read" },
+      { href: "/dashboard/client/shipments", label: "Expéditions", permission: "shipment:read" },
       { href: "/dashboard/client/support", label: "Support", permission: "support:read" },
     ],
     checkpoints: [

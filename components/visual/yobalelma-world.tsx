@@ -60,9 +60,9 @@ const globalCities: CityPoint[] = [
 
 const scenes: Record<JourneyScene, SceneConfig> = {
   home: {
-    eyebrow: "Reseau mondial",
+    eyebrow: "Réseau mondial",
     title: "Un voyage, une route utile",
-    description: "Colis, voyageurs, relais et hubs connectes dans une meme experience.",
+    description: "Colis, voyageurs, relais et hubs réunis dans une même expérience.",
     icon: Globe2,
     cities: globalCities,
     metrics: [
@@ -70,17 +70,17 @@ const scenes: Record<JourneyScene, SceneConfig> = {
       { label: "Zones suivies", value: "12" },
       { label: "Confiance", value: "Vérifiée" },
     ],
-    status: ["Matching", "Depot", "Suivi", "Remise"],
+    status: ["Mise en relation", "Dépôt", "Suivi", "Remise"],
   },
   client: {
     eyebrow: "Client",
     title: "Carte colis intelligente",
-    description: "Expeditions, points relais et preuves avances au meme endroit.",
+    description: "Expéditions, points relais et preuves réunis au même endroit.",
     icon: PackageCheck,
     cities: [
-      { name: "Paris", region: "Depart", x: 24, y: 28 },
+      { name: "Paris", region: "Départ", x: 24, y: 28 },
       { name: "Bruxelles", region: "Relais", x: 37, y: 38 },
-      { name: "Dakar", region: "Arrivee", x: 62, y: 67 },
+      { name: "Dakar", region: "Arrivée", x: 62, y: 67 },
       { name: "Abidjan", region: "Option", x: 74, y: 58 },
     ],
     metrics: [
@@ -88,17 +88,17 @@ const scenes: Record<JourneyScene, SceneConfig> = {
       { label: "Retrait", value: "QR" },
       { label: "Assurance", value: "Active" },
     ],
-    status: ["Demande creee", "Relais choisi", "Colis suivi", "Preuve archivee"],
+    status: ["Demande créée", "Relais choisi", "Colis suivi", "Preuve archivée"],
   },
   transporter: {
     eyebrow: "Livreur",
     title: "Missions locales en mouvement",
-    description: "Collecte, GPS, distance et remise finale avec controles terrain.",
+    description: "Collecte, itinéraire, distance et remise finale avec contrôles terrain.",
     icon: Truck,
     cities: [
       { name: "Relais nord", region: "Pickup", x: 18, y: 42 },
       { name: "Client", region: "Collecte", x: 38, y: 25 },
-      { name: "Hub", region: "Depot", x: 61, y: 57 },
+      { name: "Hub", region: "Dépôt", x: 61, y: 57 },
       { name: "Destination", region: "Final", x: 81, y: 38 },
     ],
     metrics: [
@@ -106,25 +106,25 @@ const scenes: Record<JourneyScene, SceneConfig> = {
       { label: "Missions", value: "4" },
       { label: "SLA", value: "96%" },
     ],
-    status: ["Mission acceptee", "Navigation", "Scan depot", "Livraison confirmee"],
+    status: ["Mission acceptée", "Navigation", "Scan du dépôt", "Livraison confirmée"],
   },
   traveler: {
     eyebrow: "Voyageur",
-    title: "Capacite aerienne disponible",
-    description: "Vols, billets, bagages et lots internationaux synchronises.",
+    title: "Capacité aérienne disponible",
+    description: "Vols, billets, bagages et lots internationaux synchronisés.",
     icon: Plane,
     cities: [
-      { name: "Paris CDG", region: "Depart", x: 20, y: 31 },
+      { name: "Paris CDG", region: "Départ", x: 20, y: 31 },
       { name: "Madrid", region: "Transit", x: 39, y: 48 },
-      { name: "Casablanca", region: "Controle", x: 56, y: 58 },
-      { name: "Dakar", region: "Arrivee", x: 78, y: 42 },
+      { name: "Casablanca", region: "Contrôle", x: 56, y: 58 },
+      { name: "Dakar", region: "Arrivée", x: 78, y: 42 },
     ],
     metrics: [
-      { label: "Capacite", value: "8 kg" },
-      { label: "Billet", value: "Verifie" },
+      { label: "Capacité", value: "8 kg" },
+      { label: "Billet", value: "Vérifié" },
       { label: "Lots", value: "3" },
     ],
-    status: ["Billet ajoute", "Capacite declaree", "Lot scelle", "QR retrait"],
+    status: ["Billet ajouté", "Capacité déclarée", "Lot scellé", "QR de retrait"],
   },
   hub: {
     eyebrow: "Hub",
@@ -450,7 +450,7 @@ export function SignalTimeline({
           </div>
           <div className="rounded-md border border-black/10 bg-white/80 p-3 shadow-line">
             <p className="text-sm font-bold text-black">{item}</p>
-            <p className="mt-1 text-xs leading-5 text-black/50">Etape suivie</p>
+            <p className="mt-1 text-xs font-medium leading-5 text-black/65">Étape suivie</p>
           </div>
         </div>
       ))}
