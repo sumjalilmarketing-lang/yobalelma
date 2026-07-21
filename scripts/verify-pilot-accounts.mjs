@@ -55,6 +55,8 @@ for (const account of pilotAccounts) {
   }
 
   const escalation = account.role === "super_admin" ? "not_applicable" : await assertEscalationDenied(client, authUser.id, profile);
+  const recovery = await service.auth.admin.generateLink({ type: "recovery", email: account.email });
+  if (recovery.error || !recovery.data.properties?.action_link) throw recovery.error ?? new Error(`Recovery method failed for ${account.email}.`);
   const signOut = await client.auth.signOut();
   if (signOut.error) throw signOut.error;
   const afterSignOut = await client.auth.getSession();
@@ -71,6 +73,7 @@ for (const account of pilotAccounts) {
     profileVerified: profile.is_verified === true,
     roles: actualRoles,
     roleEscalation: escalation,
+    secureRecovery: "admin_link_generation_verified",
     session: "verified",
     signOut: "verified",
     status: "active",
