@@ -139,7 +139,7 @@ export default function Home() {
       <section className="border-y border-black/10 bg-white py-12 md:py-16">
         <div className="container grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>
-            <p className="text-sm font-bold uppercase text-primary">Mode pays</p>
+            <p className="text-sm font-bold uppercase text-primary">Destinations</p>
             <h2 className="mt-3 text-3xl font-black leading-tight md:text-4xl">
               Des routes qui traversent les continents avec la meme clarte.
             </h2>
