@@ -6,7 +6,7 @@ import { Activity, Bell, BookOpenCheck, Building2, ClipboardList, LogOut, Menu, 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { AdminSession } from "../lib/types";
-import type { GovernanceDirection } from "../lib/governance-catalog";
+import { getGovernanceRole, type GovernanceDirection } from "../lib/governance-catalog";
 
 const primary = [
   { href: "/command", label: "Vue d’ensemble", icon: Activity },
@@ -21,6 +21,7 @@ export function CommandShell({ children, directions, session }: { children: Reac
   const [dark, setDark] = useState(false);
   const [open, setOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const roleLabels = session.roleIds.map((roleId) => getGovernanceRole(roleId)?.label ?? roleId).join(" · ");
   useEffect(() => { const value = localStorage.getItem("yobalelma.command.theme") === "dark"; setDark(value); document.documentElement.classList.toggle("dark", value); setHydrated(true); }, []);
   const toggleTheme = () => setDark((current) => { const next = !current; localStorage.setItem("yobalelma.command.theme", next ? "dark" : "light"); document.documentElement.classList.toggle("dark", next); return next; });
   return <div className="yb-app-shell">
@@ -37,6 +38,7 @@ export function CommandShell({ children, directions, session }: { children: Reac
       <aside className="hidden lg:block">
         <div className="yb-sidebar sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto p-3">
           <div className="rounded-xl bg-black p-4 text-white"><p className="text-xs font-black uppercase tracking-[.16em] text-primary">Responsabilité active</p><p className="mt-2 truncate text-lg font-black">{session.name}</p><p className="mt-1 truncate text-xs font-bold text-white/60">{session.email}</p></div>
+          <p className="mt-3 rounded-lg bg-primary/10 px-3 py-2 text-xs font-black text-primary">{roleLabels}</p>
           <nav className="mt-4 grid gap-1" aria-label="Navigation du centre de commandement">{primary.map(({ href, label, icon: Icon }) => <Link key={href} href={href} className={navClass(pathname, href)} onClick={() => setOpen(false)}><Icon className="h-4 w-4" />{label}</Link>)}</nav>
           <p className="mt-5 px-3 text-[10px] font-black uppercase tracking-[.16em] text-muted-foreground">Directions autorisées</p>
           <nav className="mt-2 grid gap-1" aria-label="Directions">{directions.map((direction) => <Link key={direction.id} href={`/command/directions/${direction.slug}`} className={navClass(pathname, `/command/directions/${direction.slug}`)} onClick={() => setOpen(false)}><Building2 className="h-4 w-4" />{direction.shortLabel}</Link>)}</nav>
