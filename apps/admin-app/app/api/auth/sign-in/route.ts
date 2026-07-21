@@ -15,6 +15,13 @@ export async function POST(request: NextRequest) {
     if (!supabase) throw new Error("unavailable");
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
+    const factors = await supabase.auth.mfa.listFactors();
+    if (factors.error) throw factors.error;
+    if ((factors.data.totp ?? []).some((factor) => factor.status === "verified")) {
+      const mfaUrl = new URL("/auth/mfa", requestOrigin(request));
+      mfaUrl.searchParams.set("next", returnTo);
+      return NextResponse.redirect(mfaUrl, { status: 303 });
+    }
     return NextResponse.redirect(new URL(returnTo, requestOrigin(request)), { status: 303 });
   } catch {
     const url = new URL("/auth/sign-in", requestOrigin(request));
