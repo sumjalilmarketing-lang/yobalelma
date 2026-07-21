@@ -10,6 +10,7 @@ import {
   type PlatformRole,
 } from "@/lib/auth/roles";
 import type { JourneyScene } from "@/components/visual/yobalelma-world";
+import { SponsoredPlacement } from "@/components/monetization/sponsored-placement";
 
 type Action = { href: string; label: string; variant?: "default" | "secondary" | "outline" | "ghost" | "dark" };
 
@@ -59,6 +60,7 @@ export async function ExternalRoleHome({
             checkpoints={checkpoints}
             spaces={spaces}
           />
+          {role === "client" ? <SponsoredPlacement code="user.home.partner" /> : null}
         </div>
       ) : state.status === "blocked" ? (
         <AccountAccessNotice

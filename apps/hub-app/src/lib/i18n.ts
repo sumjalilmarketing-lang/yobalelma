@@ -66,6 +66,7 @@ export const hubDictionaries: Record<SupportedLocale, HubDictionary> = {
   es,
   fr,
   it,
+  nl: en,
   pt,
   ru,
   "zh-CN": zh,

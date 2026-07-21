@@ -24,7 +24,18 @@ type LocalizationContextValue = {
   setCountry: (country: string) => void;
   setCurrency: (currency: string) => void;
   setLocale: (locale: string) => void;
+  setTimeZone: (timeZone: string) => void;
+  setTheme: (theme: ExperiencePreferences["theme"]) => void;
+  setAdPersonalization: (enabled: boolean) => void;
+  setReducedMotion: (enabled: boolean) => void;
+  preferences: ExperiencePreferences;
   settings: LocalizationSettings;
+};
+
+export type ExperiencePreferences = {
+  adPersonalization: boolean;
+  reducedMotion: boolean;
+  theme: "system" | "light" | "dark";
 };
 
 const LocalizationContext = createContext<LocalizationContextValue | null>(null);
@@ -33,6 +44,10 @@ const storageKeys = {
   country: "yobalelma.country",
   currency: "yobalelma.currency",
   locale: "yobalelma.locale",
+  timeZone: "yobalelma.time-zone",
+  theme: "yobalelma.theme",
+  adPersonalization: "yobalelma.ads.personalized",
+  reducedMotion: "yobalelma.accessibility.reduced-motion",
 };
 
 export function LocalizationProvider({
@@ -43,10 +58,11 @@ export function LocalizationProvider({
   initialSettings: LocalizationSettings;
 }) {
   const [settings, setSettings] = useState(initialSettings);
+  const [preferences, setPreferences] = useState<ExperiencePreferences>({ adPersonalization: false, reducedMotion: false, theme: "system" });
 
   useEffect(() => {
     const browserLocale = navigator.languages?.[0] ?? navigator.language;
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timeZone = localStorage.getItem(storageKeys.timeZone) ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     setSettings(
       resolveLocaleSettings({
@@ -56,7 +72,26 @@ export function LocalizationProvider({
         timeZone: timeZone || initialSettings.timeZone,
       }),
     );
+    const theme = (localStorage.getItem(storageKeys.theme) as ExperiencePreferences["theme"] | null) ?? "system";
+    const reducedMotion = localStorage.getItem(storageKeys.reducedMotion) === "true" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setPreferences({
+      adPersonalization: localStorage.getItem(storageKeys.adPersonalization) === "true",
+      reducedMotion,
+      theme,
+    });
   }, [initialSettings.country, initialSettings.currency, initialSettings.locale, initialSettings.timeZone]);
+
+  useEffect(() => {
+    document.documentElement.lang = settings.locale;
+    document.documentElement.dir = settings.direction;
+    document.documentElement.dataset.ybCountry = settings.country;
+  }, [settings.country, settings.direction, settings.locale]);
+
+  useEffect(() => {
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.classList.toggle("dark", preferences.theme === "dark" || (preferences.theme === "system" && systemDark));
+    document.documentElement.dataset.ybReducedMotion = preferences.reducedMotion ? "true" : "false";
+  }, [preferences.reducedMotion, preferences.theme]);
 
   const value = useMemo<LocalizationContextValue>(
     () => ({
@@ -86,9 +121,27 @@ export function LocalizationProvider({
           return next;
         });
       },
+      setTimeZone: (timeZone) => {
+        const safeTimeZone = Intl.supportedValuesOf?.("timeZone").includes(timeZone) ? timeZone : "UTC";
+        localStorage.setItem(storageKeys.timeZone, safeTimeZone);
+        setSettings((current) => ({ ...current, timeZone: safeTimeZone }));
+      },
+      setTheme: (theme) => {
+        localStorage.setItem(storageKeys.theme, theme);
+        setPreferences((current) => ({ ...current, theme }));
+      },
+      setAdPersonalization: (enabled) => {
+        localStorage.setItem(storageKeys.adPersonalization, String(enabled));
+        setPreferences((current) => ({ ...current, adPersonalization: enabled }));
+      },
+      setReducedMotion: (enabled) => {
+        localStorage.setItem(storageKeys.reducedMotion, String(enabled));
+        setPreferences((current) => ({ ...current, reducedMotion: enabled }));
+      },
+      preferences,
       settings,
     }),
-    [settings],
+    [preferences, settings],
   );
 
   return <LocalizationContext.Provider value={value}>{children}</LocalizationContext.Provider>;

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { LocalizationSwitcher } from "@/components/i18n/localization-switcher";
 import { demoCollectionAccounts, getCollectionSession } from "@collection-app/src/lib/auth";
 
 const input = "yb-field text-sm font-semibold";
@@ -23,7 +22,7 @@ export default async function SignIn({ searchParams }: { searchParams: Promise<{
       </div>
     </section>
     <section className="flex min-h-screen items-center justify-center p-4 sm:p-6 lg:min-h-0"><div className="yb-card w-full max-w-lg p-5 sm:p-6">
-      <div className="mb-6 flex items-center justify-between"><div><p className="yb-eyebrow">Accès sécurisé</p><h2 className="mt-2 text-3xl font-black">Connexion Collection</h2></div><LocalizationSwitcher /></div>
+      <div className="mb-6"><p className="yb-eyebrow">Accès sécurisé</p><h2 className="mt-2 text-3xl font-black">Connexion Collection</h2></div>
       {params.error ? <p className="mb-4 rounded-lg bg-error/10 p-3 text-sm font-bold text-error" role="alert">{params.error}</p> : null}
       <form action="/api/auth/supabase-sign-in" className="grid gap-4" method="post"><input name="returnTo" type="hidden" value={nextPath} /><label className="grid gap-1 text-sm font-bold">Email professionnel<input className={input} name="email" type="email" autoComplete="email" required /></label><label className="grid gap-1 text-sm font-bold">Mot de passe<input className={input} name="password" type="password" autoComplete="current-password" required /></label><button className="h-11 rounded-lg bg-primary font-black text-white shadow-glow" type="submit">Ouvrir ma tournée</button></form>
       {demo ? <><div className="my-5 flex items-center gap-3 text-xs font-black uppercase text-muted-foreground"><span className="h-px flex-1 bg-black/10" />Accès de formation<span className="h-px flex-1 bg-black/10" /></div><form action="/api/auth/collection-sign-in" className="grid gap-3" method="post"><input name="returnTo" type="hidden" value={nextPath} /><label className="grid gap-1 text-sm font-bold">Profil de formation<select className={input} name="email" defaultValue={demoCollectionAccounts[0].email}>{demoCollectionAccounts.map((account) => <option key={account.email} value={account.email}>{account.name} — {roleLabels[account.role]}</option>)}</select></label><label className="grid gap-1 text-sm font-bold">Responsabilité<select className={input} name="role" defaultValue="collection_driver"><option value="collection_driver">Agent de collecte</option><option value="collection_manager">Responsable Collection</option><option value="operations_manager">Responsable des opérations</option></select></label><label className="grid gap-1 text-sm font-bold">Identifiant de formation<input className={input} name="code" defaultValue="COL-DRIVER" /></label><button className="h-11 rounded-lg bg-black font-black text-white" type="submit">Découvrir l’espace Collection</button></form></> : null}

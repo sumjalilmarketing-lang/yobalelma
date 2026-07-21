@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ExperienceSettingsPanel } from "@/components/settings/experience-settings-panel";
 import {
   AlertTriangle,
   BarChart3,
@@ -971,6 +972,7 @@ function SettingsPage({ session }: { session: HubSession }) {
           <Rule icon={<ShieldCheck className="h-5 w-5" />} label="Role autorise" value={session.role} />
         </div>
       </Panel>
+      <ExperienceSettingsPanel />
     </div>
   );
 }

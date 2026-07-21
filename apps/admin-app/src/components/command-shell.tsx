@@ -2,34 +2,37 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, Bell, BookOpenCheck, Building2, ClipboardList, LogOut, Menu, Moon, Search, ShieldCheck, Sun, Users, X } from "lucide-react";
+import { Activity, Bell, BookOpenCheck, Building2, ClipboardList, Globe2, LogOut, Megaphone, Menu, Search, Settings, ShieldCheck, Users, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { AdminSession } from "../lib/types";
 import { getGovernanceRole, type GovernanceDirection } from "../lib/governance-catalog";
 
-const primary = [
+const basePrimary = [
   { href: "/command", label: "Vue d’ensemble", icon: Activity },
   { href: "/command/missions", label: "Missions", icon: ClipboardList },
   { href: "/command/workflows", label: "Workflows", icon: BookOpenCheck },
   { href: "/command/equipes", label: "Équipes", icon: Users },
   { href: "/command/audit", label: "Journal des décisions", icon: ShieldCheck },
+  { href: "/command/settings", label: "Paramètres", icon: Settings },
 ];
 
 export function CommandShell({ children, directions, session }: { children: React.ReactNode; directions: GovernanceDirection[]; session: AdminSession }) {
   const pathname = usePathname();
-  const [dark, setDark] = useState(false);
   const [open, setOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const roleLabels = session.roleIds.map((roleId) => getGovernanceRole(roleId)?.label ?? roleId).join(" · ");
-  useEffect(() => { const value = localStorage.getItem("yobalelma.command.theme") === "dark"; setDark(value); document.documentElement.classList.toggle("dark", value); setHydrated(true); }, []);
-  const toggleTheme = () => setDark((current) => { const next = !current; localStorage.setItem("yobalelma.command.theme", next ? "dark" : "light"); document.documentElement.classList.toggle("dark", next); return next; });
+  const primary = [
+    ...basePrimary,
+    ...(session.roleIds.some((role) => ["super_admin", "admin", "country_manager"].includes(role)) ? [{ href: "/command/experience-pays", label: "Expérience par pays", icon: Globe2 }] : []),
+    ...(session.roleIds.some((role) => ["super_admin", "admin", "partner_manager"].includes(role)) ? [{ href: "/command/monetisation", label: "Publicité et monétisation", icon: Megaphone }] : []),
+  ];
+  useEffect(() => { setHydrated(true); }, []);
   return <div className="yb-app-shell">
     <header className="yb-topbar fixed inset-x-0 top-0 z-50"><div className="mx-auto flex h-16 max-w-[1800px] items-center gap-3 px-3 md:px-5">
       <button disabled={!hydrated} className="grid h-10 w-10 place-items-center rounded-lg border disabled:opacity-50 lg:hidden" aria-label="Ouvrir la navigation" onClick={() => setOpen(true)}><Menu className="h-5 w-5" /></button>
       <Link href="/command" className="flex items-center gap-2"><Image src="/brand/yobalelma-mark.svg" alt="Yobalelma" width={40} height={40} priority /><span className="hidden sm:block"><strong className="block leading-none">Yobalelma</strong><small className="font-black uppercase tracking-[.15em] text-primary">Command</small></span></Link>
       <Link href="/command/missions" className="ml-auto hidden max-w-xl flex-1 items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2 lg:flex"><Search className="h-4 w-4 text-primary" /><span className="text-xs font-black uppercase tracking-[.12em] text-muted-foreground">Rechercher une mission ou une responsabilité</span></Link>
-      <button aria-label="Changer de thème" onClick={toggleTheme} className="grid h-10 w-10 place-items-center rounded-lg border">{dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</button>
       <Link aria-label="Notifications" href="/command/missions" className="grid h-10 w-10 place-items-center rounded-lg border"><Bell className="h-4 w-4" /></Link>
       <form action="/api/auth/sign-out" method="post"><button aria-label="Déconnexion" className="grid h-10 w-10 place-items-center rounded-lg bg-black text-white"><LogOut className="h-4 w-4" /></button></form>
     </div></header>

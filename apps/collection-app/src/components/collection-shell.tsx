@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, CloudOff, LogOut, Menu, Moon, Navigation, Search, Sun, Wifi } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { LocalizationSwitcher } from "@/components/i18n/localization-switcher";
 import { useLocalization } from "@/components/i18n/localization-provider";
 import { cn } from "@/lib/utils";
 import { canAccessCollectionNavigation, collectionNavigation } from "../lib/permissions";
@@ -23,7 +22,6 @@ export function CollectionShell({ children, session }: { children: React.ReactNo
       <Link href="/collection" className="flex items-center gap-2"><Image src="/brand/yobalelma-mark.svg" alt="Yobalelma" width={40} height={40} priority /><span className="hidden sm:block"><strong className="block leading-none">Yobalelma</strong><small className="font-black uppercase tracking-[.16em] text-primary">Collection</small></span></Link>
       <Link href="/collection/scanner" className="ml-auto hidden flex-1 items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2 lg:flex"><Search className="h-4 w-4 text-primary" /><span className="text-xs font-black uppercase tracking-[.14em] text-muted-foreground">Rechercher mission, lot ou colis</span></Link>
       <div aria-label={online ? "Statut réseau : synchronisé" : "Statut réseau : hors ligne"} className={cn("flex items-center gap-1 rounded-full px-2 py-1 text-xs font-black", online ? "bg-success/10 text-success" : "bg-warning/15 text-foreground")}>{online ? <Wifi className="h-3.5 w-3.5" /> : <CloudOff className="h-3.5 w-3.5" />}<span className="hidden md:inline">{online ? "Synchronisé" : "Hors ligne"}</span></div>
-      <LocalizationSwitcher className="hidden xl:flex" />
       <button aria-label="Changer de thème" onClick={toggleTheme} className="grid h-10 w-10 place-items-center rounded-lg border bg-background">{dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</button>
       <Link aria-label="Notifications" href="/collection/notifications" className="relative grid h-10 w-10 place-items-center rounded-lg border bg-background"><Bell className="h-4 w-4" /><span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" /></Link>
       <form action="/api/auth/collection-sign-out" method="post"><button aria-label="Déconnexion" className="grid h-10 w-10 place-items-center rounded-lg bg-black text-white"><LogOut className="h-4 w-4" /></button></form>

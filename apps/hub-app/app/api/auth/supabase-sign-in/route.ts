@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   const supabase = await tryCreateSupabaseServerClient();
 
   if (!supabase) {
-    return authError(request, returnTo, "Configuration Supabase indisponible.");
+    return authError(request, returnTo, "La connexion est momentanément indisponible.");
   }
 
   const email = formString(formData, "email");

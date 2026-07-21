@@ -4,6 +4,9 @@ import { loadCommandData, loadMissionDetail } from "@admin-app/src/lib/admin-dat
 import { requireAdminSession } from "@admin-app/src/lib/auth";
 import { visibleDirectionsForRoles } from "@admin-app/src/lib/governance-catalog";
 import { canManageMissions } from "@admin-app/src/lib/governance-catalog";
+import { CountryExperiencePage, MonetizationPage } from "@admin-app/src/components/experience-pages";
+import { ExperienceSettingsPanel } from "@/components/settings/experience-settings-panel";
+import { Page } from "@admin-app/src/components/command-pages";
 
 export const dynamic = "force-dynamic";
 
@@ -22,5 +25,8 @@ export default async function CommandPage({ params }: { params: Promise<{ segmen
   if (segments[0] === "workflows" && segments.length === 1) return <WorkflowsPage session={session} />;
   if (segments[0] === "equipes" && segments.length === 1) return <TeamsPage session={session} data={data} />;
   if (segments[0] === "audit" && segments.length === 1) return <AuditPage audit={data.audit} />;
+  if (segments[0] === "settings" && segments.length === 1) return <Page eyebrow="Préférences" title="Paramètres" description="Réglez l’affichage et les formats utilisés sur cet appareil."><ExperienceSettingsPanel /></Page>;
+  if (segments[0] === "experience-pays" && segments.length === 1 && session.roleIds.some((role) => ["super_admin", "admin", "country_manager"].includes(role))) return <CountryExperiencePage />;
+  if (segments[0] === "monetisation" && segments.length === 1 && session.roleIds.some((role) => ["super_admin", "admin", "partner_manager"].includes(role))) return <MonetizationPage />;
   notFound();
 }

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { LocalizationSwitcher } from "@/components/i18n/localization-switcher";
 import { getHubSession, demoHubAccounts } from "@hub-app/src/lib/auth";
 import { Field, inputClass, selectClass, submitClass } from "@hub-app/src/components/hub-ui";
 
@@ -53,7 +52,6 @@ export default async function HubSignInPage({
               <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Accès protégé</p>
               <h2 className="mt-2 text-3xl font-black">Connexion Hub</h2>
             </div>
-            <LocalizationSwitcher />
           </div>
           {params.error ? (
             <div className="mb-4 rounded-md border border-error/25 bg-error/10 p-3 text-sm font-bold text-error">

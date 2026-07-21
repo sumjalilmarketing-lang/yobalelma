@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, LogOut, Search } from "lucide-react";
-import { LocalizationSwitcher } from "@/components/i18n/localization-switcher";
 import { cn } from "@/lib/utils";
 import { canAccessHubNavigation, hubNavigation } from "../lib/permissions";
 import type { HubSession } from "../lib/types";
@@ -31,7 +30,6 @@ export function HubShell({
             </span>
             <kbd className="ml-auto rounded border bg-white px-1.5 py-0.5 text-[10px]">Ctrl K</kbd>
           </Link>
-          <LocalizationSwitcher className="hidden lg:flex" />
           <Link
             aria-label="Notifications"
             className="flex h-10 w-10 items-center justify-center rounded-md border border-black/10 bg-white text-primary shadow-line"

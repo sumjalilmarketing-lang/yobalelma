@@ -55,11 +55,13 @@ export type OperationalWorkspaceConfig = {
 };
 
 type OperationalWorkspaceProps = {
+  children?: React.ReactNode;
   config: OperationalWorkspaceConfig;
   returnTo: string;
 };
 
 export async function OperationalWorkspace({
+  children,
   config,
   returnTo,
 }: OperationalWorkspaceProps) {
@@ -89,6 +91,7 @@ export async function OperationalWorkspace({
             }
           >
             <WorkspaceContent config={config} userId={state.userId} role={state.role} />
+            {children}
           </PermissionGuard>
         </div>
       ) : state.status === "blocked" ? (
