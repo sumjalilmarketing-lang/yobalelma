@@ -9,6 +9,7 @@ export function assertSameOrigin(request: Request) {
 export function rateLimit(request: Request, limit = 40, windowMs = 60_000) {
   const key = `${request.headers.get("x-forwarded-for")?.split(",")[0] ?? "local"}:${new URL(request.url).pathname}`;
   const now = Date.now();
+  if (limits.size > 2_000) for (const [entryKey, entry] of limits) if (entry.resetAt <= now) limits.delete(entryKey);
   const current = limits.get(key);
   if (!current || current.resetAt <= now) {
     limits.set(key, { count: 1, resetAt: now + windowMs });

@@ -1,22 +1,14 @@
 import { NextResponse } from "next/server";
-import { getHubSnapshot } from "@hub-app/src/lib/hub-store";
 import { getOptionalPublicEnv } from "@/lib/env";
 
 export async function GET() {
-  const snapshot = getHubSnapshot();
   const supabase = await checkSupabase();
   const healthy = supabase === "ok";
 
-  return NextResponse.json({
-    app: "hub-app",
-    checks: {
-      operationsStore: true,
-      routes: 27,
-      supabase,
-      totalWeightInHubKg: snapshot.totalWeightInHubKg,
-    },
-    status: healthy ? "ok" : "degraded",
-  }, { status: healthy ? 200 : 503 });
+  return NextResponse.json(
+    { status: healthy ? "ok" : "degraded" },
+    { headers: { "Cache-Control": "no-store" }, status: healthy ? 200 : 503 },
+  );
 }
 
 async function checkSupabase() {

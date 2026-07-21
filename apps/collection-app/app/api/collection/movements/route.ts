@@ -34,7 +34,13 @@ export async function POST(request: NextRequest) {
     return response({ accepted: true, id: data, requestId, synchronized: true }, limit.remaining);
   } catch (error) {
     structuredLog("warn", "collection_movement_rejected", { error: error instanceof Error ? error.name : "UnknownError", requestId });
-    return NextResponse.json({ error: error instanceof z.ZodError ? "Mouvement invalide." : error instanceof Error ? error.message : "Mouvement refusé.", requestId }, { status: error instanceof z.ZodError ? 400 : 409 });
+    return NextResponse.json({ error: error instanceof z.ZodError ? "Mouvement invalide." : movementError(error), requestId }, { status: error instanceof z.ZodError ? 400 : 409 });
   }
 }
 function response(body: Record<string, unknown>, remaining: number) { const result=NextResponse.json(body); result.headers.set("x-ratelimit-remaining", String(remaining)); return result; }
+function movementError(error: unknown) {
+  const message = error instanceof Error ? error.message.toLowerCase() : "";
+  if (message.includes("introuvable") || message.includes("not found")) return "Le colis ou la tournée active n’a pas été trouvé.";
+  if (message.includes("auth") || message.includes("access") || message.includes("permission")) return "Votre profil ne permet pas cette opération.";
+  return "Le mouvement n’a pas pu être enregistré. Réessayez dans quelques instants.";
+}

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default async function MfaPage({ searchParams }: { searchParams: Promise<{ error?: string; next?: string }> }) {
   const params = await searchParams;
-  const next = params.next?.startsWith("/") && !params.next.startsWith("//") ? params.next : "/command";
+  const next = params.next?.startsWith("/") && !params.next.startsWith("//") && !params.next.includes("\\") ? params.next : "/command";
   return <main className="grid min-h-screen place-items-center bg-background p-6">
     <section className="w-full max-w-md rounded-2xl border bg-card p-7 shadow-xl">
       <Image src="/brand/yobalelma-mark.svg" alt="Yobalelma" width={56} height={56} priority />

@@ -25,6 +25,7 @@ export async function createRelaySessionToken(session: RelaySession) {
   return `${payload}.${base64url(new Uint8Array(signature))}`;
 }
 export async function verifyRelaySessionToken(token?: string | null): Promise<RelaySession | null> {
+  if (process.env.NODE_ENV === "production") return null;
   const configured = secret(); if (!token || !configured) return null;
   const [payload, signature, extra] = token.split("."); if (!payload || !signature || extra) return null;
   try {

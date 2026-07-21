@@ -75,6 +75,8 @@ async function createSignedValue(value: HubSession | PickupQrToken) {
 }
 
 export async function verifyHubSessionToken(token?: string | null): Promise<HubSession | null> {
+  if (process.env.NODE_ENV === "production") return null;
+
   const session = await verifySignedValue<HubSession>(token);
 
   if (!session?.expiresAt || session.expiresAt < Date.now()) return null;

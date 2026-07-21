@@ -1,9 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { correlationId, structuredLog } from "../src/lib/observability";
 import {
+  createHubSessionToken,
   createHubPickupQrToken,
+  verifyHubSessionToken,
   verifyHubPickupQrToken,
 } from "../src/lib/session-token";
+import { isSafeRelativePath } from "../src/lib/http";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -37,6 +40,16 @@ describe("Hub staging security", () => {
     expect(correlationId(new Request("https://hub.yobalelma.test", {
       headers: { "x-correlation-id": "unsafe value" },
     }))).toMatch(/^[0-9a-f-]{36}$/u);
+  });
+
+  it("rejects custom demo sessions in production and unsafe redirects", async () => {
+    vi.stubEnv("HUB_SESSION_SECRET", "hub-test-secret-at-least-thirty-two-characters");
+    const token = await createHubSessionToken({ email: "agent@yobalelma.test", expiresAt: Date.now() + 60_000, hubId: "hub-test", name: "Agent", role: "hub_agent", sessionId: "test", source: "demo" });
+    vi.stubEnv("NODE_ENV", "production");
+    await expect(verifyHubSessionToken(token)).resolves.toBeNull();
+    expect(isSafeRelativePath("/hub/scanner")).toBe(true);
+    expect(isSafeRelativePath("//malicious.example")).toBe(false);
+    expect(isSafeRelativePath("/\\malicious.example")).toBe(false);
   });
 
   it("redacts credentials and emails from structured logs", () => {

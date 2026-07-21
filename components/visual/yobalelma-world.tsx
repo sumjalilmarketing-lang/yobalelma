@@ -174,7 +174,7 @@ const scenes: Record<JourneyScene, SceneConfig> = {
       { name: "Audit", region: "Controle", x: 82, y: 59 },
     ],
     metrics: [
-      { label: "Acces", value: "Protege" },
+      { label: "Accès", value: "Protégé" },
       { label: "Audit", value: "111" },
       { label: "Alertes", value: "OK" },
     ],
@@ -224,10 +224,10 @@ const scenes: Record<JourneyScene, SceneConfig> = {
     cities: globalCities.slice(0, 4),
     metrics: [
       { label: "Flux", value: "Clair" },
-      { label: "Role", value: "Protege" },
+      { label: "Rôle", value: "Protégé" },
       { label: "Suivi", value: "Actif" },
     ],
-    status: ["Profil", "Action", "Controle", "Suivi"],
+    status: ["Profil", "Action", "Contrôle", "Suivi"],
   },
 };
 

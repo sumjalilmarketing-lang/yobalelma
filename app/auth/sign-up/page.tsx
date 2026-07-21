@@ -30,7 +30,7 @@ export default function SignUpPage() {
           <PremiumChecklist
             tone="client"
             items={[
-              "Role public choisi des l'inscription.",
+              "Rôle public choisi dès l’inscription.",
               "Profil cree pour rattacher les futures operations.",
               "KYC et documents ajoutes ensuite dans le dashboard.",
             ]}

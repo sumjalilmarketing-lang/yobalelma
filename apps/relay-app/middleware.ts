@@ -9,6 +9,14 @@ import { isRelayRole, type RelayRole } from "./src/lib/types";
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const requestId = correlationId(request);
+  if (pathname === "/auth/sign-in") {
+    const next = request.nextUrl.searchParams.get("next");
+    if (next && (!next.startsWith("/") || next.startsWith("//") || next.includes("\\"))) {
+      const url = request.nextUrl.clone();
+      url.searchParams.set("next", "/relay");
+      return correlated(NextResponse.redirect(url), requestId);
+    }
+  }
   const isPage = pathname.startsWith("/relay");
   const isApi = pathname.startsWith("/api/relay");
   if (!isPage && !isApi) return correlated(NextResponse.next(), requestId);
@@ -61,4 +69,4 @@ function correlated(response: NextResponse, id: string) {
   return response;
 }
 
-export const config = { matcher: ["/relay/:path*", "/api/relay/:path*"] };
+export const config = { matcher: ["/auth/sign-in", "/relay/:path*", "/api/relay/:path*"] };

@@ -8,9 +8,9 @@ const roleLabels = { collection_driver: "Agent de collecte", collection_supervis
 export default async function SignIn({ searchParams }: { searchParams: Promise<{ error?: string; next?: string }> }) {
   const session = await getCollectionSession();
   const params = await searchParams;
-  const nextPath = params.next?.startsWith("/") ? params.next : "/collection";
+  const nextPath = params.next?.startsWith("/") && !params.next.startsWith("//") && !params.next.includes("\\") ? params.next : "/collection";
   if (session) redirect(nextPath);
-  const demo = process.env.NODE_ENV !== "production" || process.env.COLLECTION_ENABLE_DEMO_AUTH === "1";
+  const demo = process.env.NODE_ENV !== "production";
 
   return <main className="grid min-h-screen lg:grid-cols-[1.08fr_.92fr]">
     <section className="relative hidden overflow-hidden bg-black p-7 text-white lg:block lg:p-12">

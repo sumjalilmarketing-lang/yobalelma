@@ -25,6 +25,7 @@ export async function createCollectionSessionToken(session: CollectionSession) {
   return `${payload}.${base64url(new Uint8Array(signature))}`;
 }
 export async function verifyCollectionSessionToken(token?: string | null): Promise<CollectionSession | null> {
+  if (process.env.NODE_ENV === "production") return null;
   const configured = secret(); if (!token || !configured) return null;
   const [payload, signature, extra] = token.split("."); if (!payload || !signature || extra) return null;
   try {

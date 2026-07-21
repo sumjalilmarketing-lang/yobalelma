@@ -6,7 +6,8 @@ export async function POST(request: NextRequest) {
   try {
     assertSameOrigin(request); rateLimit(request, 10, 60_000);
     const data = await request.formData(); const email = String(data.get("email") ?? "").trim(); const password = String(data.get("password") ?? "");
-    const returnTo = typeof data.get("returnTo") === "string" && String(data.get("returnTo")).startsWith("/") ? String(data.get("returnTo")) : "/relay";
+    const requested = String(data.get("returnTo") ?? "");
+    const returnTo = requested.startsWith("/") && !requested.startsWith("//") && !requested.includes("\\") ? requested : "/relay";
     if (!email || !password) throw new Error("Email et mot de passe requis.");
     const supabase = await tryCreateSupabaseServerClient(); if (!supabase) throw new Error("service unavailable");
     const { error } = await supabase.auth.signInWithPassword({ email, password }); if (error) throw error;

@@ -7,7 +7,11 @@ import { correlationId, safeErrorName, structuredLog } from "./observability";
 export function redirectTo(formData: FormData, fallback = "/hub") {
   const value = formData.get("returnTo");
 
-  return typeof value === "string" && value.startsWith("/") ? value : fallback;
+  return typeof value === "string" && isSafeRelativePath(value) ? value : fallback;
+}
+
+export function isSafeRelativePath(value: string) {
+  return value.startsWith("/") && !value.startsWith("//") && !value.includes("\\");
 }
 
 export function requestOrigin(request: NextRequest) {
@@ -20,7 +24,7 @@ export function requestOrigin(request: NextRequest) {
 }
 
 export function requestRedirect(request: NextRequest, pathname: string, status = 303) {
-  const safePathname = pathname.startsWith("/") ? pathname : "/hub";
+  const safePathname = isSafeRelativePath(pathname) ? pathname : "/hub";
   const requestId = correlationId(request);
   structuredLog("info", "hub_api_completed", {
     method: request.method,
@@ -67,8 +71,8 @@ export function actionRedirect(request: NextRequest, pathname: string) {
 }
 
 export function actionError(request: NextRequest, error: unknown, returnTo = "/hub") {
-  const message = error instanceof Error ? error.message : "Hub operation failed.";
-  const url = new URL(returnTo.startsWith("/") ? returnTo : "/hub", requestOrigin(request));
+  const message = professionalHubError(error);
+  const url = new URL(isSafeRelativePath(returnTo) ? returnTo : "/hub", requestOrigin(request));
   url.searchParams.set("error", message);
   const requestId = correlationId(request);
   structuredLog("error", "hub_api_failed", {
@@ -81,6 +85,20 @@ export function actionError(request: NextRequest, error: unknown, returnTo = "/h
   const response = NextResponse.redirect(url, { status: 303 });
   response.headers.set("x-correlation-id", requestId);
   return response;
+}
+
+function professionalHubError(error: unknown) {
+  const raw = error instanceof Error ? error.message.toLowerCase() : "";
+  if (raw.includes("auth") || raw.includes("access") || raw.includes("permission") || raw.includes("role")) {
+    return "Votre profil ne permet pas cette opération.";
+  }
+  if (raw.includes("not found") || raw.includes("introuvable")) {
+    return "L’élément demandé n’a pas été trouvé.";
+  }
+  if (raw.includes("capacity") || raw.includes("capacité")) {
+    return "La capacité disponible ne permet pas cette opération.";
+  }
+  return "L’opération n’a pas pu être enregistrée. Réessaie dans quelques instants.";
 }
 
 export function clearHubSessionResponse(request: NextRequest, returnTo = "/auth/sign-in") {

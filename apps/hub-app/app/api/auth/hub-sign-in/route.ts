@@ -2,10 +2,18 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createDemoHubSession } from "@hub-app/src/lib/auth";
 import { formString, redirectTo, requestOrigin, requestRedirect } from "@hub-app/src/lib/http";
 import { hubSessionCookie } from "@hub-app/src/lib/session-token";
+import { assertSameOrigin, rateLimit } from "@hub-app/src/lib/security";
 
 export async function POST(request: NextRequest) {
-  if (process.env.NODE_ENV === "production" && process.env.HUB_ENABLE_DEMO_AUTH !== "1") {
+  if (process.env.NODE_ENV === "production") {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  try {
+    assertSameOrigin(request);
+    rateLimit(request);
+  } catch {
+    return NextResponse.json({ error: "Request refused" }, { status: 429 });
   }
 
   const formData = await request.formData();
@@ -24,14 +32,14 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 8,
       path: "/",
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
     });
 
     return response;
-  } catch (error) {
+  } catch {
     const url = new URL("/auth/sign-in", requestOrigin(request));
     url.searchParams.set("next", returnTo);
-    url.searchParams.set("error", error instanceof Error ? error.message : "Connexion impossible.");
+    url.searchParams.set("error", "Les informations de formation sont incorrectes.");
 
     return NextResponse.redirect(url, { status: 303 });
   }

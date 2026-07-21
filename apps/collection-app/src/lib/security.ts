@@ -5,7 +5,9 @@ export function assertSameOrigin(request: Request) {
 }
 export function rateLimit(request: Request, limit = 60, windowMs = 60_000) {
   const key = `${request.headers.get("x-forwarded-for")?.split(",")[0] ?? "local"}:${new URL(request.url).pathname}`;
-  const now = Date.now(); const current = limits.get(key);
+  const now = Date.now();
+  if (limits.size > 2_000) for (const [entryKey, entry] of limits) if (entry.resetAt <= now) limits.delete(entryKey);
+  const current = limits.get(key);
   if (!current || current.resetAt <= now) { limits.set(key, { count: 1, resetAt: now + windowMs }); return { remaining: limit - 1, resetAt: now + windowMs }; }
   current.count += 1; if (current.count > limit) throw new Error("Trop de requêtes. Réessayez dans quelques instants.");
   return { remaining: limit - current.count, resetAt: current.resetAt };

@@ -9,4 +9,10 @@ describe("Admin MFA", () => {
     expect(source).toContain("currentLevel !== \"aal2\"");
     expect(source).not.toContain("cookie.name.toLowerCase()");
   });
+
+  it("rejects protocol-relative and backslash redirects", async () => {
+    const source = await readFile(path.resolve(process.cwd(), "apps/admin-app/app/api/auth/sign-in/route.ts"), "utf8");
+    expect(source).toContain('!requested.startsWith("//")');
+    expect(source).toContain('!requested.includes("\\\\")');
+  });
 });

@@ -10,8 +10,8 @@ export default async function HubSignInPage({
 }) {
   const session = await getHubSession();
   const params = await searchParams;
-  const nextPath = params.next?.startsWith("/") ? params.next : "/hub";
-  const demoAuthEnabled = process.env.NODE_ENV !== "production" || process.env.HUB_ENABLE_DEMO_AUTH === "1";
+  const nextPath = params.next?.startsWith("/") && !params.next.startsWith("//") && !params.next.includes("\\") ? params.next : "/hub";
+  const demoAuthEnabled = process.env.NODE_ENV !== "production";
 
   if (session) {
     redirect(nextPath);

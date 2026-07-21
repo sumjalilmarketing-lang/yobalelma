@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const email = String(data.get("email") ?? "").trim();
     const password = String(data.get("password") ?? "");
     const requested = String(data.get("returnTo") ?? "/command");
-    const returnTo = requested.startsWith("/") && !requested.startsWith("//") ? requested : "/command";
+    const returnTo = requested.startsWith("/") && !requested.startsWith("//") && !requested.includes("\\") ? requested : "/command";
     if (!email || !password) throw new Error("missing credentials");
     const supabase = await tryCreateSupabaseServerClient();
     if (!supabase) throw new Error("unavailable");

@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     rateLimit(request, 8, 60_000);
     const form = await request.formData();
     const requested = String(form.get("returnTo") ?? "/command");
-    returnTo = requested.startsWith("/") && !requested.startsWith("//") ? requested : "/command";
+    returnTo = requested.startsWith("/") && !requested.startsWith("//") && !requested.includes("\\") ? requested : "/command";
     const code = String(form.get("code") ?? "").trim();
     if (!/^\d{6}$/u.test(code)) throw new Error("invalid code");
     const supabase = await tryCreateSupabaseServerClient();

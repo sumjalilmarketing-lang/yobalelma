@@ -5,7 +5,7 @@ import { getAdminSession } from "@admin-app/src/lib/auth";
 export default async function SignInPage({ searchParams }: { searchParams: Promise<{ error?: string; next?: string }> }) {
   const [session, params] = await Promise.all([getAdminSession(), searchParams]);
   if (session) redirect("/command");
-  const nextPath = params.next?.startsWith("/") && !params.next.startsWith("//") ? params.next : "/command";
+  const nextPath = params.next?.startsWith("/") && !params.next.startsWith("//") && !params.next.includes("\\") ? params.next : "/command";
   return <main className="grid min-h-screen lg:grid-cols-[1.08fr_.92fr]">
     <section className="relative hidden overflow-hidden bg-black p-12 text-white lg:block">
       <div className="command-grid absolute inset-0 opacity-30" />

@@ -1,3 +1,3 @@
 export function GET() {
-  return Response.json({ app: "user-app", ok: true, service: "Yobalelma User App" });
+  return Response.json({ status: "ok" }, { headers: { "Cache-Control": "no-store" } });
 }

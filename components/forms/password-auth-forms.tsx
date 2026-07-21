@@ -105,7 +105,7 @@ export function SignUpForm() {
         <Field label="Email" error={form.formState.errors.email?.message}>
           <Input type="email" autoComplete="email" {...form.register("email")} />
         </Field>
-        <Field label="Role souhaite" error={form.formState.errors.role?.message}>
+        <Field label="Rôle souhaité" error={form.formState.errors.role?.message}>
           <Select {...form.register("role")}>
             <option value="client">Je veux envoyer un colis</option>
             <option value="local_transporter">Je veux devenir livreur</option>
