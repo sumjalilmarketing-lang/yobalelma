@@ -19,11 +19,11 @@ export default async function ClientShipmentsPage() {
     <PageShell
       eyebrow="Client"
       title="Mes expeditions"
-      description="Suis les envois crees, leur code tracking, le mode de depart et le statut operationnel."
+      description="Suis les envois créés, leur code de suivi, le mode de départ et leur statut."
     >
       <div className="mb-6 flex flex-wrap gap-3">
         <Button asChild>
-          <Link href="/dashboard/client/shipments/new">Nouvelle expedition</Link>
+          <Link href="/dashboard/client/shipments/new">Nouvelle expédition</Link>
         </Button>
       </div>
       {state.status === "ready" ? <ShipmentList userId={state.userId} /> : <ConfigurationNotice />}
@@ -51,9 +51,9 @@ async function ShipmentList({ userId }: { userId: string }) {
   if (!data?.length) {
     return (
       <EmptyState
-        title="Aucune expedition"
+        title="Aucune expédition"
         description="Cree une expedition pour declencher tracking, pickup request ou depot relais."
-        action={{ href: "/dashboard/client/shipments/new", label: "Creer une expedition" }}
+        action={{ href: "/dashboard/client/shipments/new", label: "Créer une expédition" }}
       />
     );
   }

@@ -38,9 +38,9 @@ const actions = [
 ];
 
 const trustSignals = [
-  { label: "Trajets verifies", icon: Route },
+  { label: "Trajets vérifiés", icon: Route },
   { label: "Colis suivis", icon: PackageCheck },
-  { label: "Identites controlees", icon: ShieldCheck },
+  { label: "Identités contrôlées", icon: ShieldCheck },
 ];
 
 export default function Home() {
@@ -80,8 +80,8 @@ export default function Home() {
                 Chaque voyage devient une livraison
               </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/75 sm:text-xl">
-              Yobalelma relie expediteurs, voyageurs, livreurs, relais et hubs dans
-              une experience fluide, controlee et transparente.
+              Yobalelma relie expéditeurs, voyageurs, livreurs, relais et hubs dans
+              une expérience fluide, contrôlée et transparente.
               </p>
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -113,7 +113,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 md:py-16" aria-label="Acces rapides Yobalelma">
+      <section className="py-12 md:py-16" aria-label="Accès rapides Yobalelma">
         <div className="container grid gap-4 md:grid-cols-3">
           {actions.map((action) => (
             <Link
@@ -141,11 +141,11 @@ export default function Home() {
           <div>
             <p className="text-sm font-bold uppercase text-primary">Destinations</p>
             <h2 className="mt-3 text-3xl font-black leading-tight md:text-4xl">
-              Des routes qui traversent les continents avec la meme clarte.
+              Des routes qui traversent les continents avec la même clarté.
             </h2>
             <p className="mt-4 max-w-xl leading-7 text-black/60">
               Dakar, Paris, Abidjan, Montreal, Casablanca ou Tokyo: chaque trajet
-              reste lisible, rassurant et adapte a son marche.
+              reste lisible, rassurant et adapté à son marché.
             </p>
           </div>
           <DestinationModeGrid />
@@ -155,9 +155,9 @@ export default function Home() {
       <section className="py-12 md:py-16">
         <div className="container">
           <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase text-primary">Espaces metiers</p>
+            <p className="text-sm font-bold uppercase text-primary">Espaces métiers</p>
             <h2 className="mt-3 text-3xl font-black leading-tight md:text-4xl">
-              Chaque equipe retrouve ses priorites au bon endroit.
+              Chaque équipe retrouve ses priorités au bon endroit.
             </h2>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">

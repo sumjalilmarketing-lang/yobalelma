@@ -78,7 +78,7 @@ async function ShipmentDetail({
   const shipment = shipmentResult.data;
 
   if (!shipment) {
-    return <EmptyState title="Expedition introuvable" description="Aucune expedition client ne correspond a cet identifiant." />;
+    return <EmptyState title="Expédition introuvable" description="Aucune expédition ne correspond à cet identifiant." />;
   }
 
   return (
