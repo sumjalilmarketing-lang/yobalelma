@@ -66,7 +66,7 @@ export function PageShell({ eyebrow, title, description, children, scene }: Page
                   <div className="grid grid-cols-3 gap-2">
                     {summary.metrics.map((metric) => (
                       <div key={metric.label} className="rounded-md border border-white/15 bg-white/10 p-3">
-                        <p className="text-[11px] font-black uppercase text-white/80">{metric.label}</p>
+                        <p className="text-xs font-black uppercase text-white/80">{metric.label}</p>
                         <p className="mt-1 text-sm font-black text-white">{metric.value}</p>
                       </div>
                     ))}

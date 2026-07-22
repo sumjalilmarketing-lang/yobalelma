@@ -23,14 +23,14 @@ export function PageHeader({
   subtitle: string;
 }) {
   return (
-    <header className="relative overflow-hidden rounded-lg border border-black/10 bg-black p-5 text-white shadow-crisp">
+    <header className="yb-page-hero">
       <div className="hub-grid absolute inset-0 opacity-30" />
       <div className="hub-skyline absolute inset-x-0 bottom-0 h-24 opacity-25" />
       <div className="relative flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">{eyebrow}</p>
           <h1 className="mt-2 text-3xl font-black tracking-normal md:text-5xl">{title}</h1>
-          <p className="mt-3 max-w-2xl text-sm font-semibold text-white/74 md:text-base">{subtitle}</p>
+          <p className="yb-page-hero-description mt-3 text-sm md:text-base">{subtitle}</p>
         </div>
         {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
       </div>
@@ -50,10 +50,10 @@ export function Panel({
   title?: string;
 }) {
   return (
-    <section className={cn("hub-card-reveal min-w-0 rounded-lg border border-black/10 bg-white p-4 shadow-line", className)}>
+    <section className={cn("yb-panel hub-card-reveal", className)}>
       {title ? (
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-sm font-black uppercase tracking-[0.16em] text-muted-foreground">{title}</h2>
+          <h2 className="yb-panel-title">{title}</h2>
           {action}
         </div>
       ) : null}
@@ -82,8 +82,8 @@ export function ActionButton({
   return (
     <Link
       className={cn(
-        "inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-black transition hover:-translate-y-0.5",
-        tone === "primary" ? "bg-primary text-primary-foreground shadow-glow" : "border border-white/20 bg-white/10 text-white",
+        "yb-button",
+        tone === "primary" ? "yb-button-primary" : "border-white/25 bg-white/10 text-white hover:bg-white/15",
       )}
       href={href}
     >
@@ -154,10 +154,8 @@ export function Field({
   );
 }
 
-export const inputClass =
-  "h-10 rounded-md border border-black/10 bg-white px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-2 focus:ring-ring";
+export const inputClass = "yb-field text-sm font-semibold";
 
 export const selectClass = inputClass;
 
-export const submitClass =
-  "inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-black text-primary-foreground shadow-glow transition hover:-translate-y-0.5";
+export const submitClass = "yb-button yb-button-primary w-full";

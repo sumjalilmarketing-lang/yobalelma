@@ -1,5 +1,19 @@
 # Yobalelma Design System
 
+> Version 2.0 — socle premium unifié, validé le 22 juillet 2026.
+
+## Contrat d'interface 2.0
+
+- Les contrôles interactifs mesurent 48 px par défaut et jamais moins de 44 px.
+- La microcopie visible ne descend pas sous 12 px ; le texte courant reste entre 14 et 18 px.
+- Les pages d'authentification utilisent `yb-auth-layout`, `yb-auth-visual`, `yb-auth-content` et `yb-auth-card`.
+- Les titres de page utilisent `yb-page-hero`; les surfaces métier utilisent `yb-panel`.
+- Les champs, libellés et actions utilisent `yb-field`, `yb-label` et `yb-button`.
+- Les erreurs de formulaire restent proches du champ et utilisent une région annoncée par les technologies d'assistance.
+- La couleur d'accent propre à chaque métier enrichit la marque sans remplacer l'orange Yobalelma sur l'action primaire.
+- Toutes les animations respectent `prefers-reduced-motion` et restent fonctionnelles, courtes et non bloquantes.
+- Les écrans sont contrôlés à 390, 768, 1440 et 3840 px avant livraison.
+
 Version 1.0 — référence officielle de l’écosystème Yobalelma.
 
 ## Principe de marque

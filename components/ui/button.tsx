@@ -17,10 +17,10 @@ const buttonVariants = cva(
         dark: "bg-secondary text-secondary-foreground shadow-[var(--yb-shadow-md)] hover:-translate-y-0.5 hover:opacity-90",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 px-3",
+        default: "h-12 px-5 py-2.5",
+        sm: "h-11 px-4",
         lg: "h-12 px-6 text-base",
-        icon: "h-10 w-10",
+        icon: "h-11 w-11",
       },
     },
     defaultVariants: {

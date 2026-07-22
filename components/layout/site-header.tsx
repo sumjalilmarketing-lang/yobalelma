@@ -60,12 +60,12 @@ export async function SiteHeader() {
           )}
         </div>
       </div>
-      <nav aria-label="Navigation mobile" className="container flex gap-2 overflow-x-auto pb-3 text-sm font-bold text-black/80 md:hidden">
+      <nav aria-label="Navigation mobile" className="container grid grid-cols-5 gap-1 pb-3 text-xs font-extrabold leading-tight text-black/80 md:hidden">
         {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className="shrink-0 rounded-md border border-black/10 bg-muted/70 px-3 py-2 transition hover:border-primary/50 hover:bg-white hover:text-black"
+            className="grid min-h-11 place-items-center rounded-md border border-black/10 bg-muted/70 px-1 py-2 text-center transition hover:border-primary/50 hover:bg-white hover:text-black"
           >
             {item.label}
           </Link>

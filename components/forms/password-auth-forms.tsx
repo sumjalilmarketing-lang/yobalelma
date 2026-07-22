@@ -230,10 +230,10 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <label className="grid gap-2 text-sm font-semibold">
+    <label className="yb-label">
       {label}
       {children}
-      {error ? <span className="text-sm text-red-700">{error}</span> : null}
+      {error ? <span className="text-sm font-semibold text-error" role="alert">{error}</span> : null}
     </label>
   );
 }

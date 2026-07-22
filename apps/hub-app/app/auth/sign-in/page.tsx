@@ -18,8 +18,8 @@ export default async function HubSignInPage({
   }
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-[1.05fr_0.95fr]">
-      <section className="relative overflow-hidden bg-black p-6 text-white lg:p-10">
+    <main className="yb-auth-layout grid lg:grid-cols-[1.05fr_0.95fr]">
+      <section className="yb-auth-visual p-6 lg:p-10">
         <div className="hub-grid absolute inset-0 opacity-25" />
         <div className="hub-skyline absolute inset-x-0 bottom-0 h-36 opacity-25" />
         <div className="relative flex min-h-full flex-col justify-between">
@@ -31,22 +31,22 @@ export default async function HubSignInPage({
             src="/brand/yobalelma-official-wordmark.jpeg"
             width={420}
           />
-          <div className="max-w-2xl py-12">
+          <div className="yb-auth-copy">
             <p className="text-xs font-black uppercase tracking-[0.24em] text-primary">Hub logistique</p>
-            <h1 className="mt-4 text-4xl font-black tracking-normal md:text-6xl">Contrôler chaque colis avant le voyage.</h1>
-            <p className="mt-5 text-base font-semibold text-white/70 md:text-lg">
+            <h1 className="yb-auth-title mt-4">Contrôler chaque colis avant le voyage.</h1>
+            <p className="yb-auth-description mt-6">
               Réception, inspection, inventaire, capacité, lots et remise voyageur avec une traçabilité complète.
             </p>
           </div>
-          <div className="grid gap-3 text-sm font-bold text-white/70 md:grid-cols-3">
-            <span>Scans sécurisés</span>
-            <span>Décisions traçables</span>
-            <span>Accès maîtrisés</span>
+          <div className="yb-auth-features">
+            <span className="yb-auth-feature">Scans sécurisés</span>
+            <span className="yb-auth-feature">Décisions traçables</span>
+            <span className="yb-auth-feature">Accès maîtrisés</span>
           </div>
         </div>
       </section>
-      <section className="flex items-center justify-center bg-background p-6">
-        <div className="w-full max-w-lg rounded-lg border border-black/10 bg-white p-6 shadow-panel">
+      <section className="yb-auth-content">
+        <div className="yb-auth-card">
           <div className="mb-5 flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Accès protégé</p>
@@ -69,11 +69,7 @@ export default async function HubSignInPage({
             <button className={submitClass} type="submit">Ouvrir ma session</button>
           </form>
 
-          {demoAuthEnabled ? <><div className="my-5 flex items-center gap-3 text-xs font-black uppercase tracking-[0.16em] text-muted-foreground">
-            <span className="h-px flex-1 bg-black/10" />
-            Accès de formation
-            <span className="h-px flex-1 bg-black/10" />
-          </div>
+          {demoAuthEnabled ? <><div className="yb-form-divider my-6">Accès de formation</div>
 
           <form action="/api/auth/hub-sign-in" className="grid gap-4" method="post">
             <input name="returnTo" type="hidden" value={nextPath} />
