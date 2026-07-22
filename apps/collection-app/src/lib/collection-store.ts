@@ -4,6 +4,7 @@ const now = new Date();
 const at = (minutes: number) => new Date(now.getTime() + minutes * 60_000).toISOString();
 
 const state: CollectionState = {
+  source: "fixture",
   missions: [
     {
       id: "mission-dkr-001", code: "COL-DKR-260718-01", title: "Tournée relais Dakar → Hub DSS", origin: "Relais Plateau", destination: "Hub DSS",

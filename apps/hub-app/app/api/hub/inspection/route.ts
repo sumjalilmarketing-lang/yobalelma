@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { recordInspection } from "@hub-app/src/lib/hub-store";
 import { actionError, formNumber, formString, redirectTo, requestRedirect, requireHubApiSession } from "@hub-app/src/lib/http";
-import { tryRecordInspectionLive } from "@hub-app/src/lib/live-hub-actions";
+import { canUseHubFixture, tryRecordInspectionLive } from "@hub-app/src/lib/live-hub-actions";
 import type { InspectionDecision, Inspection } from "@hub-app/src/lib/types";
 
 export async function POST(request: NextRequest) {
@@ -19,8 +19,11 @@ export async function POST(request: NextRequest) {
       shipmentId: formString(formData, "shipmentId"),
     };
 
-    if (!(await tryRecordInspectionLive(input))) {
+    const recorded = await tryRecordInspectionLive(input);
+    if (!recorded && canUseHubFixture(session)) {
       recordInspection(input);
+    } else if (!recorded) {
+      throw new Error("L’inspection n’a pas été confirmée.");
     }
 
     return requestRedirect(request, returnTo);

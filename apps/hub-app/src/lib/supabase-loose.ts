@@ -15,8 +15,9 @@ type LooseSelectQuery<T> = PostgrestResult<T[]> & {
   single(): PostgrestResult<T>;
 };
 
-type LooseUpdateQuery = {
-  eq(column: string, value: unknown): PostgrestResult<null>;
+type LooseUpdateQuery = PostgrestResult<null> & {
+  eq(column: string, value: unknown): LooseUpdateQuery;
+  select<T = Record<string, unknown>>(columns: string): LooseSelectQuery<T>;
 };
 
 type LooseInsertQuery<T> = {

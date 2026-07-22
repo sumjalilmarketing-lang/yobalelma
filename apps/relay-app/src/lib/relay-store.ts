@@ -35,6 +35,7 @@ const packages: RelayPackage[] = statuses.map((status, index) => {
 });
 
 const state: RelayState = {
+  source: "fixture",
   relayPoint: { id: "relay-orange-plateau", name: "Orange Plateau", code: "RLY-DKR-001", address: "12 avenue Léopold Sédar Senghor, Dakar", network: "Orange", capacity: 86, openUntil: "20:00" },
   packages,
   locations,

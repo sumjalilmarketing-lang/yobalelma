@@ -8,12 +8,14 @@ export function haversineKm(a: { lat: number; lng: number }, b: { lat: number; l
 }
 
 export function optimizeStops(stops: CollectionStop[], start = { lat: 14.7167, lng: -17.4677 }) {
-  const remaining = [...stops]; const ordered: CollectionStop[] = []; let cursor = start; let distanceKm = 0;
+  const positioned = stops.filter((stop): stop is CollectionStop & { position: { lat: number; lng: number } } => Boolean(stop.position));
+  const withoutPosition = stops.filter((stop) => !stop.position);
+  const remaining = [...positioned]; const ordered: CollectionStop[] = []; let cursor = start; let distanceKm = 0;
   while (remaining.length) {
     const ranked = remaining.map((stop, index) => ({ index, stop, distance: haversineKm(cursor, stop.position) })).sort((a, b) => a.distance - b.distance);
     const next = ranked[0]; ordered.push(next.stop); distanceKm += next.distance; cursor = next.stop.position; remaining.splice(next.index, 1);
   }
-  return { stops: ordered, distanceKm: Math.round(distanceKm * 10) / 10, savedPercent: stops.length > 1 ? 18 : 0 };
+  return { stops: [...ordered, ...withoutPosition], distanceKm: Math.round(distanceKm * 10) / 10, savedPercent: 0 };
 }
 
 export function predictDelay(mission: CollectionMission, trafficFactor = 1) {

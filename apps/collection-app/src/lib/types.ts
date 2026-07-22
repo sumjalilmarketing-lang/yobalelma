@@ -15,7 +15,7 @@ export type CollectionNavigationItem = { href: string; label: string; permission
 export type GeoPoint = { lat: number; lng: number; label: string };
 export type CollectionStop = {
   id: string; kind: StopKind; name: string; address: string; eta: string; status: "pending" | "arrived" | "completed";
-  position: GeoPoint; expectedPackages: number; scannedPackages: number; signatureRequired: boolean;
+  position?: GeoPoint; expectedPackages: number; scannedPackages: number; signatureRequired: boolean;
 };
 export type CollectionMission = {
   id: string; code: string; title: string; origin: string; destination: string; status: MissionStatus; priority: "normal" | "high" | "urgent";
@@ -31,11 +31,12 @@ export type PackageItem = { id: string; trackingCode: string; batchCode?: string
 export type Incident = { id: string; type: string; title: string; severity: "low" | "medium" | "high"; status: "open" | "investigating" | "resolved"; at: string; missionCode: string };
 export type CollectionEvent = { id: string; at: string; action: string; actor: string; entity: string; detail: string };
 export type CollectionState = {
-  missions: CollectionMission[]; packages: PackageItem[]; vehicle: Vehicle; incidents: Incident[]; events: CollectionEvent[];
+  source: "live" | "unavailable" | "fixture"; loadError?: string;
+  missions: CollectionMission[]; packages: PackageItem[]; vehicle: Vehicle | null; incidents: Incident[]; events: CollectionEvent[];
   notifications: Array<{ id: string; title: string; message: string; at: string; read: boolean }>;
   messages: Array<{ id: string; sender: string; message: string; at: string }>;
-  gps: { position: GeoPoint; speedKph: number; accuracyMeters: number; updatedAt: string };
-  sync: { pending: number; lastSyncedAt: string; online: boolean };
+  gps: { position: GeoPoint; speedKph: number; accuracyMeters: number; updatedAt: string } | null;
+  sync: { pending: number; lastSyncedAt?: string; online: boolean };
 };
 
 export function isCollectionRole(role: PlatformRole | string | undefined): role is CollectionRole {

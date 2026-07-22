@@ -18,21 +18,25 @@ export async function loadRelayState(session: RelaySession): Promise<RelayState>
   const client = await tryCreateSupabaseServerClient();
   if (!client || !session.userId) return emptyRelayState();
   const supabase = client as SupabaseClient;
+  const { data: auth } = await supabase.auth.getUser();
+  if (auth.user?.id !== session.userId) return emptyRelayState();
   const relayPointId = session.relayPointId ?? await findAccessiblePoint(supabase, session);
   if (!relayPointId) return emptyRelayState();
 
-  const [{ data: pointData }, { data: inventoryData }, { data: locationData }, { data: scanData }] = await Promise.all([
+  const [pointResult, inventoryResult, locationResult, scanResult] = await Promise.all([
     supabase.from("relay_points").select("id,name,address_line1,city,country,capacity_slots").eq("id", relayPointId).maybeSingle(),
     supabase.from("relay_inventory").select("id,shipment_id,status,checked_in_at,checked_out_at,quality_score,due_at,storage_location_id").eq("current_relay_point_id", relayPointId).order("checked_in_at", { ascending: false }).limit(250),
     supabase.from("relay_storage_locations").select("id,code,kind,zone,capacity,max_weight_kg,status").eq("relay_point_id", relayPointId).order("code"),
     supabase.from("relay_scan_events").select("id,shipment_id,actor_id,scan_type,note,created_at").eq("relay_point_id", relayPointId).order("created_at", { ascending: false }).limit(30),
   ]);
 
-  const point = pointData as unknown as PointRow | null;
+  if (pointResult.error || inventoryResult.error || locationResult.error || scanResult.error) return emptyRelayState();
+
+  const point = pointResult.data as unknown as PointRow | null;
   if (!point) return emptyRelayState();
-  const inventory = (inventoryData ?? []) as unknown as InventoryRow[];
+  const inventory = (inventoryResult.data ?? []) as unknown as InventoryRow[];
   const shipmentIds = inventory.map((row) => row.shipment_id);
-  const scans = (scanData ?? []) as unknown as ScanRow[];
+  const scans = (scanResult.data ?? []) as unknown as ScanRow[];
   const actorIds = [...new Set(scans.map((row) => row.actor_id))];
   const [shipmentsResult, packagesResult, addressesResult, profilesResult] = await Promise.all([
     shipmentIds.length ? supabase.from("shipments").select("id,tracking_code,destination_city,destination_country,latest_delivery_date,status").in("id", shipmentIds) : Promise.resolve({ data: [] }),
@@ -40,11 +44,15 @@ export async function loadRelayState(session: RelaySession): Promise<RelayState>
     shipmentIds.length ? supabase.from("shipment_addresses").select("shipment_id,contact_name,type").in("shipment_id", shipmentIds).eq("type", "delivery") : Promise.resolve({ data: [] }),
     actorIds.length ? supabase.from("profiles").select("id,full_name").in("id", actorIds) : Promise.resolve({ data: [] }),
   ]);
+  if ("error" in shipmentsResult && shipmentsResult.error) return emptyRelayState();
+  if ("error" in packagesResult && packagesResult.error) return emptyRelayState();
+  if ("error" in addressesResult && addressesResult.error) return emptyRelayState();
+  if ("error" in profilesResult && profilesResult.error) return emptyRelayState();
   const shipments = new Map(((shipmentsResult.data ?? []) as unknown as ShipmentRow[]).map((row) => [row.id, row]));
   const packageDetails = new Map(((packagesResult.data ?? []) as unknown as PackageRow[]).map((row) => [row.shipment_id, row]));
   const recipients = new Map(((addressesResult.data ?? []) as unknown as AddressRow[]).map((row) => [row.shipment_id, row.contact_name]));
   const actors = new Map(((profilesResult.data ?? []) as unknown as ProfileRow[]).map((row) => [row.id, row.full_name]));
-  const locationRows = (locationData ?? []) as unknown as LocationRow[];
+  const locationRows = (locationResult.data ?? []) as unknown as LocationRow[];
   const locationCodes = new Map(locationRows.map((row) => [row.id, row.code]));
   const occupancy = new Map<string, number>();
   for (const row of inventory) if (row.status === "stored" && row.storage_location_id) occupancy.set(row.storage_location_id, (occupancy.get(row.storage_location_id) ?? 0) + 1);
@@ -70,19 +78,20 @@ export async function loadRelayState(session: RelaySession): Promise<RelayState>
       receivedAt: row.checked_in_at,
       dueAt: row.due_at ?? shipment.latest_delivery_date,
       photoCount: 0,
-      qualityScore: row.quality_score ?? 100,
+      qualityScore: row.quality_score ?? 0,
       otpRequired: shipment.status === "at_relay",
     }];
   });
 
   return {
-    relayPoint: { id: point.id, name: point.name, code: point.city.toUpperCase().slice(0, 3), address: `${point.address_line1}, ${point.city}`, network: "Réseau Yobalelma", capacity: point.capacity_slots, openUntil: "20:00" },
+    source: "live",
+    relayPoint: { id: point.id, name: point.name, code: point.city.toUpperCase().slice(0, 3), address: `${point.address_line1}, ${point.city}`, network: "Réseau Yobalelma", capacity: point.capacity_slots, openUntil: "—" },
     packages,
     locations: locationRows.map((row) => ({ id: row.id, code: row.code, kind: row.kind, zone: row.zone, capacity: row.capacity, occupied: occupancy.get(row.id) ?? 0, maxWeightKg: row.max_weight_kg, status: row.status })),
     incidents: packages.filter((item) => item.status === "anomaly").map((item) => ({ id: `incident-${item.id}`, type: "package_check", title: "Colis à vérifier avant remise", severity: "high", status: "open", at: item.receivedAt, trackingCode: item.trackingCode })),
     events: scans.map((row) => ({ id: row.id, at: row.created_at, action: row.scan_type, actor: actors.get(row.actor_id) ?? "Équipe Yobalelma", entity: shipments.get(row.shipment_id)?.tracking_code ?? "Colis", detail: cleanNote(row.note) })),
     notifications: [],
-    sync: { pending: 0, lastSyncedAt: new Date().toISOString(), online: true },
+    sync: { pending: 0, lastSyncedAt: scans[0]?.created_at ?? "", online: true },
   };
 }
 
@@ -110,8 +119,10 @@ function cleanNote(note: string | null) {
 
 function emptyRelayState(): RelayState {
   return {
+    source: "unavailable",
+    loadError: "Les données du point relais sont momentanément indisponibles.",
     relayPoint: { id: "", name: "Point relais", code: "YBL", address: "", network: "Réseau Yobalelma", capacity: 0, openUntil: "—" },
     packages: [], locations: [], incidents: [], events: [], notifications: [],
-    sync: { pending: 0, lastSyncedAt: new Date(0).toISOString(), online: true },
+    sync: { pending: 0, lastSyncedAt: "", online: false },
   };
 }

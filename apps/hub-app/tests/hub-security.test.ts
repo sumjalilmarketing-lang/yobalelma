@@ -1,4 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { correlationId, structuredLog } from "../src/lib/observability";
 import {
   createHubSessionToken,
@@ -14,6 +16,23 @@ afterEach(() => {
 });
 
 describe("Hub staging security", () => {
+  it("fails closed instead of exposing fixture data to authenticated production sessions", () => {
+    const page = readFileSync(resolve(process.cwd(), "apps/hub-app/app/hub/[[...segments]]/page.tsx"), "utf8");
+    const enterprise = readFileSync(resolve(process.cwd(), "apps/hub-app/src/lib/enterprise-data.ts"), "utf8");
+
+    expect(page).not.toContain("(await loadLiveHubState(session)) ?? getHubState()");
+    expect(page).toContain('session.source === "demo" && process.env.NODE_ENV !== "production"');
+    expect(enterprise).toContain('source: "unavailable"');
+    expect(enterprise).toContain('process.env.NODE_ENV !== "production" ? createEnterpriseDemoState(session)');
+  });
+
+  it("never promotes a traveler KYC status without persisted evidence", () => {
+    const loader = readFileSync(resolve(process.cwd(), "apps/hub-app/src/lib/live-hub-data.ts"), "utf8");
+
+    expect(loader).toContain('profileKyc.get(text(row, "traveler_id")) ?? "pending"');
+    expect(loader).not.toContain('id: text(row, "id"), kycStatus: "verified"');
+  });
+
   it("signs short-lived pickup QR values and rejects tampering", async () => {
     vi.stubEnv("HUB_SESSION_SECRET", "hub-test-secret-at-least-thirty-two-characters");
     const pickup = {

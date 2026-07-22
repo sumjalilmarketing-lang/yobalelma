@@ -34,6 +34,7 @@ try {
 async function ready() {
   try {
     const response = await fetch(`${baseURL}/api/health?probe=1`, { signal: AbortSignal.timeout(2000) });
-    return response.status < 500 && (await response.json()).app === "relay-app";
+    const payload = await response.json();
+    return response.status < 500 && ["starting", "ok"].includes(payload.status);
   } catch { return false; }
 }

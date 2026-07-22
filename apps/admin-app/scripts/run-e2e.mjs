@@ -22,4 +22,4 @@ try {
   const child = spawn(process.execPath, [playwrightCli, "test", ...process.argv.slice(2)], { cwd: appDir, env: { ...process.env, PLAYWRIGHT_BASE_URL: baseURL, PLAYWRIGHT_SKIP_WEBSERVER: "1" }, stdio: "inherit", windowsHide: true });
   process.exitCode = await new Promise((resolve) => child.on("exit", (code, signal) => resolve(signal ? 1 : (code ?? 1))));
 } finally { server?.kill(); }
-async function ready() { try { const response = await fetch(`${baseURL}/api/health`, { signal: AbortSignal.timeout(2000) }); const payload = await response.json(); return response.status < 500 && payload.application === "Yobalelma Command"; } catch { return false; } }
+async function ready() { try { const response = await fetch(`${baseURL}/api/health`, { signal: AbortSignal.timeout(2000) }); const payload = await response.json(); return response.status < 500 && payload.status === "ok"; } catch { return false; } }

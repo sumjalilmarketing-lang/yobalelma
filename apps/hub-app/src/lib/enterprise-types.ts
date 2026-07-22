@@ -90,7 +90,7 @@ export type EnterpriseAuditEvent = {
 
 export type EnterpriseHubState = {
   generatedAt: string;
-  source: "demo" | "supabase";
+  source: "demo" | "supabase" | "unavailable";
   activeHubId: string;
   hubs: EnterpriseHubSummary[];
   agents: EnterpriseAgentMetric[];

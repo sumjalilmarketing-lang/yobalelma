@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { createBatch } from "@hub-app/src/lib/hub-store";
 import { actionError, formString, redirectTo, requestRedirect, requireHubApiSession } from "@hub-app/src/lib/http";
-import { tryCreateBatchLive } from "@hub-app/src/lib/live-hub-actions";
+import { canUseHubFixture, tryCreateBatchLive } from "@hub-app/src/lib/live-hub-actions";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       return requestRedirect(request, `/hub/batches/${liveBatchId}`);
     }
 
+    if (!canUseHubFixture(session)) throw new Error("Le lot n’a pas été créé dans le service Hub.");
     const batch = createBatch({
       session,
       shipmentIds,

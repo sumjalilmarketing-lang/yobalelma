@@ -8,10 +8,10 @@ import { correlationId, structuredLog } from "@collection-app/src/lib/observabil
 
 const movementSchema = z.object({
   trackingCode: z.string().trim().regex(/^YBL-[A-Z]{2}-\d{4}-\d{4}$/u),
-  action: z.enum(["loaded", "unloaded", "quantity_checked", "photo_added", "signature_added", "anomaly_reported"]),
+  action: z.enum(["loaded", "unloaded", "quantity_checked", "anomaly_reported"]),
   idempotencyKey: z.string().min(8).max(160).regex(/^[a-zA-Z0-9:._-]+$/u),
   stopId: z.string().uuid().optional(),
-});
+}).strict();
 
 export async function POST(request: NextRequest) {
   const requestId = correlationId(request);
@@ -22,10 +22,13 @@ export async function POST(request: NextRequest) {
     const payload = movementSchema.parse(await request.json());
     if (session.source === "demo") return response({ accepted: true, id: `demo-${payload.idempotencyKey}`, requestId, synchronized: false }, limit.remaining);
     const supabase = await tryCreateSupabaseServerClient(); if (!supabase) throw new Error("Supabase indisponible.");
-    const [{ data: shipment }, { data: route }] = await Promise.all([
+    const { data: auth } = await supabase.auth.getUser(); if (auth.user?.id !== session.userId) throw new Error("Authentication required");
+    const [shipmentResult, routeResult] = await Promise.all([
       supabase.from("shipments").select("id").eq("tracking_code", payload.trackingCode).maybeSingle(),
       supabase.from("collection_routes").select("id").eq("driver_id", session.userId!).in("status", ["planned", "in_progress"]).order("route_date").limit(1).maybeSingle(),
     ]);
+    if (shipmentResult.error || routeResult.error) throw new Error("Operational lookup failed");
+    const shipment = shipmentResult.data; const route = routeResult.data;
     if (!shipment?.id || !route?.id) throw new Error("Colis ou tournée active introuvable.");
     const rpc = supabase.rpc as unknown as (name: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>;
     const { data, error } = await rpc("record_collection_movement", { p_route_id: route.id, p_shipment_id: shipment.id, p_movement_type: payload.action, p_idempotency_key: payload.idempotencyKey, p_stop_id: payload.stopId ?? null, p_metadata: { tracking_code: payload.trackingCode, source: "collection_app" } });

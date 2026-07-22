@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
 import { toUserFacingMessage } from "@/lib/presentation/user-facing-copy";
+import { callSupabaseRpc } from "@/lib/supabase/rpc";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 
 const signedUploadSchema = z.object({
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
     .slice(0, 120);
   const path = parsed.data.path ?? `${expectedPrefix}${crypto.randomUUID()}-${safeFileName || "document"}`;
 
-  if (!path.startsWith(expectedPrefix)) {
+  if (!path.startsWith(expectedPrefix) || path.includes("..") || path.includes("\\")) {
     return fail("Ce document ne peut pas être ajouté à ton dossier.", 403);
   }
 
@@ -68,6 +69,21 @@ export async function POST(request: Request) {
 
   if (error) {
     return fail(toUserFacingMessage(error.message), 400);
+  }
+
+  const { error: registrationError } = await callSupabaseRpc<string>(
+    supabase,
+    "register_secure_upload",
+    {
+      p_bucket: parsed.data.bucket,
+      p_declared_mime_type: parsed.data.contentType,
+      p_declared_size_bytes: parsed.data.size,
+      p_storage_path: path,
+    },
+  );
+
+  if (registrationError) {
+    return fail("Le contrôle de sécurité du document n’a pas pu être préparé.", 503);
   }
 
   return ok("Le document est prêt à être ajouté.", { ...data, path });

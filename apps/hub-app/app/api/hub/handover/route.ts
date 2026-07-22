@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { handoverBatch } from "@hub-app/src/lib/hub-store";
 import { actionError, formBoolean, formNumber, formString, redirectTo, requestRedirect, requireHubApiSession } from "@hub-app/src/lib/http";
-import { tryHandoverBatchLive } from "@hub-app/src/lib/live-hub-actions";
+import { canUseHubFixture, tryHandoverBatchLive } from "@hub-app/src/lib/live-hub-actions";
 import { hubPickupQrCookie } from "@hub-app/src/lib/session-token";
 
 export async function POST(request: NextRequest) {
@@ -23,8 +23,10 @@ export async function POST(request: NextRequest) {
 
     const handedOverLive = await tryHandoverBatchLive(input);
 
-    if (!handedOverLive) {
+    if (!handedOverLive && canUseHubFixture(session)) {
       handoverBatch(input);
+    } else if (!handedOverLive) {
+      throw new Error("La remise n’a pas été confirmée.");
     }
 
     const response = requestRedirect(request, returnTo);

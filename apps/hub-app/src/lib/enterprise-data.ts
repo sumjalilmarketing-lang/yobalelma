@@ -43,14 +43,18 @@ export function createEnterpriseDemoState(session: HubSession): EnterpriseHubSta
   };
 }
 
+function createUnavailableState(session: HubSession, latencyMs = 0): EnterpriseHubState {
+  return { generatedAt: new Date().toISOString(), source: "unavailable", activeHubId: session.hubId, hubs: [], agents: [], alerts: [], incidents: [], forecasts: [], audit: [], health: { api: "degraded", auth: "degraded", database: "degraded", realtime: "degraded", scanner: "degraded", storage: "degraded", latencyMs, availabilityPercent: 0, version: process.env.NEXT_PUBLIC_APP_VERSION ?? "unknown" } };
+}
+
 export async function loadEnterpriseHubState(session: HubSession): Promise<EnterpriseHubState> {
-  const fallback = createEnterpriseDemoState(session);
-  if (session.source !== "supabase" || !session.userId) return fallback;
+  if (session.source !== "supabase" || !session.userId) return process.env.NODE_ENV !== "production" ? createEnterpriseDemoState(session) : createUnavailableState(session);
   const client = await tryCreateSupabaseServerClient();
-  if (!client) return { ...fallback, health: { ...fallback.health, database: "degraded", auth: "degraded" } };
+  if (!client) return createUnavailableState(session);
   const started = Date.now();
+  const base = createUnavailableState(session);
   try {
-    const [{ data: tower, error }, hubsResult, alertsResult, incidentsResult, performanceResult, forecastResult, auditResult] = await Promise.all([
+    const [{ data: tower, error }, hubsResult, alertsResult, incidentsResult, performanceResult, forecastResult, auditResult, profilesResult] = await Promise.all([
       callSupabaseRpc<LooseRow[]>(client, "get_hub_control_tower", { p_hub_id: null }),
       fromSupabaseTable(client, "airport_hubs").select<LooseRow>("id,code,name,city,country,country_code,timezone,currency_code,status,latitude,longitude"),
       fromSupabaseTable(client, "hub_alerts").select<LooseRow>("id,hub_id,title,message,severity,status,triggered_at,sla_due_at").order("triggered_at", { ascending: false }).limit(50),
@@ -58,6 +62,7 @@ export async function loadEnterpriseHubState(session: HubSession): Promise<Enter
       fromSupabaseTable(client, "hub_agent_performance").select<LooseRow>("id,profile_id,hub_id,received_packages,completed_inspections,stock_movements,prepared_batches,operation_errors,resolved_incidents,processed_weight_kg,average_operation_seconds,sla_compliance_percent,metadata").limit(100),
       fromSupabaseTable(client, "hub_forecast_snapshots").select<LooseRow>("hub_id,forecast_date,expected_packages,expected_weight_kg,expected_traveler_capacity_kg,recommended_agent_count,recommended_storage_locations,saturation_risk_percent,delay_risk_percent").order("forecast_date").limit(100),
       fromSupabaseTable(client, "hub_audit_events").select<LooseRow>("id,actor_id,actor_role,hub_id,action,resource_type,resource_id,result,risk_level,occurred_at,correlation_id").order("occurred_at", { ascending: false }).limit(100),
+      fromSupabaseTable(client, "profiles").select<LooseRow>("id,full_name"),
     ]);
     if (error || !Array.isArray(tower) || tower.length === 0) throw new Error(error?.message ?? "empty control tower");
     const metadata = new Map((hubsResult.data ?? []).map((row: LooseRow) => [s(row, "id"), row]));
@@ -67,16 +72,17 @@ export async function loadEnterpriseHubState(session: HubSession): Promise<Enter
       return { id: s(row, "hub_id"), code: s(row, "hub_code"), name: s(row, "hub_name"), city: s(row, "city"), country: s(row, "country"), countryCode: s(extra, "country_code"), timezone: s(extra, "timezone"), currency: s(extra, "currency_code"), status: s(row, "status", "operational") as EnterpriseHubSummary["status"], inbound: n(row, "inbound_count"), inventory: n(row, "inventory_count"), batches: n(row, "active_batches"), incidents: n(row, "open_incidents"), criticalAlerts: n(row, "critical_alerts"), storedWeightKg: n(row, "stored_weight_kg"), storageCapacityKg: n(row, "storage_capacity_kg"), travelerCapacityKg: n(row, "traveler_capacity_kg"), reservedCapacityKg: n(row, "reserved_capacity_kg"), latitude: n(extra, "latitude"), longitude: n(extra, "longitude") };
     });
     const hubCodes = new Map(hubs.map((hub) => [hub.id, hub.code]));
+    const profileNames = new Map((profilesResult.data ?? []).map((row: LooseRow) => [s(row, "id"), s(row, "full_name", "Collaborateur")]));
     return {
-      ...fallback, source: "supabase", generatedAt: new Date().toISOString(), hubs,
+      ...base, source: "supabase", generatedAt: new Date().toISOString(), hubs,
       alerts: (alertsResult.data ?? []).map((row: LooseRow) => ({ id: s(row, "id"), hubCode: hubCodes.get(s(row, "hub_id")) ?? "—", title: s(row, "title"), message: s(row, "message"), severity: s(row, "severity", "info") as EnterpriseHubState["alerts"][number]["severity"], status: s(row, "status", "open") as EnterpriseHubState["alerts"][number]["status"], triggeredAt: s(row, "triggered_at"), slaDueAt: s(row, "sla_due_at") || undefined })),
-      incidents: (incidentsResult.data ?? []).map((row: LooseRow) => ({ id: s(row, "id"), code: s(row, "incident_code"), hubCode: hubCodes.get(s(row, "hub_id")) ?? "—", title: s(row, "title"), type: s(row, "incident_type"), priority: s(row, "priority"), status: s(row, "status"), assignedTo: s(row, "assigned_to", "Non assigné"), openedAt: s(row, "created_at"), slaMinutes: 120 })),
-      agents: performanceResult.data?.length ? (performanceResult.data as LooseRow[]).map((row, index) => ({ id: s(row, "id"), name: `Agent ${index + 1}`, hubCode: hubCodes.get(s(row, "hub_id")) ?? "—", team: "Operations", station: "Hub", received: n(row, "received_packages"), inspections: n(row, "completed_inspections"), movements: n(row, "stock_movements"), batches: n(row, "prepared_batches"), errors: n(row, "operation_errors"), resolvedIncidents: n(row, "resolved_incidents"), processedWeightKg: n(row, "processed_weight_kg"), averageSeconds: n(row, "average_operation_seconds"), slaPercent: n(row, "sla_compliance_percent"), productivity: Math.max(0, Math.min(100, Math.round(n(row, "sla_compliance_percent") - n(row, "operation_errors") * 2))) })) : fallback.agents,
+      incidents: (incidentsResult.data ?? []).map((row: LooseRow) => ({ id: s(row, "id"), code: s(row, "incident_code"), hubCode: hubCodes.get(s(row, "hub_id")) ?? "—", title: s(row, "title"), type: s(row, "incident_type"), priority: s(row, "priority"), status: s(row, "status"), assignedTo: s(row, "assigned_to", "Non assigné"), openedAt: s(row, "created_at"), slaMinutes: 0 })),
+      agents: (performanceResult.data ?? []).map((row: LooseRow) => ({ id: s(row, "id"), name: profileNames.get(s(row, "profile_id")) ?? "Collaborateur", hubCode: hubCodes.get(s(row, "hub_id")) ?? "—", team: "Operations", station: "Hub", received: n(row, "received_packages"), inspections: n(row, "completed_inspections"), movements: n(row, "stock_movements"), batches: n(row, "prepared_batches"), errors: n(row, "operation_errors"), resolvedIncidents: n(row, "resolved_incidents"), processedWeightKg: n(row, "processed_weight_kg"), averageSeconds: n(row, "average_operation_seconds"), slaPercent: n(row, "sla_compliance_percent"), productivity: Math.max(0, Math.min(100, Math.round(n(row, "sla_compliance_percent") - n(row, "operation_errors") * 2))) })),
       forecasts: (forecastResult.data ?? []).map((row: LooseRow) => ({ hubCode: hubCodes.get(s(row, "hub_id")) ?? "—", date: s(row, "forecast_date"), expectedPackages: n(row, "expected_packages"), expectedWeightKg: n(row, "expected_weight_kg"), travelerCapacityKg: n(row, "expected_traveler_capacity_kg"), recommendedAgents: n(row, "recommended_agent_count"), recommendedLocations: n(row, "recommended_storage_locations"), saturationRisk: n(row, "saturation_risk_percent"), delayRisk: n(row, "delay_risk_percent") })),
       audit: (auditResult.data ?? []).map((row: LooseRow) => ({ id: s(row, "id"), actor: s(row, "actor_id", "Système"), role: s(row, "actor_role"), hubCode: hubCodes.get(s(row, "hub_id")) ?? "—", action: s(row, "action"), resource: `${s(row, "resource_type")}:${s(row, "resource_id")}`, result: s(row, "result"), risk: s(row, "risk_level"), occurredAt: s(row, "occurred_at"), correlationId: s(row, "correlation_id") })),
-      health: { ...fallback.health, latencyMs: Date.now() - started },
+      health: { ...base.health, api: "operational", auth: "operational", database: "operational", realtime: "operational", storage: "operational", latencyMs: Date.now() - started },
     };
   } catch {
-    return { ...fallback, health: { ...fallback.health, database: "degraded", realtime: "degraded", latencyMs: Date.now() - started } };
+    return createUnavailableState(session, Date.now() - started);
   }
 }

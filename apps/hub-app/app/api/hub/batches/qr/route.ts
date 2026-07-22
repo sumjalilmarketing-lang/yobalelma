@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { generatePickupQr, markBatchReady } from "@hub-app/src/lib/hub-store";
 import { actionError, formString, redirectTo, requestRedirect, requireHubApiSession } from "@hub-app/src/lib/http";
-import { tryGeneratePickupQrLive } from "@hub-app/src/lib/live-hub-actions";
+import { canUseHubFixture, tryGeneratePickupQrLive } from "@hub-app/src/lib/live-hub-actions";
 import { createHubPickupQrToken, hubPickupQrCookie } from "@hub-app/src/lib/session-token";
 
 export async function POST(request: NextRequest) {
@@ -13,11 +13,12 @@ export async function POST(request: NextRequest) {
     const batchId = formString(formData, "batchId");
     const liveQr = await tryGeneratePickupQrLive(batchId, session);
 
-    if (!liveQr) {
+    if (!liveQr && canUseHubFixture(session)) {
       markBatchReady(batchId, session);
       generatePickupQr(batchId, session);
       return requestRedirect(request, returnTo);
     }
+    if (!liveQr) throw new Error("Le QR de remise n’a pas été généré.");
 
     const response = requestRedirect(request, returnTo);
     response.cookies.set(hubPickupQrCookie, await createHubPickupQrToken(liveQr), {

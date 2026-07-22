@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { moveInventory } from "@hub-app/src/lib/hub-store";
 import { actionError, formNumber, formString, redirectTo, requestRedirect, requireHubApiSession } from "@hub-app/src/lib/http";
-import { tryMoveInventoryLive } from "@hub-app/src/lib/live-hub-actions";
+import { canUseHubFixture, tryMoveInventoryLive } from "@hub-app/src/lib/live-hub-actions";
 import type { InventoryStatus } from "@hub-app/src/lib/types";
 
 export async function POST(request: NextRequest) {
@@ -19,8 +19,11 @@ export async function POST(request: NextRequest) {
       toLocationId: formString(formData, "toLocationId"),
     };
 
-    if (!(await tryMoveInventoryLive(input))) {
+    const moved = await tryMoveInventoryLive(input);
+    if (!moved && canUseHubFixture(session)) {
       moveInventory(input);
+    } else if (!moved) {
+      throw new Error("Le mouvement n’a pas été confirmé.");
     }
 
     return requestRedirect(request, returnTo);

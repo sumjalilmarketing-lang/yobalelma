@@ -67,6 +67,8 @@ export type RelayIncident = {
 
 export type RelayEvent = { id: string; at: string; action: string; actor: string; entity: string; detail: string };
 export type RelayState = {
+  source: "live" | "unavailable" | "fixture";
+  loadError?: string;
   relayPoint: { id: string; name: string; code: string; address: string; network: string; capacity: number; openUntil: string };
   packages: RelayPackage[];
   locations: StorageLocation[];

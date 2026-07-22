@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { reserveShipmentForBatch } from "@hub-app/src/lib/hub-store";
 import { actionError, formString, redirectTo, requestRedirect, requireHubApiSession } from "@hub-app/src/lib/http";
-import { tryReserveShipmentForBatchLive } from "@hub-app/src/lib/live-hub-actions";
+import { canUseHubFixture, tryReserveShipmentForBatchLive } from "@hub-app/src/lib/live-hub-actions";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -15,8 +15,11 @@ export async function POST(request: NextRequest) {
       shipmentId: formString(formData, "shipmentId"),
     };
 
-    if (!(await tryReserveShipmentForBatchLive(input))) {
+    const reserved = await tryReserveShipmentForBatchLive(input);
+    if (!reserved && canUseHubFixture(session)) {
       reserveShipmentForBatch(input);
+    } else if (!reserved) {
+      throw new Error("La réservation n’a pas été confirmée.");
     }
 
     return requestRedirect(request, returnTo);

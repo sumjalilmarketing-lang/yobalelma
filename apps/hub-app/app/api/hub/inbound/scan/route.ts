@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { scanInboundPackage } from "@hub-app/src/lib/hub-store";
 import { actionError, formNumber, formString, redirectTo, requestRedirect, requireHubApiSession } from "@hub-app/src/lib/http";
-import { tryScanInboundPackageLive } from "@hub-app/src/lib/live-hub-actions";
+import { canUseHubFixture, tryScanInboundPackageLive } from "@hub-app/src/lib/live-hub-actions";
 import type { InboundItemStatus } from "@hub-app/src/lib/types";
 
 export async function POST(request: NextRequest) {
@@ -19,8 +19,11 @@ export async function POST(request: NextRequest) {
       trackingCode: formString(formData, "trackingCode"),
     };
 
-    if (!(await tryScanInboundPackageLive(input))) {
+    const recorded = await tryScanInboundPackageLive(input);
+    if (!recorded && canUseHubFixture(session)) {
       scanInboundPackage(input);
+    } else if (!recorded) {
+      throw new Error("L’enregistrement n’a pas été confirmé.");
     }
 
     return requestRedirect(request, returnTo);

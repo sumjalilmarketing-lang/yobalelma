@@ -14,7 +14,10 @@ export default async function HubCatchAllPage({
   const { segments } = await params;
   const pathname = `/hub${segments?.length ? `/${segments.join("/")}` : ""}`;
   const session = await requireHubSession(pathname);
-  const hubState = (await loadLiveHubState(session)) ?? getHubState();
+  let hubState;
+  try { hubState = await loadLiveHubState(session); } catch { hubState = null; }
+  if (!hubState && session.source === "demo" && process.env.NODE_ENV !== "production") hubState = getHubState();
+  if (!hubState) return <main className="mx-auto grid min-h-screen max-w-3xl place-items-center p-6"><section className="w-full rounded-2xl border bg-background p-8 text-center shadow-line"><h1 className="text-2xl font-black">Données Hub indisponibles</h1><p className="mt-3 text-muted-foreground">Les opérations n’ont pas pu être chargées. Aucune donnée de remplacement n’est affichée. Réessayez dans quelques instants.</p></section></main>;
   const enterpriseState = await loadEnterpriseHubState(session);
   const cookieStore = await cookies();
   const pickupQr = await verifyHubPickupQrToken(cookieStore.get(hubPickupQrCookie)?.value);

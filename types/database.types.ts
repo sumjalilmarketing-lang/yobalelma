@@ -259,31 +259,46 @@ export type Database = {
           created_at: string
           created_by: string | null
           driver_id: string | null
+          estimated_duration_minutes: number | null
           id: string
           name: string
+          optimization_metadata: Json
+          optimized_distance_km: number | null
           route_date: string
+          route_kind: string
           status: Database["public"]["Enums"]["collection_route_status"]
           updated_at: string
+          vehicle_id: string | null
         }
         Insert: {
           created_at?: string
           created_by?: string | null
           driver_id?: string | null
+          estimated_duration_minutes?: number | null
           id?: string
           name: string
+          optimization_metadata?: Json
+          optimized_distance_km?: number | null
           route_date: string
+          route_kind?: string
           status?: Database["public"]["Enums"]["collection_route_status"]
           updated_at?: string
+          vehicle_id?: string | null
         }
         Update: {
           created_at?: string
           created_by?: string | null
           driver_id?: string | null
+          estimated_duration_minutes?: number | null
           id?: string
           name?: string
+          optimization_metadata?: Json
+          optimized_distance_km?: number | null
           route_date?: string
+          route_kind?: string
           status?: Database["public"]["Enums"]["collection_route_status"]
           updated_at?: string
+          vehicle_id?: string | null
         }
         Relationships: [
           {
@@ -300,7 +315,100 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "collection_routes_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "collection_vehicles"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      collection_gps_positions: {
+        Row: {
+          accuracy_meters: number | null
+          driver_id: string
+          heading_degrees: number | null
+          id: number
+          latitude: number
+          longitude: number
+          recorded_at: string
+          route_id: string
+          speed_kph: number | null
+        }
+        Insert: {
+          accuracy_meters?: number | null
+          driver_id?: string
+          heading_degrees?: number | null
+          id?: never
+          latitude: number
+          longitude: number
+          recorded_at?: string
+          route_id: string
+          speed_kph?: number | null
+        }
+        Update: {
+          accuracy_meters?: number | null
+          driver_id?: string
+          heading_degrees?: number | null
+          latitude?: number
+          longitude?: number
+          recorded_at?: string
+          route_id?: string
+          speed_kph?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_gps_positions_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "collection_routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collection_vehicles: {
+        Row: {
+          assigned_driver_id: string | null
+          capacity_kg: number
+          created_at: string
+          fuel_percent: number
+          id: string
+          mileage_km: number
+          model: string
+          next_maintenance_km: number | null
+          plate: string
+          status: string
+          updated_at: string
+          vehicle_type: string
+        }
+        Insert: {
+          assigned_driver_id?: string | null
+          capacity_kg: number
+          created_at?: string
+          fuel_percent?: number
+          id?: string
+          mileage_km?: number
+          model: string
+          next_maintenance_km?: number | null
+          plate: string
+          status?: string
+          updated_at?: string
+          vehicle_type: string
+        }
+        Update: {
+          assigned_driver_id?: string | null
+          capacity_kg?: number
+          fuel_percent?: number
+          mileage_km?: number
+          model?: string
+          next_maintenance_km?: number | null
+          plate?: string
+          status?: string
+          updated_at?: string
+          vehicle_type?: string
+        }
+        Relationships: []
       }
       delivery_proofs: {
         Row: {

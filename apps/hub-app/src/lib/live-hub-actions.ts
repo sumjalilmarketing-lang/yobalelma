@@ -30,6 +30,16 @@ type PickupQrRow = {
   token_id: string;
 };
 
+export function canUseHubFixture(session: HubSession) {
+  return process.env.NODE_ENV !== "production" && session.source === "demo";
+}
+
+export function requireLiveHubMutation(result: boolean | string | null, session: HubSession) {
+  if (result) return result;
+  if (canUseHubFixture(session)) return null;
+  throw new Error("L’opération n’a pas été confirmée par le service Hub.");
+}
+
 function isUuid(value: string | undefined | null): value is string {
   return Boolean(value && uuidPattern.test(value));
 }
@@ -428,5 +438,19 @@ export async function tryCreateAnomalyLive(input: {
     throw new Error(error.message);
   }
 
+  return true;
+}
+
+export async function tryResolveAnomalyLive(id: string, session: HubSession) {
+  const supabase = await liveClient(session);
+  if (!supabase || !isUuid(id)) return false;
+  const { data, error } = await fromSupabaseTable(supabase, "operational_incidents")
+    .update({ resolved_at: new Date().toISOString(), resolved_by: session.userId, status: "resolved" })
+    .eq("id", id)
+    .eq("hub_id", session.hubId)
+    .select<{ id: string }>("id")
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Incident introuvable dans votre périmètre.");
   return true;
 }
