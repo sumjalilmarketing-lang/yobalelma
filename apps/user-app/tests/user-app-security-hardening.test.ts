@@ -51,8 +51,10 @@ describe("user-app security hardening", () => {
       path.resolve(process.cwd(), "app/api/payments/intents/route.ts"),
       "utf8",
     );
-    expect(source).toContain('process.env.NODE_ENV === "production"');
-    expect(source).toContain("Aucune somme n’a été débitée");
+    expect(source).toContain("createPaymentProvider()");
+    expect(source).not.toContain("create_sandbox_payment_intent");
+    const providers = await readFile(path.resolve(process.cwd(), "lib/payments/providers.ts"), "utf8");
+    expect(providers).toContain('env.PAYMENT_PROVIDER_MODE === "test" && env.NODE_ENV !== "production"');
   });
 
   it("uses unpredictable credentials for isolated E2E accounts", async () => {

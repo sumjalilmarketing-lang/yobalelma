@@ -68,6 +68,10 @@ const TABLES = [
   "user_notification_preferences",
   "payout_release_events",
   "manual_corrections",
+  "payments",
+  "payment_events",
+  "refunds",
+  "ledger_entries",
 ];
 
 const FUNCTIONS = [
@@ -92,6 +96,8 @@ const FUNCTIONS = [
   "current_user_can_manage_hub",
   "get_hub_control_tower",
   "search_hub_enterprise",
+  "apply_verified_payment_event",
+  "prevent_ledger_mutation",
 ];
 
 function redact(text) {

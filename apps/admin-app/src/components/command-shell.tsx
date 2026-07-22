@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, Bell, BookOpenCheck, Building2, ClipboardList, Globe2, LogOut, Megaphone, Menu, Search, Settings, ShieldCheck, Users, X } from "lucide-react";
+import { Activity, Banknote, Bell, BookOpenCheck, Building2, ClipboardList, CreditCard, Globe2, LogOut, Megaphone, Menu, Search, Settings, ShieldCheck, Users, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { AdminSession } from "../lib/types";
@@ -24,6 +24,10 @@ export function CommandShell({ children, directions, session }: { children: Reac
   const roleLabels = session.roleIds.map((roleId) => getGovernanceRole(roleId)?.label ?? roleId).join(" · ");
   const primary = [
     ...basePrimary,
+    ...(session.roleIds.some((role) => ["super_admin", "admin", "finance_manager", "finance_agent", "accounting_agent", "reconciliation_agent", "payment_agent", "commission_agent", "refund_agent", "auditor"].includes(role)) ? [
+      { href: "/command/finance/paiements", label: "Finance · Paiements", icon: CreditCard },
+      { href: "/command/finance/reversements", label: "Finance · Reversements", icon: Banknote },
+    ] : []),
     ...(session.roleIds.some((role) => ["super_admin", "admin", "country_manager"].includes(role)) ? [{ href: "/command/experience-pays", label: "Expérience par pays", icon: Globe2 }] : []),
     ...(session.roleIds.some((role) => ["super_admin", "admin", "partner_manager"].includes(role)) ? [{ href: "/command/monetisation", label: "Publicité et monétisation", icon: Megaphone }] : []),
   ];
