@@ -18,6 +18,7 @@
     "audit:supabase-security": "node scripts/supabase-security-audit.mjs",
     "audit:traceability-field": "node scripts/traceability-field-audit.mjs",
     "profile:traceability-preprod": "node scripts/traceability-postgres-preprod-profile.mjs",
+    "profile:operational-ai": "node scripts/operational-ai-benchmark.mjs",
     "configure:storage": "node scripts/supabase-storage-ensure.mjs",
     "migrate:supabase:management": "node scripts/supabase-management-migrate.mjs",
     "validate:supabase": "node scripts/supabase-validate.mjs"
