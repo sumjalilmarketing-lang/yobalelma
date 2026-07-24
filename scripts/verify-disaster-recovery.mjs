@@ -5,12 +5,16 @@ const source = new URL(process.env.DR_SOURCE_URL);
 const target = new URL(process.env.DR_TARGET_URL);
 if (source.origin === target.origin) throw new Error("The disaster-recovery target must be isolated from production.");
 if (source.origin !== "https://rgcgtcycbiuhcaoaadbh.supabase.co") throw new Error("Unexpected Yobalelma source project.");
+if (!target.hostname.endsWith(".supabase.co")) throw new Error("The disaster-recovery target must be an isolated Supabase project.");
+if (process.env.DR_SOURCE_SERVICE_KEY === process.env.DR_TARGET_SERVICE_KEY) throw new Error("Source and target credentials must be distinct.");
 
 const tables = [
   "profiles", "role_assignments", "user_roles", "shipments", "shipment_packages",
   "trips", "relay_inventory", "collection_routes", "collection_route_stops",
   "hub_inventory", "hub_batches", "payment_intents", "identity_verifications",
-  "audit_log_events", "operational_incidents",
+  "audit_log_events", "operational_incidents", "secure_uploads", "secure_upload_scan_events",
+  "notification_events", "notification_deliveries", "payments", "payment_events", "ledger_entries",
+  "partner_location_sync_runs",
 ];
 
 const startedAt = Date.now();

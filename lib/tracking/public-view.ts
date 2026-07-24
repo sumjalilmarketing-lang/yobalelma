@@ -46,6 +46,26 @@ export type PublicTrackingShipment = {
   statusLabel: string;
   trackingCode: string;
   updatedAt: string;
+  currentStage?: string;
+  nextStep?: string | null;
+  etaAt?: string | null;
+  trustScore?: number;
+  locationFreshness?: string;
+};
+
+export type PublicPassportState = {
+  current_stage: string;
+  next_stage: string | null;
+  eta: string | null;
+  trust_score: number;
+  updated_at: string;
+};
+
+export type PublicPassportEvent = {
+  id: string;
+  event_type: string;
+  occurred_at: string;
+  stage_after: string;
 };
 
 const trackingCodePattern = /^YBL-[A-Z0-9]{8}$/;
@@ -102,6 +122,8 @@ export function toPublicTrackingShipment(
   shipment: PublicShipmentRow,
   events: PublicShipmentEventRow[],
   finalDeliveryEvents: PublicFinalDeliveryEventRow[] = [],
+  passportState?: PublicPassportState | null,
+  passportEvents: PublicPassportEvent[] = [],
 ): PublicTrackingShipment {
   const publicEvents = [
     ...events.map((event) => ({
@@ -116,18 +138,31 @@ export function toPublicTrackingShipment(
       status: event.status,
       timestamp: event.created_at,
     })),
+    ...passportEvents.map((event) => ({
+      id: event.id,
+      label: publicStatusLabels[event.event_type] ?? event.event_type.replaceAll("_", " "),
+      status: event.stage_after,
+      timestamp: event.occurred_at,
+    })),
   ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+  const deduplicatedEvents = publicEvents.filter((event, index, rows) => rows.findIndex((candidate) => candidate.status === event.status && Math.abs(new Date(candidate.timestamp).getTime() - new Date(event.timestamp).getTime()) < 60_000) === index);
 
   return {
     createdAt: shipment.created_at,
     destination: `${shipment.destination_city}, ${shipment.destination_country}`,
     eta: `${shipment.eta_min_days}-${shipment.eta_max_days} jours`,
-    events: publicEvents,
+    events: deduplicatedEvents,
     origin: `${shipment.origin_city}, ${shipment.origin_country}`,
     scope: shipment.scope,
     status: shipment.status,
     statusLabel: publicStatusLabels[shipment.status] ?? shipment.status,
     trackingCode: shipment.tracking_code,
     updatedAt: shipment.updated_at,
+    currentStage: passportState?.current_stage,
+    nextStep: passportState?.next_stage,
+    etaAt: passportState?.eta,
+    trustScore: passportState?.trust_score,
+    locationFreshness: passportState?.updated_at,
   };
 }

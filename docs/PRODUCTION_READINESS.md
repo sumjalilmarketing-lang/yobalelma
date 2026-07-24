@@ -48,3 +48,9 @@ Yobalelma is ready for demonstration, internal testing and a controlled pilot us
 - Multi-currency payment and payout reconciliation.
 - Regional latency and failover plan.
 - Dedicated operational support tooling and SLAs.
+
+## Final gate — 22 July 2026
+
+Green: clean install, lint, strict TypeScript, 247 tests, six production builds, 28 anonymous access E2E checks, 9 role sign-ins, 3 critical authenticated workflows, 111-table Supabase validation, 62 migrations current and npm audit at 0 known advisories.
+
+Blocked for production: distributed load, verified restore, permanent Control Tower worker, official maps/routing, official notification/payment/customs connectors, external observability and authenticated Admin Control Tower visual recipe. The platform may continue only toward a controlled preproduction phase after those inputs are supplied; it is not declared production-ready.

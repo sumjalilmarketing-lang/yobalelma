@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, CheckCircle2, ChevronRight, CloudOff, MapPin, PackageCheck, Route, ScanLine, ShieldCheck, Truck } from "lucide-react";
 import { useLocalization } from "@/components/i18n/localization-provider";
 import { ExperienceSettingsPanel } from "@/components/settings/experience-settings-panel";
+import { adaptiveTrackingInterval, type RealtimePosition } from "@/lib/geolocation/realtime";
+import { enqueuePosition, pendingPositions, removePositions } from "../lib/offline-location-queue";
 import { detectOperationalAnomalies, predictDelay } from "../lib/optimizer";
 import type { CollectionMission, CollectionSession, CollectionState, MissionStatus, Tone } from "../lib/types";
 import { ActionLink, Badge, inputClass, Metric, PageHeader, Panel } from "./collection-ui";
@@ -97,18 +99,27 @@ function MapExperience({ navigationMode, state }: { navigationMode: boolean; sta
 }
 
 function GpsRecorder({ routeId }: { routeId: string }) {
-  const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
-  const record = () => {
-    if (!("geolocation" in navigator)) { setStatus("error"); return; }
-    setStatus("pending");
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      try {
-        const response = await fetch("/api/collection/gps", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ routeId, latitude: position.coords.latitude, longitude: position.coords.longitude, accuracyMeters: position.coords.accuracy, speedKph: Math.max(0, (position.coords.speed ?? 0) * 3.6), headingDegrees: position.coords.heading, recordedAt: new Date(position.timestamp).toISOString() }) });
-        const result = await response.json() as { synchronized?: boolean }; setStatus(response.ok && result.synchronized ? "success" : "error");
-      } catch { setStatus("error"); }
-    }, () => setStatus("error"), { enableHighAccuracy: true, maximumAge: 30_000, timeout: 15_000 });
+  const [status,setStatus]=useState<"idle"|"starting"|"tracking"|"delayed"|"denied"|"error">("idle");
+  const watchId=useRef<number|null>(null); const lastAcceptedAt=useRef(0); const deviceSessionId=useRef<string>(""); const batteryPercent=useRef<number|null>(null);
+  useEffect(()=>()=>{if(watchId.current!==null) navigator.geolocation.clearWatch(watchId.current);},[]);
+  const sync=async()=>{if(!navigator.onLine){setStatus("delayed");return;} const positions=await pendingPositions(); if(!positions.length)return; const response=await fetch("/api/collection/gps",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({positions:positions.map((item)=>({...item,networkStatus:item.networkStatus==="offline_replay"?"offline_replay":"online"}))})}); if(response.ok){await removePositions(positions.map((item)=>item.clientEventId));setStatus("tracking");}else setStatus("delayed");};
+  const start=async()=>{
+    if(!("geolocation" in navigator)){setStatus("error");return;} setStatus("starting"); deviceSessionId.current=crypto.randomUUID();
+    try{
+      const consent=await fetch("/api/collection/location-consent",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({granted:true,purpose:"active_mission"})}); if(!consent.ok)throw new Error("consent");
+      const transition=await fetch("/api/collection/driver-status",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({status:"mission_accepted",routeId,deviceSessionId:deviceSessionId.current,reason:"Suivi démarré par le conducteur"})}); if(!transition.ok)throw new Error("transition");
+      const batteryNavigator=navigator as Navigator&{getBattery?:()=>Promise<{level:number}>}; if(batteryNavigator.getBattery) batteryPercent.current=Math.round((await batteryNavigator.getBattery()).level*100);
+      watchId.current=navigator.geolocation.watchPosition(async(position)=>{
+        const speedKph=position.coords.speed===null?null:Math.max(0,position.coords.speed*3.6); const interval=adaptiveTrackingInterval({speedKph,batteryPercent:batteryPercent.current,background:document.hidden,networkStatus:navigator.onLine?"online":"offline"});
+        if(Date.now()-lastAcceptedAt.current<interval)return; lastAcceptedAt.current=Date.now();
+        const item:RealtimePosition={clientEventId:crypto.randomUUID(),latitude:position.coords.latitude,longitude:position.coords.longitude,accuracyMeters:position.coords.accuracy,speedKph,headingDegrees:position.coords.heading,batteryPercent:batteryPercent.current,source:"browser",recordedAt:new Date(position.timestamp).toISOString(),networkStatus:navigator.onLine?"online":"offline_replay"};
+        await enqueuePosition(item); await sync();
+      },async()=>{if(watchId.current!==null){navigator.geolocation.clearWatch(watchId.current);watchId.current=null;}setStatus("denied");await fetch("/api/collection/driver-status",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({status:"gps_unavailable",routeId,deviceSessionId:deviceSessionId.current,reason:"Position indisponible"})});},{enableHighAccuracy:true,maximumAge:15_000,timeout:20_000}); setStatus("tracking");
+    }catch{await fetch("/api/collection/location-consent",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({granted:false,purpose:"active_mission"})});setStatus("error");}
   };
-  return <button type="button" onClick={record} disabled={status === "pending"} className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-black text-white disabled:opacity-60"><MapPin className="h-4 w-4" />{status === "pending" ? "Enregistrement…" : status === "success" ? "Position enregistrée" : status === "error" ? "Réessayer" : "Enregistrer ma position"}</button>;
+  const stop=async()=>{if(watchId.current!==null){navigator.geolocation.clearWatch(watchId.current);watchId.current=null;} await fetch("/api/collection/driver-status",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({status:"paused",routeId,deviceSessionId:deviceSessionId.current||crypto.randomUUID(),reason:"Suivi suspendu par le conducteur"})}); setStatus("idle");};
+  const active=status==="tracking"||status==="delayed";
+  return <div className="flex flex-wrap items-center gap-2"><span className="text-xs font-bold text-muted-foreground" role="status">{status==="tracking"?"GPS actif":status==="delayed"?"Réseau indisponible · synchronisation différée":status==="denied"?"Permission GPS refusée":status==="error"?"Activation impossible":status==="starting"?"Activation…":"GPS arrêté"}</span><button title="Le suivi reste limité à la mission active et s’arrête lors de la suspension." type="button" onClick={active?stop:start} disabled={status==="starting"} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-black text-white disabled:opacity-60"><MapPin className="h-4 w-4" />{active?"Suspendre le suivi":"Démarrer le suivi"}</button></div>;
 }
 
 function VehiclePage({ state }: { state: CollectionState }) {

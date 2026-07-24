@@ -1,0 +1,22 @@
+import { z } from "zod";
+import { geoPointSchema, haversineDistanceMeters, type RouteResult } from "@/lib/geolocation/provider";
+
+export const dispatchCandidateSchema = z.object({ id: z.string().uuid(), countryCode: z.string().length(2), city: z.string().min(1), zoneIds: z.array(z.string()), position: geoPointSchema, positionRecordedAt: z.string().datetime({ offset: true }), accuracyMeters: z.number().nonnegative(), online: z.boolean(), available: z.boolean(), vehicleType: z.enum(["bike", "scooter", "car", "van", "truck"]), capacityKg: z.number().positive(), currentLoadKg: z.number().nonnegative(), activeMissionCount: z.number().int().nonnegative(), skills: z.array(z.string()), serviceStartsAt: z.string().regex(/^\d{2}:\d{2}$/u), serviceEndsAt: z.string().regex(/^\d{2}:\d{2}$/u), performanceScore: z.number().min(0).max(100), compliant: z.boolean() });
+export const dispatchMissionSchema = z.object({ id: z.string().uuid(), countryCode: z.string().length(2), city: z.string().min(1), zoneId: z.string(), point: geoPointSchema, weightKg: z.number().positive(), requiredVehicleTypes: z.array(z.enum(["bike", "scooter", "car", "van", "truck"])).min(1), requiredSkills: z.array(z.string()), priority: z.enum(["standard", "high", "urgent"]), slaMinutes: z.number().int().positive(), sensitive: z.boolean(), now: z.string().datetime({ offset: true }), maxRadiusKm: z.number().positive() });
+export type DispatchCandidate = z.infer<typeof dispatchCandidateSchema>; export type DispatchMission = z.infer<typeof dispatchMissionSchema>;
+export type DispatchRecommendation = { candidateId: string; score: number; distanceMeters: number; durationSeconds: number | null; routeSource: "provider" | "geographic_fallback"; reasons: string[]; confidence: "low" | "medium" | "high"; requiresHumanApproval: boolean };
+
+export async function recommendDispatch(input: { mission: DispatchMission; candidates: DispatchCandidate[]; routeLookup?: (candidate: DispatchCandidate) => Promise<RouteResult> }) {
+  const mission = dispatchMissionSchema.parse(input.mission); const now = new Date(mission.now); const recommendations: DispatchRecommendation[] = [];
+  for (const raw of input.candidates) {
+    const candidate = dispatchCandidateSchema.parse(raw); const ageMs = now.getTime() - new Date(candidate.positionRecordedAt).getTime();
+    if (!candidate.online || !candidate.available || !candidate.compliant || candidate.countryCode !== mission.countryCode || candidate.city.toLocaleLowerCase() !== mission.city.toLocaleLowerCase() || !candidate.zoneIds.includes(mission.zoneId) || !mission.requiredVehicleTypes.includes(candidate.vehicleType) || candidate.capacityKg - candidate.currentLoadKg < mission.weightKg || mission.requiredSkills.some((skill) => !candidate.skills.includes(skill)) || ageMs > 10 * 60_000 || candidate.accuracyMeters > 250) continue;
+    const geographicDistance = haversineDistanceMeters(candidate.position, mission.point); if (geographicDistance > mission.maxRadiusKm * 1000) continue;
+    let distanceMeters = geographicDistance; let durationSeconds: number | null = null; let routeSource: DispatchRecommendation["routeSource"] = "geographic_fallback";
+    if (input.routeLookup) { try { const route = await input.routeLookup(candidate); distanceMeters = route.distanceMeters; durationSeconds = route.durationSeconds; routeSource = "provider"; } catch { /* The explicit fallback remains visible in the recommendation. */ } }
+    const loadRatio = candidate.currentLoadKg / candidate.capacityKg; const score = Math.max(0, Math.min(100, Math.round(100 - Math.min(45, distanceMeters / 1000 * 3) - loadRatio * 20 - candidate.activeMissionCount * 7 + candidate.performanceScore * .2 + (mission.priority === "urgent" ? 5 : 0))));
+    const reasons = [`Zone ${mission.zoneId} autorisée`, `${Math.round((candidate.capacityKg - candidate.currentLoadKg) * 10) / 10} kg disponibles`, routeSource === "provider" ? "Itinéraire routier disponible" : "Distance géographique provisoire", `Performance ${candidate.performanceScore}/100`];
+    recommendations.push({ candidateId: candidate.id, score, distanceMeters: Math.round(distanceMeters), durationSeconds, routeSource, reasons, confidence: routeSource === "provider" && score >= 75 ? "high" : score >= 55 ? "medium" : "low", requiresHumanApproval: mission.sensitive || routeSource !== "provider" });
+  }
+  return recommendations.sort((a, b) => b.score - a.score || a.distanceMeters - b.distanceMeters);
+}

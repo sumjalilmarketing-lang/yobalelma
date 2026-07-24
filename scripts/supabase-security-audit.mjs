@@ -6,6 +6,13 @@ const PROJECT_REF = "rgcgtcycbiuhcaoaadbh";
 const MANAGEMENT_QUERY_URL = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query`;
 
 const TABLES = [
+  "parcel_traceability_events",
+  "parcel_custody_state",
+  "parcel_traceability_proofs",
+  "parcel_proof_requirements",
+  "parcel_seals",
+  "parcel_traceability_anomalies",
+  "parcel_passport_access_log",
   "airport_hubs",
   "hub_agent_profiles",
   "operations_profiles",
@@ -72,6 +79,44 @@ const TABLES = [
   "payment_events",
   "refunds",
   "ledger_entries",
+  "partner_location_sync_runs",
+  "secure_uploads",
+  "secure_upload_scan_events",
+  "customs_brokers",
+  "customs_broker_agents",
+  "customs_offices",
+  "customs_cases",
+  "customs_items",
+  "customs_documents",
+  "customs_events",
+  "customs_decisions",
+  "customs_duties",
+  "customs_rule_sets",
+  "customs_hs_suggestions",
+  "customs_outbox",
+  "operational_location_consents",
+  "operational_position_events",
+  "driver_operational_states",
+  "driver_status_events",
+  "operational_live_positions",
+  "operational_geofences",
+  "operational_geofence_events",
+  "operational_tracking_alerts",
+  "operational_location_access_logs",
+  "dispatch_rule_sets",
+  "dispatch_recommendations",
+  "dispatch_events",
+  "dispatch_recommendation_events",
+  "control_tower_events",
+  "control_tower_outbox",
+  "digital_twin_entities",
+  "digital_twin_state_events",
+  "control_tower_snapshots",
+  "control_tower_recommendations",
+  "control_tower_decision_events",
+  "control_tower_module_health",
+  "control_tower_notification_commands",
+  "operational_incident_comments",
 ];
 
 const FUNCTIONS = [
@@ -98,7 +143,66 @@ const FUNCTIONS = [
   "search_hub_enterprise",
   "apply_verified_payment_event",
   "prevent_ledger_mutation",
+  "claim_secure_upload_scan",
+  "complete_secure_upload_scan",
+  "claim_notification_delivery",
+  "complete_notification_delivery",
+  "create_customs_case",
+  "current_user_has_customs_country",
+  "verify_customs_document",
+  "record_manual_customs_decision",
+  "approve_manual_customs_decision",
+  "shipment_has_verified_customs_release",
+  "apply_verified_customs_event",
+  "assign_customs_broker",
+  "approve_customs_rule_set",
+  "validate_customs_hs_suggestion",
+  "record_indicative_customs_duty",
+  "apply_verified_customs_duty",
+  "apply_verified_customs_duty_payment",
+  "claim_customs_outbox",
+  "complete_customs_outbox",
+  "record_operational_position",
+  "set_operational_location_consent",
+  "approve_dispatch_rule_set",
+  "replace_dispatch_recommendations",
+  "approve_dispatch_recommendation",
+  "purge_expired_operational_positions",
+  "current_user_can_view_tracking_subject",
+  "set_driver_operational_status",
+  "record_operational_positions_batch",
+  "purge_expired_operational_tracking",
+  "get_client_mission_tracking",
+  "manage_tracking_alert",
+  "run_tracking_alert_sweep",
+  "record_verified_geofence_event",
+  "current_user_has_control_tower_country",
+  "ingest_control_tower_events",
+  "claim_control_tower_outbox",
+  "decide_control_tower_recommendation",
+  "purge_control_tower_history",
+  "apply_control_tower_digital_twin",
+  "refresh_control_tower_snapshot",
+  "generate_control_tower_recommendations",
+  "complete_control_tower_outbox",
+  "process_control_tower_outbox_item",
+  "manage_control_tower_incident",
+  "emit_control_tower_domain_event",
+  "sanitize_control_tower_event_payload",
+  "record_parcel_traceability_event",
+  "register_parcel_traceability_proof",
+  "is_valid_parcel_stage_transition",
+  "traceability_country_code",
+  "append_verified_operational_trace",
+  "log_parcel_passport_access",
+  "add_collection_manifest_item_traced",
+  "record_relay_storage_traced",
+  "record_parcel_seal_action",
+  "run_parcel_traceability_consistency_audit",
 ];
+const SERVICE_ONLY_FUNCTIONS = ["claim_secure_upload_scan", "complete_secure_upload_scan", "claim_notification_delivery", "complete_notification_delivery", "apply_verified_customs_event", "apply_verified_customs_duty", "apply_verified_customs_duty_payment", "claim_customs_outbox", "complete_customs_outbox", "replace_dispatch_recommendations", "purge_expired_operational_positions", "purge_expired_operational_tracking", "run_tracking_alert_sweep", "record_verified_geofence_event", "ingest_control_tower_events", "claim_control_tower_outbox", "purge_control_tower_history", "apply_control_tower_digital_twin", "refresh_control_tower_snapshot", "generate_control_tower_recommendations", "complete_control_tower_outbox", "process_control_tower_outbox_item", "run_parcel_traceability_consistency_audit"];
+const AUTHENTICATED_ONLY_FUNCTIONS = ["record_parcel_traceability_event", "register_parcel_traceability_proof", "log_parcel_passport_access", "add_collection_manifest_item_traced", "record_relay_storage_traced", "record_parcel_seal_action"];
+const INTERNAL_ONLY_FUNCTIONS = ["append_verified_operational_trace"];
 
 function redact(text) {
   return text
@@ -160,12 +264,41 @@ async function main() {
     group by proname
     order by proname;
   `);
+  const serviceOnlyFunctions = await runQuery(`
+    select p.proname as function_name, p.prosecdef as security_definer, coalesce(p.proacl::text, '') as acl,
+      has_function_privilege('service_role', p.oid, 'EXECUTE') as service_role_execute,
+      has_function_privilege('authenticated', p.oid, 'EXECUTE') as authenticated_execute,
+      has_function_privilege('anon', p.oid, 'EXECUTE') as anon_execute
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname in (${literalList(SERVICE_ONLY_FUNCTIONS)})
+    order by p.proname;
+  `);
+  const authenticatedOnlyFunctions = await runQuery(`
+    select p.proname as function_name, p.prosecdef as security_definer,
+      has_function_privilege('authenticated', p.oid, 'EXECUTE') as authenticated_execute,
+      has_function_privilege('anon', p.oid, 'EXECUTE') as anon_execute
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname in (${literalList(AUTHENTICATED_ONLY_FUNCTIONS)})
+    order by p.proname;
+  `);
+  const internalOnlyFunctions = await runQuery(`
+    select p.proname as function_name, p.prosecdef as security_definer,
+      has_function_privilege('service_role', p.oid, 'EXECUTE') as service_role_execute,
+      has_function_privilege('authenticated', p.oid, 'EXECUTE') as authenticated_execute,
+      has_function_privilege('anon', p.oid, 'EXECUTE') as anon_execute
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname in (${literalList(INTERNAL_ONLY_FUNCTIONS)})
+    order by p.proname;
+  `);
 
   const missingRls = TABLES.filter((table) => !rls.some((row) => row.table_name === table && row.rls_enabled));
   const missingPolicies = rls.filter((row) => row.policy_count === 0).map((row) => row.table_name);
   const missingFunctions = FUNCTIONS.filter(
     (fn) => !functions.some((row) => row.function_name === fn),
   );
+  const unsafeServiceFunctions = SERVICE_ONLY_FUNCTIONS.filter((name) => !serviceOnlyFunctions.some((fn) => fn.function_name === name && fn.security_definer && fn.service_role_execute && !fn.authenticated_execute && !fn.anon_execute));
+  const unsafeAuthenticatedFunctions = AUTHENTICATED_ONLY_FUNCTIONS.filter((name) => !authenticatedOnlyFunctions.some((fn) => fn.function_name === name && fn.security_definer && fn.authenticated_execute && !fn.anon_execute));
+  const unsafeInternalFunctions = INTERNAL_ONLY_FUNCTIONS.filter((name) => !internalOnlyFunctions.some((fn) => fn.function_name === name && fn.security_definer && !fn.service_role_execute && !fn.authenticated_execute && !fn.anon_execute));
 
   console.log(
     JSON.stringify(
@@ -174,15 +307,21 @@ async function main() {
         missingFunctions,
         missingPolicies,
         missingRls,
-        ok: missingRls.length === 0 && missingPolicies.length === 0 && missingFunctions.length === 0,
+        ok: missingRls.length === 0 && missingPolicies.length === 0 && missingFunctions.length === 0 && unsafeServiceFunctions.length === 0 && unsafeAuthenticatedFunctions.length === 0 && unsafeInternalFunctions.length === 0,
+        authenticatedOnlyFunctions,
+        internalOnlyFunctions,
         rls,
+        serviceOnlyFunctions,
+        unsafeServiceFunctions,
+        unsafeAuthenticatedFunctions,
+        unsafeInternalFunctions,
       },
       null,
       2,
     ),
   );
 
-  if (missingRls.length || missingPolicies.length || missingFunctions.length) {
+  if (missingRls.length || missingPolicies.length || missingFunctions.length || unsafeServiceFunctions.length || unsafeAuthenticatedFunctions.length || unsafeInternalFunctions.length) {
     process.exitCode = 1;
   }
 }

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import type { CollectionMission, CollectionSession, CollectionState, MissionStatus, PackageItem } from "./types";
 
@@ -91,7 +92,7 @@ export async function loadCollectionState(session: CollectionSession): Promise<C
   const activeRoute = routes.data.find((route) => route.status === "in_progress") ?? routes.data.find((route) => route.status === "planned");
   const vehicleRow = activeRoute?.vehicle_id ? (vehiclesResult.data ?? []).find((item) => item.id === activeRoute.vehicle_id) : (vehiclesResult.data ?? []).find((item) => item.assigned_driver_id === session.userId);
   const vehicle = vehicleRow ? { id: vehicleRow.id, plate: vehicleRow.plate, model: vehicleRow.model, type: vehicleRow.vehicle_type === "truck" ? "truck" as const : "van" as const, capacityKg: vehicleRow.capacity_kg, loadKg: packages.reduce((sum, item) => sum + item.weightKg, 0), mileageKm: vehicleRow.mileage_km, fuelPercent: vehicleRow.fuel_percent, fuelConsumptionL100Km: 0, status: vehicleRow.status === "maintenance" ? "maintenance" as const : vehicleRow.status === "inspection" || vehicleRow.status === "inactive" ? "inspection" as const : "ready" as const, nextMaintenanceKm: vehicleRow.next_maintenance_km ?? vehicleRow.mileage_km, inspectionItems: [] } : null;
-  const gpsResult = activeRoute ? await client.from("collection_gps_positions").select("latitude,longitude,accuracy_meters,speed_kph,recorded_at").eq("route_id", activeRoute.id).order("recorded_at", { ascending: false }).limit(1).maybeSingle() : { data: null, error: null };
+  const gpsResult = activeRoute ? await (client as SupabaseClient).from("operational_position_events").select("latitude,longitude,accuracy_meters,speed_kph,recorded_at").eq("collection_route_id", activeRoute.id).order("recorded_at", { ascending: false }).limit(1).maybeSingle() : { data: null, error: null };
   if (gpsResult.error) return emptyCollectionState("La position de la tournée n’a pas pu être chargée.");
   const gps = gpsResult.data ? { position: { lat: gpsResult.data.latitude, lng: gpsResult.data.longitude, label: "Dernière position confirmée" }, speedKph: gpsResult.data.speed_kph ?? 0, accuracyMeters: gpsResult.data.accuracy_meters ?? 0, updatedAt: gpsResult.data.recorded_at } : null;
   return { ...emptyCollectionState(), missions, packages, notifications, vehicle, gps, sync: { pending: 0, lastSyncedAt: gps?.updatedAt, online: true } };

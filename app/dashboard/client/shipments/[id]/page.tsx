@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth/server";
 import { loadFinalDeliveryOrderByShipment } from "@/lib/final-delivery/data";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
@@ -70,6 +71,8 @@ async function ShipmentDetail({
         .order("created_at", { ascending: false }),
     ]);
   const finalDelivery = await loadFinalDeliveryOrderByShipment(shipmentId);
+  const activeMission=(missionsResult.data??[]).find((mission)=>["accepted","picked_up"].includes(mission.status));
+  const liveTracking=activeMission?await ((supabase as SupabaseClient).rpc as unknown as (name:string,args:Record<string,unknown>)=>Promise<{data:Array<{driver_status:string;latitude:number|null;longitude:number|null;accuracy_meters:number|null;recorded_at:string|null;location_status:string|null}>|null;error:unknown}>) ("get_client_mission_tracking",{p_mission_id:activeMission.id}):{data:null,error:null};
 
   if (shipmentResult.error) {
     return <EmptyState title="Expédition indisponible" description="Cette expédition ne peut pas être affichée pour le moment." />;
@@ -188,6 +191,7 @@ async function ShipmentDetail({
       <section className="grid gap-4">
         <h2 className="text-xl font-black">Tracking</h2>
         <DataGrid>
+          {(liveTracking.data??[]).map((tracking,index)=><DataCard key={`${activeMission?.id}-${index}`} title="Suivi du livreur" subtitle={toBusinessStatusLabel(tracking.driver_status)} rows={[{label:"Position",value:tracking.latitude===null?"Signal temporairement indisponible":`${tracking.latitude.toFixed(3)}, ${tracking.longitude?.toFixed(3)}`},{label:"Qualité",value:tracking.location_status??"Indisponible"},{label:"Dernière mise à jour",value:tracking.recorded_at?new Date(tracking.recorded_at).toLocaleString("fr-FR"):"Aucun signal récent"},{label:"Confidentialité",value:"Position approximative limitée à cette mission"}]}/>) }
           {(eventsResult.data ?? []).map((event) => (
             <DataCard
               key={event.id}

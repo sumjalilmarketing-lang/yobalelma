@@ -3,6 +3,7 @@ import {
   getUserAppRolePath,
   isUserAppSpaceRole,
   mergePlatformRoles,
+  roleDashboardPath,
 } from "@/lib/auth/roles";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import { signInSchema } from "@/lib/validation/auth";
@@ -49,7 +50,8 @@ export async function POST(request: Request) {
     roleAssignmentsResult.data?.map((assignment) => assignment.role) ?? [],
     userRolesResult.data?.map((assignment) => assignment.role_id) ?? [],
   );
-  const role = assignedRoles.find(isUserAppSpaceRole);
+  const standaloneUserApp=isStandaloneUserApp(request);
+  const role = standaloneUserApp?assignedRoles.find(isUserAppSpaceRole):assignedRoles[0];
 
   if (profile?.account_status !== "active" || !role) {
     await supabase.auth.signOut();
@@ -61,5 +63,13 @@ export async function POST(request: Request) {
     );
   }
 
-  return ok("Connexion réussie.", { next: getUserAppRolePath(role) });
+  return ok("Connexion réussie.", { next: signInDestination(role,standaloneUserApp) });
+}
+
+function isStandaloneUserApp(request:Request){
+  const url=new URL(request.url);
+  return url.hostname==="app.yobalelma.com"||url.port==="43121"||process.env.YOBALELMA_APP_SURFACE==="user";
+}
+function signInDestination(role:keyof typeof roleDashboardPath,standaloneUserApp:boolean){
+  return standaloneUserApp&&isUserAppSpaceRole(role)?getUserAppRolePath(role):roleDashboardPath[role];
 }

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, Banknote, Bell, BookOpenCheck, Building2, ClipboardList, CreditCard, Globe2, LogOut, Megaphone, Menu, Search, Settings, ShieldCheck, Users, X } from "lucide-react";
+import { Activity, Banknote, Bell, BookOpenCheck, Building2, Cable, ClipboardList, CreditCard, Globe2, Gavel, LogOut, MapPinned, Megaphone, Menu, RadioTower, Search, Settings, ShieldCheck, Users, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { AdminSession } from "../lib/types";
@@ -24,11 +24,16 @@ export function CommandShell({ children, directions, session }: { children: Reac
   const roleLabels = session.roleIds.map((roleId) => getGovernanceRole(roleId)?.label ?? roleId).join(" · ");
   const primary = [
     ...basePrimary,
+    ...(session.roleIds.some((role)=>["super_admin","admin","country_manager","operations_manager","dispatch_manager","hub_manager","relay_manager","collection_manager","local_delivery_manager","traveler_manager","customs_manager","compliance_manager","finance_manager","customer_support_manager","security_manager","auditor","partner_manager","orange_partner_manager"].includes(role))?[{href:"/command/control-tower",label:"Global Control Tower",icon:RadioTower}]:[]),
+    ...(session.roleIds.some((role)=>["super_admin","admin","country_manager","operations_manager","dispatch_manager","hub_manager","relay_manager","collection_manager","local_delivery_manager","traveler_manager","customs_manager","compliance_manager","customer_support_manager","security_manager","auditor"].includes(role))?[{href:"/command/passports",label:"Passeports Logistiques",icon:Search}]:[]),
     ...(session.roleIds.some((role) => ["super_admin", "admin", "finance_manager", "finance_agent", "accounting_agent", "reconciliation_agent", "payment_agent", "commission_agent", "refund_agent", "auditor"].includes(role)) ? [
       { href: "/command/finance/paiements", label: "Finance · Paiements", icon: CreditCard },
       { href: "/command/finance/reversements", label: "Finance · Reversements", icon: Banknote },
     ] : []),
     ...(session.roleIds.some((role) => ["super_admin", "admin", "country_manager"].includes(role)) ? [{ href: "/command/experience-pays", label: "Expérience par pays", icon: Globe2 }] : []),
+    ...(session.roleIds.some((role) => ["super_admin", "admin", "operations_manager", "dispatch_manager", "security_manager", "auditor"].includes(role)) ? [{ href: "/command/operations/dispatch", label: "Opérations · Dispatch", icon: MapPinned }] : []),
+    ...(session.roleIds.some((role) => ["super_admin", "admin", "customs_manager", "customs_agent", "compliance_manager", "compliance_agent", "customs_broker", "customs_broker_manager", "finance_customs_agent", "auditor"].includes(role)) ? [{ href: "/command/douane", label: "Douane · International", icon: Gavel }] : []),
+    ...(session.roleIds.some((role) => ["super_admin", "admin", "partner_manager", "orange_partner_manager", "relay_partner_manager", "auditor"].includes(role)) ? [{ href: "/command/integrations/orange", label: "Intégrations · Orange", icon: Cable }] : []),
     ...(session.roleIds.some((role) => ["super_admin", "admin", "partner_manager"].includes(role)) ? [{ href: "/command/monetisation", label: "Publicité et monétisation", icon: Megaphone }] : []),
   ];
   useEffect(() => { setHydrated(true); }, []);
@@ -36,7 +41,7 @@ export function CommandShell({ children, directions, session }: { children: Reac
     <header className="yb-topbar fixed inset-x-0 top-0 z-50"><div className="mx-auto flex h-16 max-w-[1800px] items-center gap-3 px-3 md:px-5">
       <button disabled={!hydrated} className="grid h-10 w-10 place-items-center rounded-lg border disabled:opacity-50 lg:hidden" aria-label="Ouvrir la navigation" onClick={() => setOpen(true)}><Menu className="h-5 w-5" /></button>
       <Link href="/command" className="flex items-center gap-2"><Image src="/brand/yobalelma-mark.svg" alt="Yobalelma" width={40} height={40} priority /><span className="hidden sm:block"><strong className="block leading-none">Yobalelma</strong><small className="font-black uppercase tracking-[.15em] text-primary">Command</small></span></Link>
-      <Link href="/command/missions" className="ml-auto hidden max-w-xl flex-1 items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2 lg:flex"><Search className="h-4 w-4 text-primary" /><span className="text-xs font-black uppercase tracking-[.12em] text-muted-foreground">Rechercher une mission ou une responsabilité</span></Link>
+      <Link href="/command/passports" className="ml-auto hidden max-w-xl flex-1 items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2 lg:flex"><Search className="h-4 w-4 text-primary" /><span className="text-xs font-black uppercase tracking-[.12em] text-muted-foreground">Rechercher un colis ou une expédition</span></Link>
       <Link aria-label="Notifications" href="/command/missions" className="grid h-10 w-10 place-items-center rounded-lg border"><Bell className="h-4 w-4" /></Link>
       <form action="/api/auth/sign-out" method="post"><button aria-label="Déconnexion" className="grid h-10 w-10 place-items-center rounded-lg bg-black text-white"><LogOut className="h-4 w-4" /></button></form>
     </div></header>

@@ -1,4 +1,5 @@
 import { fail, ok, parseJsonRequest } from "@/lib/api/responses";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { shouldExposeTestOtp } from "@/lib/final-delivery/otp-visibility";
 import {
   buildDigitalParcelTwin,
@@ -86,6 +87,10 @@ export async function POST(request: Request) {
       country: parsed.data.deliveryCountry,
       instructions: parsed.data.deliveryInstructions || null,
       postal_code: parsed.data.deliveryPostalCode || null,
+      formatted_address: parsed.data.deliveryFormattedAddress || parsed.data.deliveryAddressLine1,
+      landmark: parsed.data.deliveryLandmark || null, neighborhood: parsed.data.deliveryNeighborhood || null, commune: parsed.data.deliveryCommune || null, region: parsed.data.deliveryRegion || null,
+      country_code: parsed.data.deliveryCountryCode || null, latitude: parsed.data.deliveryLatitude ?? null, longitude: parsed.data.deliveryLongitude ?? null,
+      provider_place_id: parsed.data.deliveryProviderPlaceId || null, location_type: parsed.data.deliveryLocationType || null, geocoding_provider: parsed.data.deliveryGeocodingProvider || null, accuracy_level: parsed.data.deliveryAccuracyLevel || null, validation_status: parsed.data.deliveryValidationStatus || "manual", plus_code: parsed.data.deliveryPlusCode || null,
     },
     p_destination_city: parsed.data.deliveryCity,
     p_destination_country: parsed.data.deliveryCountry,
@@ -120,6 +125,10 @@ export async function POST(request: Request) {
       country: parsed.data.pickupCountry,
       instructions: parsed.data.pickupInstructions || null,
       postal_code: parsed.data.pickupPostalCode || null,
+      formatted_address: parsed.data.pickupFormattedAddress || parsed.data.pickupAddressLine1,
+      landmark: parsed.data.pickupLandmark || null, neighborhood: parsed.data.pickupNeighborhood || null, commune: parsed.data.pickupCommune || null, region: parsed.data.pickupRegion || null,
+      country_code: parsed.data.pickupCountryCode || null, latitude: parsed.data.pickupLatitude ?? null, longitude: parsed.data.pickupLongitude ?? null,
+      provider_place_id: parsed.data.pickupProviderPlaceId || null, location_type: parsed.data.pickupLocationType || null, geocoding_provider: parsed.data.pickupGeocodingProvider || null, accuracy_level: parsed.data.pickupAccuracyLevel || null, validation_status: parsed.data.pickupValidationStatus || "manual", plus_code: parsed.data.pickupPlusCode || null,
     },
     p_preferred_pickup_date: parsed.data.preferredPickupDate,
     p_scope: estimate.scope,
@@ -136,10 +145,18 @@ export async function POST(request: Request) {
     return fail("Expedition creee sans reference de suivi.", 500);
   }
 
+  const addressDb = supabase as SupabaseClient;
+  const addressUpdates = await Promise.all([
+    addressDb.from("shipment_addresses").update({ formatted_address: parsed.data.pickupFormattedAddress || parsed.data.pickupAddressLine1, landmark: parsed.data.pickupLandmark || null, neighborhood: parsed.data.pickupNeighborhood || null, commune: parsed.data.pickupCommune || null, region: parsed.data.pickupRegion || null, country_code: parsed.data.pickupCountryCode || null, latitude: parsed.data.pickupLatitude ?? null, longitude: parsed.data.pickupLongitude ?? null, provider_place_id: parsed.data.pickupProviderPlaceId || null, location_type: parsed.data.pickupLocationType || null, geocoding_provider: parsed.data.pickupGeocodingProvider || null, accuracy_level: parsed.data.pickupAccuracyLevel || null, validation_status: parsed.data.pickupValidationStatus || "manual", plus_code: parsed.data.pickupPlusCode || null }).eq("shipment_id", shipment.id).eq("type", "pickup"),
+    addressDb.from("shipment_addresses").update({ formatted_address: parsed.data.deliveryFormattedAddress || parsed.data.deliveryAddressLine1, landmark: parsed.data.deliveryLandmark || null, neighborhood: parsed.data.deliveryNeighborhood || null, commune: parsed.data.deliveryCommune || null, region: parsed.data.deliveryRegion || null, country_code: parsed.data.deliveryCountryCode || null, latitude: parsed.data.deliveryLatitude ?? null, longitude: parsed.data.deliveryLongitude ?? null, provider_place_id: parsed.data.deliveryProviderPlaceId || null, location_type: parsed.data.deliveryLocationType || null, geocoding_provider: parsed.data.deliveryGeocodingProvider || null, accuracy_level: parsed.data.deliveryAccuracyLevel || null, validation_status: parsed.data.deliveryValidationStatus || "manual", plus_code: parsed.data.deliveryPlusCode || null }).eq("shipment_id", shipment.id).eq("type", "delivery"),
+  ]);
+  const addressMetadataSaved = addressUpdates.every((item) => !item.error);
+
   return ok("Expedition creee et confirmee.", {
     deliveryOtpCodeForTestOnly: shouldExposeTestOtp() ? shipment.delivery_otp_code : undefined,
     estimate,
     shipmentId: shipment.id,
     trackingCode: shipment.tracking_code,
+    addressMetadataSaved,
   });
 }

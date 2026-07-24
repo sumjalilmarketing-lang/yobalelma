@@ -16,6 +16,7 @@ const eslintConfig = [
       "**/.next/**",
       "**/.next-e2e/**",
       "**/.next-e2e-*/**",
+      "**/.next-browser-smoke/**",
       "**/.next-preview/**",
       "**/.next-staging/**",
       "**/coverage/**",

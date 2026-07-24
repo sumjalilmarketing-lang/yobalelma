@@ -6,6 +6,7 @@ node_modules/
 .next/
 .next-e2e/
 .next-e2e-*/
+.next-browser-smoke/
 .next-preview/
 .next-staging/
 out/
@@ -19,6 +20,9 @@ coverage/
 test-results/
 tsconfig.tsbuildinfo
 .tools/
+tmp/
+apps/hub-app/.staging-*.log
+apps/hub-app/pnpm-lock.yaml
 
 # environment
 .env

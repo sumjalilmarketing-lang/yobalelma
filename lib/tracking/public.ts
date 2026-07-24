@@ -75,8 +75,29 @@ export async function getPublicTrackingState(
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const [{ data: passportState }, { data: passportEvents }] = await Promise.all([
+    selectFromLooseTable<{
+      current_stage: string;
+      eta: string | null;
+      next_stage: string | null;
+      trust_score: number;
+      updated_at: string;
+    }>(supabase, "parcel_custody_state", "current_stage, next_stage, eta, trust_score, updated_at")
+      .eq("shipment_id", shipment.id)
+      .maybeSingle(),
+    selectFromLooseTable<{
+      event_type: string;
+      id: string;
+      occurred_at: string;
+      stage_after: string;
+    }>(supabase, "parcel_traceability_events", "id, event_type, stage_after, occurred_at")
+      .eq("shipment_id", shipment.id)
+      .order("occurred_at", { ascending: false })
+      .limit(30),
+  ]);
+
   return {
-    shipment: toPublicTrackingShipment(shipment, events ?? [], finalDeliveryEvents ?? []),
+    shipment: toPublicTrackingShipment(shipment, events ?? [], finalDeliveryEvents ?? [], passportState, passportEvents ?? []),
     status: "ready",
   };
 }

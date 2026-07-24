@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { fail, ok, readJsonRequest, validationFail } from "@/lib/api/responses";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import {
@@ -38,42 +39,18 @@ export async function POST(request: Request) {
       return validationFail(parsed.error);
     }
 
-    const { data, error } = await supabase
-      .from("collection_manifest_items")
-      .insert({
-        incident_note: parsed.data.incidentNote || null,
-        manifest_id: parsed.data.manifestId,
-        shipment_id: parsed.data.shipmentId,
-      })
-      .select("id")
-      .single();
+    const client = supabase as unknown as SupabaseClient;
+    const { data, error } = await client.rpc("add_collection_manifest_item_traced", {
+      p_incident_note: parsed.data.incidentNote || null,
+      p_manifest_id: parsed.data.manifestId,
+      p_shipment_id: parsed.data.shipmentId,
+    });
 
     if (error) {
       return fail(error.message, 400);
     }
 
-    const { error: shipmentError } = await supabase
-      .from("shipments")
-      .update({ status: "collected_for_hub" })
-      .eq("id", parsed.data.shipmentId);
-
-    if (shipmentError) {
-      return fail(shipmentError.message, 400);
-    }
-
-    const { error: statusError } = await supabase.from("shipment_status_events").insert({
-      actor_id: user.id,
-      metadata: { collection_manifest_id: parsed.data.manifestId, collection_manifest_item_id: data.id },
-      note: "Colis ajoute au manifeste de collecte hub.",
-      shipment_id: parsed.data.shipmentId,
-      status: "collected_for_hub",
-    });
-
-    if (statusError) {
-      return fail(statusError.message, 400);
-    }
-
-    return ok("Colis ajoute au manifeste.", { itemId: data.id });
+    return ok("Colis ajoute au manifeste.", { itemId: data });
   }
 
   const parsed = collectionManifestSchema.safeParse(body);

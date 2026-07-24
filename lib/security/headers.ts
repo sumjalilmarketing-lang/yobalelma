@@ -47,7 +47,7 @@ export const securityHeaders = [
   },
   {
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), payment=()",
+    value: "camera=(), microphone=(), geolocation=(self), payment=()",
   },
   {
     key: "Cross-Origin-Opener-Policy",

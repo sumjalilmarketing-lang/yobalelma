@@ -111,3 +111,9 @@ Remote migration history is linked and aligned through `20260712120000`. Anonymo
 - Payment and payout state transitions need provider idempotency keys before production.
 - QR token scan paths should be load/race tested with concurrent scans.
 - Some indexes are present, but production-scale pagination/search indexes should be revisited after real query plans are available.
+
+## Final validation — 22 July 2026
+
+The management and data APIs were validated against `https://rgcgtcycbiuhcaoaadbh.supabase.co`: authentication 200, 111 tables checked, 10 storage buckets checked and no failure. Migration management checked 62 migrations with `pendingBeforeApply: 0`; no migration was applied because the remote schema was already current. The security catalog reported no missing RLS, policy or required function.
+
+Rollback and restore remain unproven because `DR_SOURCE_URL` and `DR_RESTORE_TARGET_URL` are intentionally absent. Production query plans, deadlock tests, orphan scans and a full restore rehearsal remain required in isolated preproduction.

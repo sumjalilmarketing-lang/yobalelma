@@ -8,7 +8,7 @@ export const adminAppManifest = {
     "traveler_validation", "traveler_support", "customs_manager", "customs_agent", "compliance_manager", "compliance_agent", "finance_manager",
     "finance_agent", "accounting_agent", "reconciliation_agent", "payment_agent", "commission_agent", "refund_agent", "customer_support_manager",
     "customer_support_agent", "support_agent", "security_manager", "auditor", "partner_manager", "orange_partner_manager", "relay_partner_manager",
-    "carrier_partner_manager", "airline_partner_manager",
+    "carrier_partner_manager", "airline_partner_manager", "customs_broker", "customs_broker_manager", "finance_customs_agent",
   ],
   status: "active",
 } as const;
