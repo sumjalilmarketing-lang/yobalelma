@@ -4,6 +4,7 @@ import { PageShell } from "@/components/layout/page-shell";
 import { requireRole } from "@/lib/auth/server";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -18,11 +19,11 @@ export default async function ClientShipmentsPage() {
     <PageShell
       eyebrow="Client"
       title="Mes expeditions"
-      description="Suis les envois crees, leur code tracking, le mode de depart et le statut operationnel."
+      description="Suis les envois créés, leur code de suivi, le mode de départ et leur statut."
     >
       <div className="mb-6 flex flex-wrap gap-3">
         <Button asChild>
-          <Link href="/dashboard/client/shipments/new">Nouvelle expedition</Link>
+          <Link href="/dashboard/client/shipments/new">Nouvelle expédition</Link>
         </Button>
       </div>
       {state.status === "ready" ? <ShipmentList userId={state.userId} /> : <ConfigurationNotice />}
@@ -44,15 +45,15 @@ async function ShipmentList({ userId }: { userId: string }) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    return <EmptyState title="Chargement impossible" description={error.message} />;
+    return <EmptyState title="Chargement impossible" description="Vos expéditions ne sont pas disponibles pour le moment. Réessayez dans quelques instants." />;
   }
 
   if (!data?.length) {
     return (
       <EmptyState
-        title="Aucune expedition"
+        title="Aucune expédition"
         description="Cree une expedition pour declencher tracking, pickup request ou depot relais."
-        action={{ href: "/dashboard/client/shipments/new", label: "Creer une expedition" }}
+        action={{ href: "/dashboard/client/shipments/new", label: "Créer une expédition" }}
       />
     );
   }
@@ -66,9 +67,9 @@ async function ShipmentList({ userId }: { userId: string }) {
           subtitle={`${shipment.origin_city}, ${shipment.origin_country} -> ${shipment.destination_city}, ${shipment.destination_country}`}
           href={`/dashboard/client/shipments/${shipment.id}`}
           rows={[
-            { label: "Statut", value: shipment.status },
-            { label: "Portee", value: shipment.scope },
-            { label: "Depart", value: shipment.fulfillment_method },
+            { label: "Statut", value: toBusinessStatusLabel(shipment.status) },
+            { label: "Trajet", value: shipment.scope === "international" ? "International" : "National" },
+            { label: "Départ", value: shipment.fulfillment_method === "pickup" ? "Enlèvement à domicile" : "Dépôt en point relais" },
             {
               label: "Prix",
               value: `${(shipment.estimated_price_cents / 100).toFixed(2)} ${shipment.currency}`,

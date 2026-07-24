@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import type { ApiResult } from "@/lib/api/responses";
+import { getSafeAuthRedirect } from "@/lib/auth/redirect";
 import {
   forgotPasswordSchema,
   resetPasswordSchema,
@@ -42,7 +43,7 @@ export function PasswordSignInForm() {
 
     if (payload.ok) {
       const next = new URLSearchParams(window.location.search).get("next");
-      router.push(next ?? payload.data?.next ?? "/dashboard");
+      router.push(getSafeAuthRedirect(next, payload.data?.next ?? "/dashboard"));
     }
   }
 
@@ -104,7 +105,7 @@ export function SignUpForm() {
         <Field label="Email" error={form.formState.errors.email?.message}>
           <Input type="email" autoComplete="email" {...form.register("email")} />
         </Field>
-        <Field label="Role souhaite" error={form.formState.errors.role?.message}>
+        <Field label="Rôle souhaité" error={form.formState.errors.role?.message}>
           <Select {...form.register("role")}>
             <option value="client">Je veux envoyer un colis</option>
             <option value="local_transporter">Je veux devenir livreur</option>
@@ -229,10 +230,10 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <label className="grid gap-2 text-sm font-semibold">
+    <label className="yb-label">
       {label}
       {children}
-      {error ? <span className="text-sm text-red-700">{error}</span> : null}
+      {error ? <span className="text-sm font-semibold text-error" role="alert">{error}</span> : null}
     </label>
   );
 }

@@ -2,6 +2,7 @@ import { PageShell } from "@/components/layout/page-shell";
 import { DataCard, DataGrid, EmptyState, ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
+import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,7 @@ export default async function ClientNotificationsPage() {
 
   return (
     <PageShell eyebrow="Client" title="Notifications" description="Alertes in-app de suivi, remise et incidents." scene="client">
-      {error ? <EmptyState title="Lecture impossible" description={error.message} /> : null}
+      {error ? <EmptyState title="Lecture impossible" description="Vos notifications ne sont pas disponibles pour le moment." /> : null}
       {data?.length ? (
         <DataGrid>
           {data.map((notification) => (
@@ -47,9 +48,8 @@ export default async function ClientNotificationsPage() {
               key={notification.id}
               href={notification.action_url ?? undefined}
               title={notification.title}
-              subtitle={`${notification.channel} - ${notification.status}`}
+              subtitle={`${toNotificationChannelLabel(notification.channel)} · ${toBusinessStatusLabel(notification.status)}`}
               rows={[
-                { label: "Type", value: notification.type },
                 { label: "Message", value: notification.body },
                 { label: "Date", value: new Date(notification.created_at).toLocaleString("fr-FR") },
                 { label: "Lu", value: notification.read_at ? "oui" : "non" },
@@ -62,4 +62,12 @@ export default async function ClientNotificationsPage() {
       )}
     </PageShell>
   );
+}
+
+function toNotificationChannelLabel(channel: string) {
+  if (channel === "email") return "E-mail";
+  if (channel === "sms") return "SMS";
+  if (channel === "whatsapp") return "WhatsApp";
+  if (channel === "push") return "Notification mobile";
+  return "Notification Yobalelma";
 }

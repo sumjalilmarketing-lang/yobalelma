@@ -129,15 +129,15 @@ export function PremiumPanel({
   return (
     <section
       className={cn(
-        "relative overflow-hidden rounded-lg border border-black/10 bg-white p-5 shadow-line",
+        "yb-panel relative overflow-hidden",
         toneStyles[tone].canvas,
         className,
       )}
     >
       {withPattern ? (
         <>
-          <div className="absolute inset-0 yb-modern-kente opacity-40" aria-hidden />
-          <div className="absolute inset-x-0 bottom-0 h-20 yb-skyline opacity-50" aria-hidden />
+          <div className="absolute inset-0 yb-modern-kente opacity-[0.12]" aria-hidden />
+          <div className="absolute inset-x-0 bottom-0 h-20 yb-skyline opacity-25" aria-hidden />
         </>
       ) : null}
       <div className="relative">{children}</div>
@@ -157,7 +157,7 @@ export function PremiumBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-black uppercase",
+        "inline-flex min-h-8 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-black uppercase tracking-[.08em]",
         toneStyles[tone].badge,
         className,
       )}
@@ -182,17 +182,17 @@ export function PremiumKpi({
   value: ReactNode;
 }) {
   return (
-    <article className="yb-card-reveal rounded-lg border border-black/10 bg-white p-5 shadow-line transition hover:-translate-y-1 hover:border-primary/50 hover:shadow-panel">
+    <article className="yb-kpi yb-card-reveal transition hover:-translate-y-1 hover:border-primary/50 hover:shadow-panel">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase text-black/45">{label}</p>
+          <p className="text-xs font-black uppercase text-black/65">{label}</p>
           <p className="mt-2 text-3xl font-black leading-none text-black">{value}</p>
         </div>
         <span className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-md", toneStyles[tone].icon)}>
           <Icon className="h-5 w-5" aria-hidden="true" />
         </span>
       </div>
-      {description ? <p className="mt-4 text-sm leading-6 text-black/60">{description}</p> : null}
+      {description ? <p className="mt-4 text-sm font-medium leading-6 text-black/75">{description}</p> : null}
       <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-muted">
         <div className={cn("h-full w-2/3 rounded-full bg-gradient-to-r", toneStyles[tone].accent)} />
       </div>
@@ -216,14 +216,14 @@ export function PremiumActionCard({
   return (
     <Link
       href={href}
-      className="group yb-card-reveal flex min-h-44 flex-col justify-between rounded-lg border border-black/10 bg-white p-5 shadow-line transition hover:-translate-y-1 hover:border-primary/60 hover:shadow-panel"
+      className="group yb-card yb-card-reveal flex min-h-44 flex-col justify-between p-5 transition hover:-translate-y-1 hover:border-primary/60 hover:shadow-panel"
     >
       <span className={cn("flex h-11 w-11 items-center justify-center rounded-md", toneStyles[tone].icon)}>
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
       <span>
         <span className="block text-xl font-black text-black">{label}</span>
-        <span className="mt-2 block text-sm leading-6 text-black/60">{description}</span>
+        <span className="mt-2 block text-sm leading-6 text-black/75">{description}</span>
       </span>
       <span className="inline-flex items-center gap-2 text-sm font-black text-primary">
         Ouvrir
@@ -257,7 +257,7 @@ export function PremiumStory({
         <div>
           <PremiumBadge tone={tone}>{eyebrow}</PremiumBadge>
           <h2 className="mt-4 text-2xl font-black leading-tight text-black md:text-3xl">{title}</h2>
-          <p className="mt-3 max-w-2xl leading-7 text-black/60">{description}</p>
+          <p className="mt-3 max-w-2xl leading-7 text-black/75">{description}</p>
         </div>
       </div>
       {children ? <div className="mt-6">{children}</div> : null}
@@ -282,11 +282,11 @@ export function PremiumEmptyState({
         <div>
           <PremiumBadge tone={tone}>Etat vide</PremiumBadge>
           <h2 className="mt-4 text-2xl font-black text-black">{title}</h2>
-          <p className="mt-3 max-w-2xl leading-7 text-black/60">{description}</p>
+          <p className="mt-3 max-w-2xl leading-7 text-black/75">{description}</p>
           {action ? (
             <Link
               href={action.href}
-              className="mt-5 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-black text-white shadow-glow transition hover:bg-primary/90"
+              className="yb-button yb-button-primary mt-5"
             >
               {action.label}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -294,8 +294,8 @@ export function PremiumEmptyState({
           ) : null}
         </div>
         <div className="relative hidden h-40 overflow-hidden rounded-lg border border-black/10 bg-white/70 md:block">
-          <div className="absolute inset-0 yb-modern-kente opacity-45" aria-hidden />
-          <div className="absolute inset-x-0 bottom-0 h-20 yb-skyline opacity-70" aria-hidden />
+          <div className="absolute inset-0 yb-modern-kente opacity-[0.14]" aria-hidden />
+          <div className="absolute inset-x-0 bottom-0 h-20 yb-skyline opacity-30" aria-hidden />
           <div className="absolute left-8 top-8 flex h-14 w-14 items-center justify-center rounded-md bg-secondary text-primary shadow-panel">
             <Layers3 className="h-7 w-7" aria-hidden="true" />
           </div>
@@ -318,7 +318,7 @@ export function PremiumChecklist({
       {items.map((item) => (
         <div key={item} className="flex items-start gap-3 rounded-md border border-black/10 bg-white/80 p-3 shadow-line">
           <CheckCircle2 className={cn("mt-0.5 h-5 w-5 shrink-0", tone === "neutral" ? "text-primary" : "text-primary")} aria-hidden="true" />
-          <p className="text-sm font-semibold leading-6 text-black/70">{item}</p>
+          <p className="text-sm font-semibold leading-6 text-black/80">{item}</p>
         </div>
       ))}
     </div>

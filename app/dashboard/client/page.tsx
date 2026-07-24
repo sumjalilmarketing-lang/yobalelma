@@ -51,8 +51,7 @@ function ConfigurationNotice() {
     <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
       <h2 className="text-2xl font-black">Connexion au service indisponible</h2>
       <p className="mt-3 max-w-2xl leading-7 text-black/60">
-        Ajoute les variables publiques Yobalelma dans l&apos;environnement pour activer
-        l&apos;espace client authentifie.
+        Cet espace est momentanément indisponible. Réessaie dans quelques instants.
       </p>
     </div>
   );

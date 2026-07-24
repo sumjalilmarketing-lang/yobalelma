@@ -4,7 +4,6 @@ import {
   PremiumChecklist,
   PremiumStory,
 } from "@/components/design-system/premium";
-import { TravelDocumentForm } from "@/components/forms/travel-document-form";
 import { TripForm } from "@/components/forms/trip-form";
 import { PageShell } from "@/components/layout/page-shell";
 import { Button } from "@/components/ui/button";
@@ -54,9 +53,6 @@ export default function VoyagerPage() {
           </Button>
         </aside>
       </div>
-      <section className="mt-10 rounded-lg border border-black/10 bg-white p-6 shadow-line">
-        <TravelDocumentForm />
-      </section>
     </PageShell>
   );
 }

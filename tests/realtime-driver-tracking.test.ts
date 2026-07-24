@@ -1,0 +1,16 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { describe,expect,it } from "vitest";
+import { adaptiveTrackingInterval,detectPositionAnomalies,estimateArrival,evaluateGeofences,type RealtimePosition } from "@/lib/geolocation/realtime";
+
+const position=(overrides:Partial<RealtimePosition>={}):RealtimePosition=>({clientEventId:"11111111-1111-4111-8111-111111111111",latitude:14.7167,longitude:-17.4677,accuracyMeters:10,speedKph:30,headingDegrees:90,batteryPercent:80,source:"browser",recordedAt:"2026-07-22T10:00:00.000Z",networkStatus:"online",...overrides});
+
+describe("realtime driver tracking",()=>{
+  it("adapts frequency to movement, battery, background and network",()=>{expect(adaptiveTrackingInterval({speedKph:30,batteryPercent:80,background:false,networkStatus:"online"})).toBe(8000);expect(adaptiveTrackingInterval({speedKph:0,batteryPercent:80,background:false,networkStatus:"online"})).toBe(30000);expect(adaptiveTrackingInterval({speedKph:30,batteryPercent:10,background:false,networkStatus:"online"})).toBe(60000);expect(adaptiveTrackingInterval({speedKph:30,batteryPercent:80,background:false,networkStatus:"offline"})).toBe(60000);});
+  it("flags impossible displacement without trusting device speed",()=>{const alerts=detectPositionAnomalies(position(),position({clientEventId:"22222222-2222-4222-8222-222222222222",latitude:15.7,recordedAt:"2026-07-22T10:01:00.000Z"}));expect(alerts).toContain("impossible_displacement");});
+  it("does not treat imprecise GPS as trusted",()=>expect(detectPositionAnomalies(null,position({accuracyMeters:600}))).toContain("imprecise"));
+  it("emits geofence transitions but always requires independent proof",()=>{const fences=[{id:"f1",center:{latitude:14.7167,longitude:-17.4677},radiusMeters:100,type:"delivery" as const}];const events=evaluateGeofences({latitude:14.72,longitude:-17.47},{latitude:14.7167,longitude:-17.4677},fences);expect(events[0]).toMatchObject({eventType:"entered",requiresProof:true});});
+  it("does not fabricate an ETA without a routing provider",async()=>expect(await estimateArrival(null,{latitude:14.7,longitude:-17.4},{latitude:14.8,longitude:-17.3},"van")).toEqual({available:false,reason:"ROUTING_PROVIDER_REQUIRED"}));
+  it("keeps live, history, alerts and access logs separated",async()=>{const sql=await readFile(path.resolve(process.cwd(),"supabase/migrations/20260722055000_realtime_driver_tracking.sql"),"utf8");for(const table of ["operational_live_positions","operational_position_events","operational_tracking_alerts","operational_location_access_logs","driver_status_events"])expect(sql).toContain(table);expect(sql).toContain("purge_expired_operational_tracking");expect(sql).toContain("get_client_mission_tracking");});
+  it("uses idempotent offline batches instead of invented positions",async()=>{const api=await readFile(path.resolve(process.cwd(),"apps/collection-app/app/api/collection/gps/route.ts"),"utf8");const queue=await readFile(path.resolve(process.cwd(),"apps/collection-app/src/lib/offline-location-queue.ts"),"utf8");expect(api).toContain('rpc("record_operational_positions_batch"');expect(queue).toContain("indexedDB.open");expect(queue).toContain("maxItems = 100");});
+});

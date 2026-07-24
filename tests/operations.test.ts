@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  ManualPaymentProvider,
+  TestPaymentProvider,
   createPaymentProvider,
-  createPayoutProvider,
 } from "@/lib/payments/providers";
 import {
   commissionSchema,
@@ -15,58 +14,59 @@ import {
 } from "@/lib/validation/operations";
 
 describe("operations validation", () => {
-  it("accepts a sandbox payment intent", () => {
+  it("accepts a payment request for an owned shipment", () => {
     const result = paymentIntentSchema.parse({
-      amountCents: 2500,
-      currency: "EUR",
+      phoneNumber: "+221771234567",
       shipmentId: "00000000-0000-4000-8000-000000000001",
     });
 
-    expect(result.amountCents).toBe(2500);
+    expect(result.shipmentId).toBe("00000000-0000-4000-8000-000000000001");
   });
 
-  it("rejects zero payment amounts", () => {
+  it("rejects client-controlled payment amounts", () => {
     expect(() =>
       paymentIntentSchema.parse({
         amountCents: 0,
         currency: "EUR",
+        phoneNumber: "+221771234567",
         shipmentId: "00000000-0000-4000-8000-000000000001",
       }),
     ).toThrow();
   });
 
   it("keeps a manual payment fallback available for pilot operations", async () => {
-    const provider = new ManualPaymentProvider();
-    const result = await provider.createIntent({
-      amountCents: 2500,
+    const provider = new TestPaymentProvider();
+    const result = await provider.createPayment({
+      amount: 2500,
       currency: "EUR",
+      customerId: "customer-test",
+      countryCode: "SN",
+      idempotencyKey: "payment:test:0001",
+      internalReference: "pay_test_0001",
       shipmentId: "shipment-test",
     });
 
     expect(result).toEqual({
-      id: "manual_shipment-test_2500_eur",
-      mode: "manual",
-      provider: "manual",
+      amount: 2500,
+      currency: "EUR",
+      customerId: "customer-test",
+      countryCode: "SN",
+      idempotencyKey: "payment:test:0001",
+      internalReference: "pay_test_0001",
+      provider: "test",
+      providerTransactionId: null,
+      shipmentId: "shipment-test",
+      status: "pending",
     });
   });
 
   it("fails fast for unconfigured external payment providers", () => {
-    expect(() => createPaymentProvider({} as never, "mobile_money")).toThrow(
-      "Payment provider mobile_money is not configured yet.",
-    );
+    expect(() => createPaymentProvider({ env: { NODE_ENV: "production" } as NodeJS.ProcessEnv })).toThrow("Les accès officiels Orange Money sont requis avant activation.");
   });
 
   it("keeps payouts behind a provider boundary", async () => {
-    const provider = createPayoutProvider("manual");
-    const result = await provider.createPayout({
-      amountCents: 1500,
-      beneficiaryId: "beneficiary-test",
-      currency: "EUR",
-      shipmentId: "shipment-test",
-    });
-
-    expect(result.mode).toBe("manual");
-    expect(result.provider).toBe("manual");
+    const provider = new TestPaymentProvider();
+    await expect(provider.initiatePayout({ amount: 1500, beneficiaryId: "beneficiary-test", beneficiaryType: "profile", currency: "EUR", idempotencyKey: "payout:test:0001", internalReference: "payout_test_0001", reason: "mission" })).rejects.toThrow("reversement de test");
   });
 
   it("accepts a support ticket", () => {

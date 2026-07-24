@@ -1,4 +1,4 @@
-export const supportedLocales = ["fr", "en", "es", "pt", "de", "it", "ar", "ru", "zh-CN"] as const;
+export const supportedLocales = ["fr", "en", "es", "pt", "de", "it", "nl", "ar", "ru", "zh-CN"] as const;
 
 export type SupportedLocale = (typeof supportedLocales)[number];
 
@@ -46,6 +46,7 @@ export const localeLabels: Record<SupportedLocale, string> = {
   es: "Español",
   fr: "Français",
   it: "Italiano",
+  nl: "Nederlands",
   pt: "Português",
   ru: "Русский",
   "zh-CN": "简体中文",
@@ -55,6 +56,7 @@ export const countryOptions: CountryOption[] = [
   { code: "SN", currency: "XOF", label: "Sénégal", paymentMethods: ["Carte", "Mobile Money", "Espèces relais"], unitSystem: "metric" },
   { code: "CI", currency: "XOF", label: "Côte d'Ivoire", paymentMethods: ["Carte", "Mobile Money", "Espèces relais"], unitSystem: "metric" },
   { code: "FR", currency: "EUR", label: "France", paymentMethods: ["Carte", "SEPA", "Wallet"], unitSystem: "metric" },
+  { code: "BE", currency: "EUR", label: "Belgique", paymentMethods: ["Carte", "SEPA", "Bancontact", "Wallet"], unitSystem: "metric" },
   { code: "ES", currency: "EUR", label: "Espagne", paymentMethods: ["Carte", "SEPA", "Wallet"], unitSystem: "metric" },
   { code: "PT", currency: "EUR", label: "Portugal", paymentMethods: ["Carte", "SEPA", "Wallet"], unitSystem: "metric" },
   { code: "DE", currency: "EUR", label: "Allemagne", paymentMethods: ["Carte", "SEPA", "Wallet"], unitSystem: "metric" },
@@ -76,6 +78,7 @@ const localeAliases: Record<string, SupportedLocale> = {
   es: "es",
   fr: "fr",
   it: "it",
+  nl: "nl",
   pt: "pt",
   ru: "ru",
   zh: "zh-CN",
@@ -89,6 +92,8 @@ const localeAliases: Record<string, SupportedLocale> = {
   "fr-fr": "fr",
   "fr-sn": "fr",
   "it-it": "it",
+  "nl-be": "nl",
+  "nl-nl": "nl",
   "pt-br": "pt",
   "pt-pt": "pt",
   "ru-ru": "ru",
@@ -98,6 +103,7 @@ const localeAliases: Record<string, SupportedLocale> = {
 
 const countryByCode = new Map(countryOptions.map((country) => [country.code, country]));
 const currencySet = new Set<string>(supportedCurrencies);
+const timeZoneByCountry: Record<string, string> = { SN: "Africa/Dakar", CI: "Africa/Abidjan", FR: "Europe/Paris", BE: "Europe/Brussels", ES: "Europe/Madrid", PT: "Europe/Lisbon", DE: "Europe/Berlin", IT: "Europe/Rome", GB: "Europe/London", US: "America/New_York", CA: "America/Toronto", MA: "Africa/Casablanca", AE: "Asia/Dubai", JP: "Asia/Tokyo", CN: "Asia/Shanghai", RU: "Europe/Moscow" };
 
 export function normalizeLocale(value?: string | null): SupportedLocale {
   if (!value) return defaultLocale;
@@ -162,7 +168,7 @@ export function resolveLocaleSettings(input: {
     direction: localeDirection(locale),
     locale,
     paymentMethods: countryOption.paymentMethods,
-    timeZone: input.timeZone?.trim() || "UTC",
+    timeZone: input.timeZone?.trim() || timeZoneByCountry[country] || "UTC",
     unitSystem: countryOption.unitSystem,
   };
 }
@@ -176,6 +182,7 @@ export function settingsForCountry(countryCode: string, current: LocalizationSet
     country,
     currency: countryOption.currency,
     paymentMethods: countryOption.paymentMethods,
+    timeZone: timeZoneByCountry[country] || current.timeZone,
     unitSystem: countryOption.unitSystem,
   };
 }

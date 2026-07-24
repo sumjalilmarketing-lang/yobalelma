@@ -39,7 +39,7 @@ export default async function PublicTrackingPage({
       <div className="grid gap-8">
         <PremiumStory
           tone="client"
-          eyebrow="Suivi protege"
+          eyebrow="Suivi protégé"
           title="Une lecture publique du statut, sans exposer les donnees privees."
           description="Le suivi Yobalelma donne un signal clair au client et au destinataire tout en gardant les informations sensibles dans les espaces authentifies."
         >

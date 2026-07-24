@@ -29,11 +29,11 @@ export function AuthForm() {
 
   return (
     <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-      <label className="grid gap-2 text-sm font-semibold">
+      <label className="yb-label">
         Email
         <Input type="email" placeholder="toi@example.com" {...form.register("email")} />
         {form.formState.errors.email ? (
-          <span className="text-sm text-red-700">{form.formState.errors.email.message}</span>
+          <span className="text-sm font-semibold text-error" role="alert">{form.formState.errors.email.message}</span>
         ) : null}
       </label>
       <Button type="submit" disabled={form.formState.isSubmitting}>

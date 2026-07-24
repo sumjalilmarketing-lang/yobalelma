@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --config vitest.config.mjs",
     "test:e2e": "node scripts/run-e2e.mjs",
+    "seed:pilot": "node scripts/seed-pilot-users.mjs",
     "health": "node scripts/health-check.mjs",
     "check": "node ../../scripts/check-five-apps-architecture.mjs user-app"
   },
@@ -18,6 +19,7 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.56.1",
+    "@yobalelma/ui": "0.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.544.0",

@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { ExperienceSettingsPanel } from "@/components/settings/experience-settings-panel";
 import type { OperationalWorkspaceConfig } from "@/components/dashboard/operational-workspace";
 import { OperationalWorkspace } from "@/components/dashboard/operational-workspace";
 import { getWorkspaceConfig } from "@/lib/dashboard/workspace-configs";
@@ -22,8 +24,17 @@ export function UserSectionPage({ area, section }: { area: UserArea; section: st
     <OperationalWorkspace
       config={rewriteConfigLinks(config, area)}
       returnTo={`${areaPrefixes[area]}/${section}`}
-    />
+    >
+      {section === "profile" ? <Link className="inline-flex w-fit rounded-xl border px-4 py-3 text-sm font-black hover:bg-muted" href={`${areaPrefixes[area]}/settings`}>Préférences d’affichage</Link> : null}
+    </OperationalWorkspace>
   );
+}
+
+export function UserSettingsPage({ area }: { area: UserArea }) {
+  const base = getWorkspaceConfig(`${area}/profile`);
+  if (!base) notFound();
+  const config: OperationalWorkspaceConfig = { ...base, actions: [], checkpoints: [], description: "Langue, formats, thème, accessibilité et préférences d’offres.", eyebrow: "Préférences", metrics: [], title: "Réglages de l’expérience" };
+  return <OperationalWorkspace config={config} returnTo={`${areaPrefixes[area]}/settings`}><ExperienceSettingsPanel /></OperationalWorkspace>;
 }
 
 function rewriteConfigLinks(config: OperationalWorkspaceConfig, area: UserArea): OperationalWorkspaceConfig {

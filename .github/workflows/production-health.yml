@@ -1,0 +1,58 @@
+name: Production health and SLO guard
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      simulate_failure:
+        description: "Inject a controlled monitor failure"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: production-health
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Probe five production applications
+        id: probe
+        continue-on-error: true
+        run: node scripts/production-health-monitor.mjs ${{ inputs.simulate_failure && '--simulate-failure' || '' }} | tee production-health.json
+      - name: Preserve probe evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-health-${{ github.run_id }}
+          path: production-health.json
+          retention-days: 30
+      - name: Open or update the production incident
+        if: steps.probe.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const evidence = fs.readFileSync('production-health.json', 'utf8').trim();
+            const title = '[Production] Health check failure';
+            const body = `Automated health or latency guard failed.\n\nRun: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n\n\`\`\`json\n${evidence}\n\`\`\``;
+            try { await github.rest.issues.getLabel({ ...context.repo, name: 'production-incident' }); }
+            catch { await github.rest.issues.createLabel({ ...context.repo, name: 'production-incident', color: 'B42318', description: 'Automated production incident' }); }
+            const { data: issues } = await github.rest.issues.listForRepo({ ...context.repo, state: 'open', labels: 'production-incident', per_page: 100 });
+            const existing = issues.find(issue => issue.title === title);
+            if (existing) await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number, body });
+            else await github.rest.issues.create({ ...context.repo, title, body, labels: ['production-incident'] });
+      - name: Enforce monitor result
+        if: steps.probe.outcome == 'failure'
+        run: exit 1

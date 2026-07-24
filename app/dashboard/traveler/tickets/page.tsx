@@ -3,6 +3,7 @@ import { PageShell } from "@/components/layout/page-shell";
 import { DataCard, DataGrid, EmptyState, ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
+import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +49,7 @@ async function TravelerDocuments({ userId }: { userId: string }) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    return <EmptyState title="Chargement impossible" description={error.message} />;
+    return <EmptyState title="Chargement impossible" description="Vos documents ne sont pas disponibles pour le moment. Réessayez dans quelques instants." />;
   }
 
   if (!data?.length) {
@@ -61,12 +62,11 @@ async function TravelerDocuments({ userId }: { userId: string }) {
         <DataCard
           key={document.id}
           title={document.document_number}
-          subtitle={document.status}
+          subtitle={toBusinessStatusLabel(document.status)}
           rows={[
-            { label: "Trajet", value: document.trip_id },
             { label: "Route aeroport", value: `${document.departure_airport} -> ${document.arrival_airport}` },
             { label: "Depart", value: document.departure_date },
-            { label: "Review", value: document.manual_review_required ? "Revue manuelle" : "Automatique" },
+            { label: "Contrôle", value: document.manual_review_required ? "Vérification par l’équipe" : "Vérifié" },
           ]}
         />
       ))}

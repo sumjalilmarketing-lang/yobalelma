@@ -1,10 +1,14 @@
 # dependencies
 node_modules/
+.pnpm-store/
 
 # next.js
 .next/
 .next-e2e/
 .next-e2e-*/
+.next-browser-smoke/
+.next-preview/
+.next-staging/
 out/
 
 # production
@@ -16,6 +20,9 @@ coverage/
 test-results/
 tsconfig.tsbuildinfo
 .tools/
+tmp/
+apps/hub-app/.staging-*.log
+apps/hub-app/pnpm-lock.yaml
 
 # environment
 .env
@@ -23,6 +30,7 @@ tsconfig.tsbuildinfo
 .env.*.local
 .env*.local
 .supabase-cli-home/
+.pilot-access/
 
 # logs
 npm-debug.log*

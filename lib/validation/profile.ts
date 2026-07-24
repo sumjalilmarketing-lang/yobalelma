@@ -1,15 +1,12 @@
 import { z } from "zod";
-import { publicSignupRoles } from "@/lib/auth/roles";
-
 export const profileSchema = z.object({
   fullName: z.string().trim().min(2, "Nom trop court.").max(120),
   phone: z.string().trim().min(6, "Telephone trop court.").max(32),
   city: z.string().trim().min(2, "Ville trop courte.").max(80),
   country: z.string().trim().min(2, "Pays trop court.").max(80),
   address: z.string().trim().min(4, "Adresse trop courte.").max(240),
-  role: z.enum(publicSignupRoles),
   preferredLanguage: z.enum(["fr", "en"]),
-});
+}).strict();
 
 export type ProfileInput = z.infer<typeof profileSchema>;
 

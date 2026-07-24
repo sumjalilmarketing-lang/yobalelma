@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
@@ -24,11 +24,10 @@ import {
 
 export function PaymentIntentForm() {
   const [result, setResult] = useState<ApiResult<{ paymentIntentId?: string }> | null>(null);
+  const shipments = useShipmentChoices();
   const form = useForm<PaymentIntentFormInput, unknown, PaymentIntentInput>({
     resolver: zodResolver(paymentIntentSchema),
     defaultValues: {
-      amountCents: 1000,
-      currency: "EUR",
       shipmentId: "",
     },
   });
@@ -39,26 +38,18 @@ export function PaymentIntentForm() {
 
   return (
     <form className="grid gap-4 rounded-lg border border-black/10 p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-      <h2 className="text-xl font-black">Paiement sandbox</h2>
-      <Field label="ID expedition" error={form.formState.errors.shipmentId?.message}>
-        <Input {...form.register("shipmentId")} />
-      </Field>
-      <Field label="Montant (centimes)" error={form.formState.errors.amountCents?.message}>
-        <Input type="number" min="1" {...form.register("amountCents")} />
-      </Field>
-      <Field label="Devise" error={form.formState.errors.currency?.message}>
-        <Select {...form.register("currency")}>
-          <option value="EUR">EUR</option>
-          <option value="XOF">XOF</option>
-          <option value="USD">USD</option>
+      <h2 className="text-xl font-black">Préparer un paiement</h2>
+      <Field label="Expédition" error={form.formState.errors.shipmentId?.message}>
+        <Select {...form.register("shipmentId")}>
+          <option value="">Choisir une expédition</option>
+          {shipments.map((shipment) => (
+            <option key={shipment.id} value={shipment.id}>
+              {shipment.label} · {(shipment.amountCents / 100).toFixed(2)} {shipment.currency}
+            </option>
+          ))}
         </Select>
       </Field>
-      <Button type="submit" disabled={form.formState.isSubmitting}>Creer l&apos;intention</Button>
-      {result?.ok && result.data?.paymentIntentId ? (
-        <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
-          Payment intent ID : {result.data.paymentIntentId}
-        </p>
-      ) : null}
+      <Button type="submit" disabled={form.formState.isSubmitting}>Préparer le paiement</Button>
       <FormMessage message={result?.message} tone={result ? (result.ok ? "success" : "error") : "info"} />
     </form>
   );
@@ -66,6 +57,7 @@ export function PaymentIntentForm() {
 
 export function SupportTicketForm() {
   const [result, setResult] = useState<ApiResult<{ ticketId?: string }> | null>(null);
+  const shipments = useShipmentChoices();
   const form = useForm<SupportTicketFormInput, unknown, SupportTicketInput>({
     resolver: zodResolver(supportTicketSchema),
     defaultValues: {
@@ -84,15 +76,20 @@ export function SupportTicketForm() {
   return (
     <form className="grid gap-4 rounded-lg border border-black/10 p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <h2 className="text-xl font-black">Ticket support</h2>
-      <Field label="ID expedition" error={form.formState.errors.shipmentId?.message}>
-        <Input {...form.register("shipmentId")} />
+      <Field label="Expédition concernée (facultatif)" error={form.formState.errors.shipmentId?.message}>
+        <Select {...form.register("shipmentId")}>
+          <option value="">Aucune expédition</option>
+          {shipments.map((shipment) => (
+            <option key={shipment.id} value={shipment.id}>{shipment.label}</option>
+          ))}
+        </Select>
       </Field>
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Categorie" error={form.formState.errors.category?.message}>
           <Select {...form.register("category")}>
             <option value="shipment">Expedition</option>
             <option value="payment">Paiement</option>
-            <option value="kyc">KYC</option>
+            <option value="kyc">Vérification d’identité</option>
             <option value="damage">Dommage</option>
             <option value="delay">Retard</option>
             <option value="other">Autre</option>
@@ -114,11 +111,6 @@ export function SupportTicketForm() {
         <Textarea {...form.register("message")} />
       </Field>
       <Button type="submit" disabled={form.formState.isSubmitting}>Ouvrir le ticket</Button>
-      {result?.ok && result.data?.ticketId ? (
-        <p className="rounded-md bg-emerald-50 p-3 text-sm font-bold text-emerald-900">
-          Ticket ID : {result.data.ticketId}
-        </p>
-      ) : null}
       <FormMessage message={result?.message} tone={result ? (result.ok ? "success" : "error") : "info"} />
     </form>
   );
@@ -141,7 +133,7 @@ export function SupportMessageForm() {
   return (
     <form className="grid gap-4 rounded-lg border border-black/10 p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <h2 className="text-xl font-black">Reponse support</h2>
-      <Field label="ID ticket" error={form.formState.errors.ticketId?.message}>
+      <Field label="Référence de la demande" error={form.formState.errors.ticketId?.message}>
         <Input {...form.register("ticketId")} />
       </Field>
       <Field label="Message" error={form.formState.errors.message?.message}>
@@ -161,6 +153,36 @@ async function submitJson<T = unknown>(url: string, values: unknown) {
   });
 
   return (await response.json()) as ApiResult<T>;
+}
+
+type ShipmentChoice = {
+  amountCents: number;
+  currency: string;
+  id: string;
+  label: string;
+};
+
+function useShipmentChoices() {
+  const [shipments, setShipments] = useState<ShipmentChoice[]>([]);
+
+  useEffect(() => {
+    let active = true;
+
+    void fetch("/api/shipments")
+      .then((response) => response.json())
+      .then((result: ApiResult<{ shipments?: ShipmentChoice[] }>) => {
+        if (active && result.ok) {
+          setShipments(result.data?.shipments ?? []);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return shipments;
 }
 
 function Field({

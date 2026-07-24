@@ -16,7 +16,7 @@ describe("security headers", () => {
     expect(headers.get("X-Frame-Options")).toBe("DENY");
     expect(headers.get("X-Content-Type-Options")).toBe("nosniff");
     expect(headers.get("Referrer-Policy")).toBe("strict-origin-when-cross-origin");
-    expect(headers.get("Permissions-Policy")).toContain("geolocation=()");
+    expect(headers.get("Permissions-Policy")).toContain("geolocation=(self)");
     expect(headers.get("Strict-Transport-Security")).toContain("includeSubDomains");
   });
 

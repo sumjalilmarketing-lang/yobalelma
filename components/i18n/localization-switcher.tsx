@@ -5,7 +5,13 @@ import { countryOptions, localeLabels, supportedCurrencies, supportedLocales } f
 import { useLocalization } from "@/components/i18n/localization-provider";
 import { cn } from "@/lib/utils";
 
-export function LocalizationSwitcher({ className }: { className?: string }) {
+export function LocalizationSwitcher({
+  className,
+  showLocale = true,
+}: {
+  className?: string;
+  showLocale?: boolean;
+}) {
   const { setCountry, setCurrency, setLocale, settings } = useLocalization();
 
   return (
@@ -16,16 +22,18 @@ export function LocalizationSwitcher({ className }: { className?: string }) {
       )}
       aria-label="Preferences internationales"
     >
-      <CompactSelect
-        ariaLabel="Langue"
-        icon={Globe2}
-        value={settings.locale}
-        onChange={setLocale}
-        options={supportedLocales.map((locale) => ({
-          label: localeLabels[locale],
-          value: locale,
-        }))}
-      />
+      {showLocale ? (
+        <CompactSelect
+          ariaLabel="Langue"
+          icon={Globe2}
+          value={settings.locale}
+          onChange={setLocale}
+          options={supportedLocales.map((locale) => ({
+            label: localeLabels[locale],
+            value: locale,
+          }))}
+        />
+      ) : null}
       <CompactSelect
         ariaLabel="Pays"
         icon={MapPin}

@@ -2,6 +2,7 @@ import { PageShell } from "@/components/layout/page-shell";
 import { DataCard, DataGrid, EmptyState, ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
+import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ async function QrList({ userId }: { userId: string }) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    return <EmptyState title="Chargement impossible" description={error.message} />;
+    return <EmptyState title="Chargement impossible" description="Vos codes de remise ne sont pas disponibles pour le moment. Réessayez dans quelques instants." />;
   }
 
   if (!data?.length) {
@@ -49,10 +50,9 @@ async function QrList({ userId }: { userId: string }) {
       {data.map((token) => (
         <DataCard
           key={token.id}
-          title={token.token_type}
-          subtitle={token.status}
+          title={token.token_type === "destination_dropoff" ? "Remise à destination" : "Prise en charge du lot"}
+          subtitle={toBusinessStatusLabel(token.status)}
           rows={[
-            { label: "Batch", value: token.batch_id },
             { label: "Expire", value: new Date(token.expires_at).toLocaleString("fr-FR") },
             { label: "Utilise", value: token.used_at ? new Date(token.used_at).toLocaleString("fr-FR") : "Non" },
           ]}

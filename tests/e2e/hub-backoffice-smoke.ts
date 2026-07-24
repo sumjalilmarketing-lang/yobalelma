@@ -12,5 +12,5 @@ export async function expectAnonymousRedirect(page: Page, path: string) {
   await page.goto(path);
 
   await expect(page).toHaveURL(/\/auth\/sign-in/);
-  await expect(page.getByRole("heading", { name: "Connexion securisee" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Connexion sécurisée" })).toBeVisible();
 }

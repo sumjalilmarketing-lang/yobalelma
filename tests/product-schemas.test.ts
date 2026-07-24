@@ -39,21 +39,20 @@ describe("product validation", () => {
     ).toThrow();
   });
 
-  it("accepts a valid traveler profile", () => {
-    expect(
-      profileSchema.parse({
+  it("accepts a valid profile update", () => {
+    const profile = profileSchema.parse({
         fullName: "Awa Diop",
         phone: "+221770000000",
         city: "Dakar",
         country: "Senegal",
         address: "Plateau, Dakar",
-        role: "traveler",
         preferredLanguage: "fr",
-      }).role,
-    ).toBe("traveler");
+      });
+
+    expect(profile.fullName).toBe("Awa Diop");
   });
 
-  it("rejects internal roles in public profile updates", () => {
+  it("rejects every role change in profile updates", () => {
     expect(() =>
       profileSchema.parse({
         fullName: "Awa Diop",

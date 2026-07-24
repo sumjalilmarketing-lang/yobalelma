@@ -106,3 +106,9 @@ Risks:
 ## Security Verdict
 
 Security foundation is good for demonstration and internal testing. It is not yet production-complete until SQL-level RLS verification, seeded role-negative tests, provider idempotency, upload policy tests and CSP hardening are completed.
+
+## Final validation — 22 July 2026
+
+The earlier SQL-verification gap is closed: the remote Yobalelma audit checked 111 tables, found no missing RLS or expected policy, and found no service-only RPC exposed to anonymous or authenticated clients. A clean npm audit initially detected one high-severity `sharp`/libvips advisory; `sharp ^0.35.0` was locked, dependencies were reinstalled, and the repeat audit reported 0 vulnerabilities across 576 packages.
+
+Only `.env.example` is tracked. The repository scan found service-role *references* in scripts and migrations but no committed credential value or private key. Residual risks remain: CSP nonce hardening, exhaustive authenticated partner/country negative tests, external webhook penetration testing and independent production security review.

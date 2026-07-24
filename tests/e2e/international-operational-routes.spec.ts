@@ -38,7 +38,7 @@ test.describe("international operational route protection", () => {
       await page.goto(route);
 
       await expect(page).toHaveURL(/\/auth\/sign-in/);
-      await expect(page.getByRole("heading", { name: "Connexion securisee" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Connexion sécurisée" })).toBeVisible();
     });
   }
 });

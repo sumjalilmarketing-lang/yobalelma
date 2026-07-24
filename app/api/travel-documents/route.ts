@@ -24,6 +24,22 @@ export async function POST(request: Request) {
     return fail("Connecte-toi pour soumettre un document de voyage.", 401);
   }
 
+  const expectedPathPrefix = `${user.id}/`;
+  if (!parsed.data.filePath.startsWith(expectedPathPrefix)) {
+    return fail("Ce document ne peut pas être rattaché à ton dossier.", 403);
+  }
+
+  const { data: ownedTrip, error: tripError } = await supabase
+    .from("trips")
+    .select("id")
+    .eq("id", parsed.data.tripId)
+    .eq("traveler_id", user.id)
+    .maybeSingle();
+
+  if (tripError || !ownedTrip) {
+    return fail("Le voyage sélectionné est introuvable.", 404);
+  }
+
   const { data, error } = await supabase
     .from("traveler_documents")
     .insert({

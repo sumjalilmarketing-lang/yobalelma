@@ -9,11 +9,11 @@ export default function Page() {
     <UserAppInfoPage
       eyebrow="Confiance"
       title="Securite et confiance"
-      description="Les roles, la verification KYC et les preuves protegent les donnees et les colis."
+      description="Les profils, la vérification d’identité et les preuves protègent tes informations et tes colis."
       bullets={[
-        "Routes protegees par session utilisateur.",
-        "Donnees privees masquees du tracking public.",
-        "Documents et preuves rattaches aux permissions."
+        "Chaque espace personnel est protégé.",
+        "Les informations privées restent absentes du suivi public.",
+        "Les documents sont réservés aux personnes autorisées."
 ]}
     />
   );

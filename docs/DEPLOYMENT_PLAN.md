@@ -7,7 +7,7 @@
 | `user-app` | `app.yobalelma.com` | Planned |
 | `hub-app` | `hub.yobalelma.com` | Planned |
 | `collection-app` | `collecte.yobalelma.com` | Planned |
-| `relay-app` | `relais.yobalelma.com` | Planned |
+| `relay-app` | `relais.yobalelma.com` | Production-ready |
 | `admin-app` | `admin.yobalelma.com` | Planned |
 
 ## Shared Environment Variables

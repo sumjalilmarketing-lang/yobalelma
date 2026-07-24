@@ -1,0 +1,857 @@
+%PDF-1.7
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 4454 >>
+stream
+q
+0.12 0.12 0.12 rg
+1 0 0 1 48 794 cm
+BT
+/F2 16 Tf
+0 0 Td
+(YOBALELMA - PASSEPORT LOGISTIQUE) Tj
+ET
+BT
+/F2 11 Tf
+0 -14 Td
+(Colis YBL-SN-2026-0042) Tj
+ET
+BT
+/F1 9 Tf
+0 -28 Td
+(Statut: in_transit) Tj
+ET
+BT
+/F1 9 Tf
+0 -42 Td
+(Genere le: 22 juillet 2026 a 12:00) Tj
+ET
+BT
+/F1 9 Tf
+0 -56 Td
+(Verification: sample-20260722-verified-layout) Tj
+ET
+BT
+/F1 9 Tf
+0 -70 Td
+() Tj
+ET
+BT
+/F2 11 Tf
+0 -84 Td
+(IDENTITE ET ITINERAIRE) Tj
+ET
+BT
+/F1 9 Tf
+0 -98 Td
+(Colis: Documents administratifs) Tj
+ET
+BT
+/F1 9 Tf
+0 -112 Td
+(Origine: Dakar, SN) Tj
+ET
+BT
+/F1 9 Tf
+0 -126 Td
+(Destination: Paris, FR) Tj
+ET
+BT
+/F1 9 Tf
+0 -140 Td
+(Detenteur: Voyageur verifie) Tj
+ET
+BT
+/F1 9 Tf
+0 -154 Td
+() Tj
+ET
+BT
+/F2 11 Tf
+0 -168 Td
+(CHAINE DE POSSESSION) Tj
+ET
+BT
+/F1 9 Tf
+0 -182 Td
+(Evenement #1: parcel_in_transit | etape 1 | 2026-07-22T10:00:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -196 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0) Tj
+ET
+BT
+/F1 9 Tf
+0 -210 Td
+(Evenement #2: parcel_in_transit | etape 2 | 2026-07-22T10:01:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -224 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1) Tj
+ET
+BT
+/F1 9 Tf
+0 -238 Td
+(Evenement #3: parcel_in_transit | etape 3 | 2026-07-22T10:02:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -252 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2) Tj
+ET
+BT
+/F1 9 Tf
+0 -266 Td
+(Evenement #4: parcel_in_transit | etape 4 | 2026-07-22T10:03:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -280 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3) Tj
+ET
+BT
+/F1 9 Tf
+0 -294 Td
+(Evenement #5: parcel_in_transit | etape 5 | 2026-07-22T10:04:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -308 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4) Tj
+ET
+BT
+/F1 9 Tf
+0 -322 Td
+(Evenement #6: parcel_in_transit | etape 6 | 2026-07-22T10:05:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -336 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa5) Tj
+ET
+BT
+/F1 9 Tf
+0 -350 Td
+(Evenement #7: parcel_in_transit | etape 7 | 2026-07-22T10:06:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -364 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa6) Tj
+ET
+BT
+/F1 9 Tf
+0 -378 Td
+(Evenement #8: parcel_in_transit | etape 8 | 2026-07-22T10:07:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -392 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa7) Tj
+ET
+BT
+/F1 9 Tf
+0 -406 Td
+(Evenement #9: parcel_in_transit | etape 9 | 2026-07-22T10:08:00Z | source hub-app | hash) Tj
+ET
+BT
+/F1 9 Tf
+0 -420 Td
+(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa8) Tj
+ET
+BT
+/F1 9 Tf
+0 -434 Td
+(Evenement #10: parcel_in_transit | etape 10 | 2026-07-22T10:09:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -448 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa9) Tj
+ET
+BT
+/F1 9 Tf
+0 -462 Td
+(Evenement #11: parcel_in_transit | etape 11 | 2026-07-22T10:10:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -476 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa10) Tj
+ET
+BT
+/F1 9 Tf
+0 -490 Td
+(Evenement #12: parcel_in_transit | etape 12 | 2026-07-22T10:11:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -504 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa11) Tj
+ET
+BT
+/F1 9 Tf
+0 -518 Td
+(Evenement #13: parcel_in_transit | etape 13 | 2026-07-22T10:12:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -532 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa12) Tj
+ET
+BT
+/F1 9 Tf
+0 -546 Td
+(Evenement #14: parcel_in_transit | etape 14 | 2026-07-22T10:13:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -560 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa13) Tj
+ET
+BT
+/F1 9 Tf
+0 -574 Td
+(Evenement #15: parcel_in_transit | etape 15 | 2026-07-22T10:14:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -588 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa14) Tj
+ET
+BT
+/F1 9 Tf
+0 -602 Td
+(Evenement #16: parcel_in_transit | etape 16 | 2026-07-22T10:15:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -616 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa15) Tj
+ET
+BT
+/F1 9 Tf
+0 -630 Td
+(Evenement #17: parcel_in_transit | etape 17 | 2026-07-22T10:16:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -644 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa16) Tj
+ET
+BT
+/F1 8 Tf
+0 -736 Td
+(Page 1/4 - sample-20260722-verified-layout) Tj
+ET
+Q
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 5132 >>
+stream
+q
+0.12 0.12 0.12 rg
+1 0 0 1 48 794 cm
+BT
+/F2 11 Tf
+0 0 Td
+(CHAINE DE POSSESSION \(SUITE\)) Tj
+ET
+BT
+/F1 9 Tf
+0 -14 Td
+(Evenement #18: parcel_in_transit | etape 18 | 2026-07-22T10:17:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -28 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa17) Tj
+ET
+BT
+/F1 9 Tf
+0 -42 Td
+(Evenement #19: parcel_in_transit | etape 19 | 2026-07-22T10:18:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -56 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa18) Tj
+ET
+BT
+/F1 9 Tf
+0 -70 Td
+(Evenement #20: parcel_in_transit | etape 20 | 2026-07-22T10:19:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -84 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa19) Tj
+ET
+BT
+/F1 9 Tf
+0 -98 Td
+(Evenement #21: parcel_in_transit | etape 21 | 2026-07-22T10:20:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -112 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa20) Tj
+ET
+BT
+/F1 9 Tf
+0 -126 Td
+(Evenement #22: parcel_in_transit | etape 22 | 2026-07-22T10:21:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -140 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa21) Tj
+ET
+BT
+/F1 9 Tf
+0 -154 Td
+(Evenement #23: parcel_in_transit | etape 23 | 2026-07-22T10:22:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -168 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa22) Tj
+ET
+BT
+/F1 9 Tf
+0 -182 Td
+(Evenement #24: parcel_in_transit | etape 24 | 2026-07-22T10:23:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -196 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa23) Tj
+ET
+BT
+/F1 9 Tf
+0 -210 Td
+(Evenement #25: parcel_in_transit | etape 25 | 2026-07-22T10:24:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -224 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa24) Tj
+ET
+BT
+/F1 9 Tf
+0 -238 Td
+(Evenement #26: parcel_in_transit | etape 26 | 2026-07-22T10:25:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -252 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa25) Tj
+ET
+BT
+/F1 9 Tf
+0 -266 Td
+(Evenement #27: parcel_in_transit | etape 27 | 2026-07-22T10:26:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -280 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa26) Tj
+ET
+BT
+/F1 9 Tf
+0 -294 Td
+(Evenement #28: parcel_in_transit | etape 28 | 2026-07-22T10:27:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -308 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa27) Tj
+ET
+BT
+/F1 9 Tf
+0 -322 Td
+(Evenement #29: parcel_in_transit | etape 29 | 2026-07-22T10:28:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -336 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa28) Tj
+ET
+BT
+/F1 9 Tf
+0 -350 Td
+(Evenement #30: parcel_in_transit | etape 30 | 2026-07-22T10:29:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -364 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa29) Tj
+ET
+BT
+/F1 9 Tf
+0 -378 Td
+(Evenement #31: parcel_in_transit | etape 31 | 2026-07-22T10:30:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -392 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa30) Tj
+ET
+BT
+/F1 9 Tf
+0 -406 Td
+(Evenement #32: parcel_in_transit | etape 32 | 2026-07-22T10:31:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -420 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa31) Tj
+ET
+BT
+/F1 9 Tf
+0 -434 Td
+(Evenement #33: parcel_in_transit | etape 33 | 2026-07-22T10:32:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -448 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa32) Tj
+ET
+BT
+/F1 9 Tf
+0 -462 Td
+(Evenement #34: parcel_in_transit | etape 34 | 2026-07-22T10:33:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -476 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa33) Tj
+ET
+BT
+/F1 9 Tf
+0 -490 Td
+(Evenement #35: parcel_in_transit | etape 35 | 2026-07-22T10:34:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -504 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa34) Tj
+ET
+BT
+/F1 9 Tf
+0 -518 Td
+(Evenement #36: parcel_in_transit | etape 36 | 2026-07-22T10:35:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -532 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa35) Tj
+ET
+BT
+/F1 9 Tf
+0 -546 Td
+(Evenement #37: parcel_in_transit | etape 37 | 2026-07-22T10:36:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -560 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa36) Tj
+ET
+BT
+/F1 9 Tf
+0 -574 Td
+(Evenement #38: parcel_in_transit | etape 38 | 2026-07-22T10:37:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -588 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa37) Tj
+ET
+BT
+/F1 9 Tf
+0 -602 Td
+(Evenement #39: parcel_in_transit | etape 39 | 2026-07-22T10:38:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -616 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa38) Tj
+ET
+BT
+/F1 9 Tf
+0 -630 Td
+(Evenement #40: parcel_in_transit | etape 40 | 2026-07-22T10:39:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -644 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa39) Tj
+ET
+BT
+/F1 8 Tf
+0 -736 Td
+(Page 2/4 - sample-20260722-verified-layout) Tj
+ET
+Q
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 4947 >>
+stream
+q
+0.12 0.12 0.12 rg
+1 0 0 1 48 794 cm
+BT
+/F2 11 Tf
+0 0 Td
+(CHAINE DE POSSESSION \(SUITE\)) Tj
+ET
+BT
+/F1 9 Tf
+0 -14 Td
+(Evenement #41: parcel_in_transit | etape 41 | 2026-07-22T10:40:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -28 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa40) Tj
+ET
+BT
+/F1 9 Tf
+0 -42 Td
+(Evenement #42: parcel_in_transit | etape 42 | 2026-07-22T10:41:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -56 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa41) Tj
+ET
+BT
+/F1 9 Tf
+0 -70 Td
+(Evenement #43: parcel_in_transit | etape 43 | 2026-07-22T10:42:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -84 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa42) Tj
+ET
+BT
+/F1 9 Tf
+0 -98 Td
+(Evenement #44: parcel_in_transit | etape 44 | 2026-07-22T10:43:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -112 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa43) Tj
+ET
+BT
+/F1 9 Tf
+0 -126 Td
+(Evenement #45: parcel_in_transit | etape 45 | 2026-07-22T10:44:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -140 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa44) Tj
+ET
+BT
+/F1 9 Tf
+0 -154 Td
+(Evenement #46: parcel_in_transit | etape 46 | 2026-07-22T10:45:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -168 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa45) Tj
+ET
+BT
+/F1 9 Tf
+0 -182 Td
+(Evenement #47: parcel_in_transit | etape 47 | 2026-07-22T10:46:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -196 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa46) Tj
+ET
+BT
+/F1 9 Tf
+0 -210 Td
+(Evenement #48: parcel_in_transit | etape 48 | 2026-07-22T10:47:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -224 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa47) Tj
+ET
+BT
+/F1 9 Tf
+0 -238 Td
+(Evenement #49: parcel_in_transit | etape 49 | 2026-07-22T10:48:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -252 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa48) Tj
+ET
+BT
+/F1 9 Tf
+0 -266 Td
+(Evenement #50: parcel_in_transit | etape 50 | 2026-07-22T10:49:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -280 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa49) Tj
+ET
+BT
+/F1 9 Tf
+0 -294 Td
+(Evenement #51: parcel_in_transit | etape 51 | 2026-07-22T10:50:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -308 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa50) Tj
+ET
+BT
+/F1 9 Tf
+0 -322 Td
+(Evenement #52: parcel_in_transit | etape 52 | 2026-07-22T10:51:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -336 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa51) Tj
+ET
+BT
+/F1 9 Tf
+0 -350 Td
+(Evenement #53: parcel_in_transit | etape 53 | 2026-07-22T10:52:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -364 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa52) Tj
+ET
+BT
+/F1 9 Tf
+0 -378 Td
+(Evenement #54: parcel_in_transit | etape 54 | 2026-07-22T10:53:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -392 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa53) Tj
+ET
+BT
+/F1 9 Tf
+0 -406 Td
+(Evenement #55: parcel_in_transit | etape 55 | 2026-07-22T10:54:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -420 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa54) Tj
+ET
+BT
+/F1 9 Tf
+0 -434 Td
+(Evenement #56: parcel_in_transit | etape 56 | 2026-07-22T10:55:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -448 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa55) Tj
+ET
+BT
+/F1 9 Tf
+0 -462 Td
+(Evenement #57: parcel_in_transit | etape 57 | 2026-07-22T10:56:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -476 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa56) Tj
+ET
+BT
+/F1 9 Tf
+0 -490 Td
+(Evenement #58: parcel_in_transit | etape 58 | 2026-07-22T10:57:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -504 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa57) Tj
+ET
+BT
+/F1 9 Tf
+0 -518 Td
+(Evenement #59: parcel_in_transit | etape 59 | 2026-07-22T10:58:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -532 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa58) Tj
+ET
+BT
+/F1 9 Tf
+0 -546 Td
+(Evenement #60: parcel_in_transit | etape 60 | 2026-07-22T10:59:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -560 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa59) Tj
+ET
+BT
+/F1 9 Tf
+0 -574 Td
+(Evenement #61: parcel_in_transit | etape 61 | 2026-07-22T10:00:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -588 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa60) Tj
+ET
+BT
+/F1 9 Tf
+0 -602 Td
+(Evenement #62: parcel_in_transit | etape 62 | 2026-07-22T10:01:00Z | source hub-app |) Tj
+ET
+BT
+/F1 9 Tf
+0 -616 Td
+(hash aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa61) Tj
+ET
+BT
+/F1 9 Tf
+0 -630 Td
+() Tj
+ET
+BT
+/F1 8 Tf
+0 -736 Td
+(Page 3/4 - sample-20260722-verified-layout) Tj
+ET
+Q
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 554 >>
+stream
+q
+0.12 0.12 0.12 rg
+1 0 0 1 48 794 cm
+BT
+/F2 11 Tf
+0 0 Td
+(PREUVES VERIFIEES) Tj
+ET
+BT
+/F1 9 Tf
+0 -14 Td
+(QR: Verifiee) Tj
+ET
+BT
+/F1 9 Tf
+0 -28 Td
+(Identite: Verifiee) Tj
+ET
+BT
+/F1 9 Tf
+0 -42 Td
+(Photo scelle: Verifiee) Tj
+ET
+BT
+/F1 9 Tf
+0 -56 Td
+() Tj
+ET
+BT
+/F2 11 Tf
+0 -70 Td
+(SCELLES) Tj
+ET
+BT
+/F1 9 Tf
+0 -84 Td
+(S-0042: Intact) Tj
+ET
+BT
+/F1 9 Tf
+0 -98 Td
+() Tj
+ET
+BT
+/F2 11 Tf
+0 -112 Td
+(ANOMALIES) Tj
+ET
+BT
+/F1 9 Tf
+0 -126 Td
+(Aucune: -) Tj
+ET
+BT
+/F1 9 Tf
+0 -140 Td
+() Tj
+ET
+BT
+/F1 8 Tf
+0 -736 Td
+(Page 4/4 - sample-20260722-verified-layout) Tj
+ET
+Q
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000141 00000 n 
+0000000238 00000 n 
+0000000340 00000 n 
+0000004846 00000 n 
+0000004982 00000 n 
+0000010166 00000 n 
+0000010302 00000 n 
+0000015301 00000 n 
+0000015438 00000 n 
+0000016044 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R /ID [<73616d706c652d32303236303732322d> <73616d706c652d32303236303732322d>] >>
+startxref
+16182
+%%EOF

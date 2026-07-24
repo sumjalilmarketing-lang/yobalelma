@@ -13,7 +13,7 @@ export default async function Page() {
       returnTo="/client"
       title="Espace client Yobalelma"
       roleLabel="Espace client"
-      description="Prepare tes envois, suis tes colis, consulte tes paiements et contacte le support."
+      description="Prépare tes envois, suis tes colis, consulte tes paiements et contacte l’assistance."
       scene="client"
       actions={[
         {
@@ -22,12 +22,12 @@ export default async function Page() {
         },
         {
                 "href": "/client/shipments",
-                "label": "Mes expeditions",
+                "label": "Mes expéditions",
                 "variant": "secondary"
         },
         {
                 "href": "/client/tracking",
-                "label": "Tracking prive",
+                "label": "Suivi privé",
                 "variant": "secondary"
         },
         {
@@ -52,9 +52,9 @@ export default async function Page() {
         }
 ]}
       checkpoints={[
-        "Profil client actif.",
-        "Creation expedition connectee.",
-        "Tracking public et prive."
+        "Coordonnées personnelles à jour.",
+        "Création guidée de chaque expédition.",
+        "Suivi public et privé de tes colis."
 ]}
     />
   );

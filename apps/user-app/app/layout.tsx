@@ -8,9 +8,9 @@ import {
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Yobalelma User App",
+  title: "Yobalelma | Envoyer, suivre et voyager",
   description: "Chaque voyage devient une livraison.",
-  applicationName: "Yobalelma User App",
+  applicationName: "Yobalelma",
   icons: { icon: "/brand/yobalelma-mark.svg" }
 };
 
@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang={settings.locale} dir={settings.direction} suppressHydrationWarning>
-      <body>
+      <body data-yb-product="user">
         <LocalizationProvider initialSettings={settings}>{children}</LocalizationProvider>
       </body>
     </html>

@@ -3,6 +3,7 @@ import { OperationForm } from "@/components/operations/operation-form";
 import { DataCard, DataGrid, EmptyState, ConfigurationNotice } from "@/components/operations/status-panels";
 import { requireRole } from "@/lib/auth/server";
 import { tryCreateSupabaseServerClient } from "@/lib/supabase/server";
+import { toBusinessStatusLabel } from "@/lib/presentation/business-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +55,7 @@ async function MissionDetail({
     .maybeSingle();
 
   if (error) {
-    return <EmptyState title="Mission introuvable" description={error.message} />;
+    return <EmptyState title="Mission indisponible" description="Cette mission ne peut pas être affichée pour le moment." />;
   }
 
   if (!data) {
@@ -67,8 +68,8 @@ async function MissionDetail({
     <div className="grid gap-8">
       <DataGrid>
         <DataCard
-          title={shipment?.tracking_code ?? data.shipment_id}
-          subtitle={data.status}
+          title={shipment?.tracking_code ?? "Mission de livraison"}
+          subtitle={toBusinessStatusLabel(data.status)}
           rows={[
             { label: "Score", value: data.score },
             { label: "Depart", value: shipment ? `${shipment.origin_city}, ${shipment.origin_country}` : "Non charge" },
@@ -97,7 +98,12 @@ async function MissionDetail({
             required: true,
           },
           { name: "deliveryOtp", label: "OTP livraison", type: "text" },
-          { name: "proofPath", label: "Preuve de livraison Storage", type: "text" },
+          {
+            name: "proofPath",
+            label: "Preuve de remise",
+            type: "secure-upload",
+            uploadBucket: "proof-of-delivery",
+          },
         ]}
       />
     </div>

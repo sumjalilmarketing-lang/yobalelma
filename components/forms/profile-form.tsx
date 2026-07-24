@@ -11,7 +11,11 @@ import { Select } from "@/components/ui/select";
 import { type ApiResult } from "@/lib/api/responses";
 import { profileSchema, type ProfileInput } from "@/lib/validation/profile";
 
-export function ProfileForm() {
+export function ProfileForm({
+  initialValues,
+}: {
+  initialValues?: Partial<ProfileInput>;
+}) {
   const [result, setResult] = useState<ApiResult | null>(null);
   const form = useForm<ProfileInput>({
     resolver: zodResolver(profileSchema),
@@ -21,8 +25,8 @@ export function ProfileForm() {
       city: "",
       country: "",
       address: "",
-      role: "client",
       preferredLanguage: "fr",
+      ...initialValues,
     },
   });
 
@@ -53,13 +57,6 @@ export function ProfileForm() {
         </Field>
         <Field label="Adresse" error={form.formState.errors.address?.message}>
           <Input placeholder="Rue, quartier, immeuble" {...form.register("address")} />
-        </Field>
-        <Field label="Role principal" error={form.formState.errors.role?.message}>
-          <Select {...form.register("role")}>
-            <option value="client">Client</option>
-            <option value="local_transporter">Livreur local</option>
-            <option value="traveler">Voyageur</option>
-          </Select>
         </Field>
         <Field
           label="Langue preferee"

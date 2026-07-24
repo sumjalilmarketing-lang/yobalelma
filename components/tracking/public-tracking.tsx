@@ -40,9 +40,13 @@ export function TrackingResult({ shipment }: { shipment: PublicTrackingShipment 
             { label: "Destination", value: shipment.destination },
             { label: "Portee", value: shipment.scope },
             { label: "Delai estime", value: shipment.eta },
+            ...(shipment.currentStage ? [{ label: "Etape actuelle", value: shipment.currentStage.replaceAll("_", " ") }] : []),
+            ...(shipment.nextStep ? [{ label: "Prochaine etape", value: shipment.nextStep.replaceAll("_", " ") }] : []),
+            ...(shipment.etaAt ? [{ label: "ETA", value: new Date(shipment.etaAt).toLocaleString("fr-FR") }] : []),
+            ...(shipment.trustScore !== undefined ? [{ label: "Confiance du suivi", value: `${shipment.trustScore}%` }] : []),
             {
               label: "Derniere mise a jour",
-              value: new Date(shipment.updatedAt).toLocaleString("fr-FR"),
+              value: new Date(shipment.locationFreshness ?? shipment.updatedAt).toLocaleString("fr-FR"),
             },
           ]}
         />

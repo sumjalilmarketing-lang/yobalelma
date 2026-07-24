@@ -4,10 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "node scripts/next-with-root-env.mjs dev --hostname 127.0.0.1 --port 43241",
+    "build": "node scripts/next-with-root-env.mjs build",
+    "lint": "eslint . --ignore-pattern .next/** --ignore-pattern .next-e2e/** --ignore-pattern next-env.d.ts --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --config vitest.config.mjs --configLoader runner",
+    "test:e2e": "node scripts/run-e2e.mjs",
+    "seed:pilot": "node scripts/seed-pilot-users.mjs",
+    "test:security": "node scripts/validate-security.mjs",
+    "test:load": "node scripts/load-test.mjs",
     "check": "node ../../scripts/check-five-apps-architecture.mjs relay-app"
   },
   "yobalelma": {
     "domain": "relais.yobalelma.com",
-    "migrationStatus": "planned"
+    "migrationStatus": "active"
   }
 }

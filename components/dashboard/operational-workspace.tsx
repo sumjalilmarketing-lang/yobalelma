@@ -55,11 +55,13 @@ export type OperationalWorkspaceConfig = {
 };
 
 type OperationalWorkspaceProps = {
+  children?: React.ReactNode;
   config: OperationalWorkspaceConfig;
   returnTo: string;
 };
 
 export async function OperationalWorkspace({
+  children,
   config,
   returnTo,
 }: OperationalWorkspaceProps) {
@@ -83,12 +85,13 @@ export async function OperationalWorkspace({
             anyOf={[config.permission]}
             fallback={
               <EmptyState
-                title="Acces limite"
-                description="Ton role est authentifie, mais il ne possede pas la permission operationnelle attendue pour cette section."
+                title="Accès limité"
+                description="Cet espace n’est pas inclus dans ton profil actuel. Contacte l’assistance Yobalelma si tu penses qu’il devrait l’être."
               />
             }
           >
             <WorkspaceContent config={config} userId={state.userId} role={state.role} />
+            {children}
           </PermissionGuard>
         </div>
       ) : state.status === "blocked" ? (
@@ -124,11 +127,10 @@ async function WorkspaceContent({
               <ShieldCheck className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
-              <PremiumBadge tone={tone}>Controle operationnel</PremiumBadge>
-              <h2 className="text-xl font-black">Controle operationnel</h2>
-              <p className="mt-2 max-w-2xl leading-7 text-black/60">
-                Toutes les actions sensibles restent limitees au bon role et au bon
-                dossier, avec une lecture claire de l&apos;avancement.
+              <PremiumBadge tone={tone}>À faire</PremiumBadge>
+              <h2 className="text-xl font-black">Tes actions disponibles</h2>
+              <p className="mt-2 max-w-2xl leading-7 text-black/75">
+                Chaque action est adaptée à ton profil et à l’avancement de tes dossiers.
               </p>
             </div>
           </div>
@@ -142,7 +144,7 @@ async function WorkspaceContent({
                 <PremiumActionCard
                   href={action.href}
                   label={action.label}
-                  description={`Action disponible pour le module ${config.title.toLowerCase()}.`}
+                  description="Accède à cette rubrique depuis ton espace Yobalelma."
                   icon={ArrowUpRight}
                   tone={tone}
                 />
@@ -152,10 +154,10 @@ async function WorkspaceContent({
         </PremiumPanel>
 
         <PremiumPanel tone={tone} className="p-5">
-          <p className="text-sm font-bold uppercase text-black/50">Etat pilote</p>
-          <p className="mt-2 text-2xl font-black">{config.emptyTitle ?? "Module connecte"}</p>
-          <p className="mt-2 text-sm leading-6 text-black/60">
-            Les indicateurs se mettent a jour des qu&apos;une activite est visible.
+          <p className="text-sm font-bold uppercase text-black/65">Aperçu du compte</p>
+          <p className="mt-2 text-2xl font-black">{config.emptyTitle ?? "Espace prêt"}</p>
+          <p className="mt-2 text-sm leading-6 text-black/75">
+            Les indicateurs se mettent à jour dès qu&apos;une activité est disponible.
           </p>
         </PremiumPanel>
       </section>
@@ -168,15 +170,15 @@ async function WorkspaceContent({
             value={metric.count}
             icon={Gauge}
             tone={tone}
-            description={metric.error ? "Donnee temporairement indisponible." : "Activite visible pour ce compte."}
+            description={metric.error ? "Donnée temporairement indisponible." : "Activité disponible pour ce compte."}
           />
         ))}
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1fr_360px]">
         <div>
-          <PremiumBadge tone={tone}>Controle du flux</PremiumBadge>
-          <h2 className="mt-2 text-2xl font-black">Etapes attendues</h2>
+          <PremiumBadge tone={tone}>Repères</PremiumBadge>
+          <h2 className="mt-2 text-2xl font-black">Prochaines étapes</h2>
           <SignalTimeline scene={config.scene ?? "operations"} items={config.checkpoints} className="mt-5" />
         </div>
       </section>

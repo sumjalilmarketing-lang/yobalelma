@@ -52,7 +52,7 @@ test.describe.serial("authenticated role workflows", () => {
     await page.getByLabel("Pays de depart").fill("France");
     await page.getByLabel("Ville de depart").fill("Paris");
     await page.getByLabel("Code postal depart").fill("75001");
-    await page.getByLabel("Adresse de depart").fill("1 rue du Test");
+    await page.getByLabel("Adresse de départ").fill("1 rue du Test");
     await page.getByLabel("Instructions depart").fill("Code porte E2E.");
 
     await page.getByLabel("Nom destinataire").fill("Destinataire Test");
@@ -61,7 +61,7 @@ test.describe.serial("authenticated role workflows", () => {
     await page.getByLabel("Pays d'arrivee").fill("France");
     await page.getByLabel("Ville d'arrivee").fill("Lyon");
     await page.getByLabel("Code postal arrivee").fill("69001");
-    await page.getByLabel("Adresse d'arrivee").fill("2 avenue du Test");
+    await page.getByLabel("Adresse d’arrivée").fill("2 avenue du Test");
     await page.getByLabel("Instructions arrivee").fill("Livrer en main propre.");
 
     await page.getByLabel("Nom du colis").fill(`Documents E2E ${runId}`);

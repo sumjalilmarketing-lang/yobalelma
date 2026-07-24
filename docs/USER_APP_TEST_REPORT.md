@@ -1,6 +1,6 @@
 # User App Test Report
 
-Date: 2026-07-14
+Date: 2026-07-20
 
 ## Commands executed
 
@@ -10,12 +10,12 @@ Date: 2026-07-14
 - Supabase security audit: passed.
 - Workspace lint: passed.
 - Workspace typecheck: passed.
-- User-app unit tests: passed, 2 files, 6 tests.
+- User-app unit tests: passed, 2 files, 8 tests.
 - Workspace unit/integration tests: passed, 17 files, 90 tests.
 - Workspace production build: passed.
 - User-app independent production build: passed.
-- User-app E2E: passed, 31/31 tests.
-- User-app visual demo: passed, 17 screenshots generated.
+- User-app E2E: passed, 78/78 tests.
+- User-app visual demo: passed, 18 screenshots generated.
 
 ## Playwright specs
 
@@ -31,6 +31,7 @@ Date: 2026-07-14
 - `user-app-access-control.spec.ts` - passed.
 - `user-mobile-responsive.spec.ts` - passed.
 - `user-app-visual-demo.spec.ts` - passed.
+- `user-secure-upload.spec.ts` - passed; real private upload validated and the test file removed afterward.
 
 ## Bugs found and fixed during validation
 
@@ -38,6 +39,8 @@ Date: 2026-07-14
 - Public tracking form posted to legacy `/suivi`; changed to `/tracking`.
 - Playwright assertions were too strict for duplicated premium headings; tests now use exact headings or first matching visible element.
 - Visual demo needed authenticated captures to reconnect per protected route.
+- The route audit now covers all 66 public and protected page routes.
+- Technical service errors are normalized before they reach visible interfaces.
 
 ## Notes
 

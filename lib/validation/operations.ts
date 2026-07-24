@@ -1,10 +1,15 @@
 import { z } from "zod";
 
 export const paymentIntentSchema = z.object({
+  phoneNumber: z.string().trim().regex(/^\+[1-9]\d{7,14}$/u, "Numéro international invalide."),
   shipmentId: z.string().trim().uuid("Expedition invalide."),
-  amountCents: z.coerce.number().int().positive("Montant invalide.").max(10_000_000),
-  currency: z.enum(["EUR", "XOF", "USD"]).default("EUR"),
-});
+}).strict();
+
+export const refundRequestSchema = z.object({
+  amount: z.number().int().positive().max(100_000_000),
+  paymentId: z.string().trim().uuid("Paiement invalide."),
+  reason: z.string().trim().min(3).max(500),
+}).strict();
 
 export const supportTicketSchema = z.object({
   shipmentId: z.string().trim().uuid("Expedition invalide.").optional().or(z.literal("")),

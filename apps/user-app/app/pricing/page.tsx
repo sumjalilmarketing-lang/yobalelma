@@ -9,11 +9,11 @@ export default function Page() {
     <UserAppInfoPage
       eyebrow="Prix"
       title="Tarification"
-      description="Le prix MVP est estime selon le trajet, le poids facturable, la valeur declaree, la fragilite et le niveau de service."
+      description="Le prix est estimé selon le trajet, le poids facturable, la valeur déclarée, la fragilité et le niveau de service."
       bullets={[
         "Meme pays: expedition nationale.",
         "Pays differents: expedition internationale.",
-        "Paiement sandbox/manual avant branchement provider."
+        "Le récapitulatif complet est présenté avant toute confirmation."
 ]}
     />
   );

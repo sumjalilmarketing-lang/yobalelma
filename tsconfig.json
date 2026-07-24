@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
@@ -19,9 +23,36 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ],
+      "@hub-app/*": [
+        "./apps/hub-app/*"
+      ],
+      "@user-app/*": [
+        "./apps/user-app/*"
+      ],
+      "@relay-app/*": [
+        "./apps/relay-app/*"
+      ],
+      "@collection-app/*": [
+        "./apps/collection-app/*"
+      ],
+      "@admin-app/*": [
+        "./apps/admin-app/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "tests/e2e"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next-e2e/types/**/*.ts",
+    ".next/types/**/*.ts",
+    "next-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "tests/e2e",
+    "apps/*/tests/e2e"
+  ]
 }

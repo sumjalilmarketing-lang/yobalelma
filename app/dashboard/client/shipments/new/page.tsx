@@ -6,7 +6,7 @@ import { requireRole } from "@/lib/auth/server";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Nouvelle expedition | Yobalelma",
+  title: "Nouvelle expédition | Yobalelma",
 };
 
 export default async function NewShipmentPage() {
@@ -15,8 +15,8 @@ export default async function NewShipmentPage() {
   return (
     <PageShell
       eyebrow="Client"
-      title="Creer une expedition"
-      description="Le serveur detecte automatiquement national ou international selon les pays saisis."
+      title="Créer une expédition"
+      description="Renseigne le départ, la destination et les informations utiles pour préparer ton envoi."
     >
       {state.status === "ready" ? <ShipmentForm /> : <ConfigurationNotice />}
     </PageShell>

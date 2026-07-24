@@ -5,11 +5,14 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormMessage } from "@/components/forms/form-message";
+import { SecureUploadField } from "@/components/forms/secure-upload-field";
+import { SmartAddressField } from "@/components/forms/smart-address-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApiResult } from "@/lib/api/responses";
+import type { StructuredAddress } from "@/lib/geolocation/provider";
 import {
   estimateShipment,
   formatMoney,
@@ -57,6 +60,7 @@ export function ShipmentForm() {
       pickupPostalCode: "",
       pickupCountry: "",
       pickupInstructions: "",
+      pickupFormattedAddress: "", pickupLandmark: "", pickupNeighborhood: "", pickupCommune: "", pickupRegion: "", pickupCountryCode: "", pickupProviderPlaceId: "", pickupLocationType: "", pickupGeocodingProvider: "", pickupAccuracyLevel: "", pickupValidationStatus: "", pickupPlusCode: "",
       recipientName: "",
       recipientPhone: "",
       recipientEmail: "",
@@ -66,6 +70,7 @@ export function ShipmentForm() {
       deliveryPostalCode: "",
       deliveryCountry: "",
       deliveryInstructions: "",
+      deliveryFormattedAddress: "", deliveryLandmark: "", deliveryNeighborhood: "", deliveryCommune: "", deliveryRegion: "", deliveryCountryCode: "", deliveryProviderPlaceId: "", deliveryLocationType: "", deliveryGeocodingProvider: "", deliveryAccuracyLevel: "", deliveryValidationStatus: "", deliveryPlusCode: "",
       packageTitle: "",
       packageCategory: "documents",
       packageDescription: "",
@@ -86,6 +91,14 @@ export function ShipmentForm() {
   });
   const pickupCountry = form.watch("pickupCountry");
   const deliveryCountry = form.watch("deliveryCountry");
+  const pickupAddress = form.watch("pickupAddressLine1"); const deliveryAddress = form.watch("deliveryAddressLine1");
+  const applyAddress = (prefix: "pickup" | "delivery", address: StructuredAddress) => {
+    const set = (name: keyof ShipmentInput, value: string | number | undefined) => form.setValue(name, value as never, { shouldDirty: true, shouldValidate: true });
+    set(`${prefix}AddressLine1` as keyof ShipmentInput, address.addressLine1 || address.formattedAddress); set(`${prefix}FormattedAddress` as keyof ShipmentInput, address.formattedAddress);
+    set(`${prefix}City` as keyof ShipmentInput, address.city); set(`${prefix}PostalCode` as keyof ShipmentInput, address.postalCode || ""); set(`${prefix}Country` as keyof ShipmentInput, address.country); set(`${prefix}CountryCode` as keyof ShipmentInput, address.countryCode);
+    set(`${prefix}Landmark` as keyof ShipmentInput, address.landmark || ""); set(`${prefix}Neighborhood` as keyof ShipmentInput, address.neighborhood || ""); set(`${prefix}Commune` as keyof ShipmentInput, address.commune || ""); set(`${prefix}Region` as keyof ShipmentInput, address.region || "");
+    set(`${prefix}Latitude` as keyof ShipmentInput, address.latitude); set(`${prefix}Longitude` as keyof ShipmentInput, address.longitude); set(`${prefix}ProviderPlaceId` as keyof ShipmentInput, address.providerPlaceId); set(`${prefix}LocationType` as keyof ShipmentInput, address.locationType); set(`${prefix}GeocodingProvider` as keyof ShipmentInput, address.geocodingProvider); set(`${prefix}AccuracyLevel` as keyof ShipmentInput, address.accuracyLevel); set(`${prefix}ValidationStatus` as keyof ShipmentInput, address.validationStatus); set(`${prefix}PlusCode` as keyof ShipmentInput, address.plusCode || "");
+  };
   const detectedInternational =
     pickupCountry.trim().length > 1 &&
     deliveryCountry.trim().length > 1 &&
@@ -146,9 +159,7 @@ export function ShipmentForm() {
             <Input autoComplete="postal-code" {...form.register("pickupPostalCode")} />
           </Field>
         </div>
-        <Field label="Adresse de depart" error={form.formState.errors.pickupAddressLine1?.message}>
-          <Input autoComplete="address-line1" {...form.register("pickupAddressLine1")} />
-        </Field>
+        <SmartAddressField label="Adresse de départ" countryCode={form.watch("pickupCountryCode") || undefined} value={pickupAddress} onTextChange={(value) => form.setValue("pickupAddressLine1", value, { shouldDirty: true, shouldValidate: true })} onSelect={(address) => applyAddress("pickup", address)} />
         <Field label="Complement depart" error={form.formState.errors.pickupAddressLine2?.message}>
           <Input autoComplete="address-line2" {...form.register("pickupAddressLine2")} />
         </Field>
@@ -181,12 +192,7 @@ export function ShipmentForm() {
             <Input autoComplete="postal-code" {...form.register("deliveryPostalCode")} />
           </Field>
         </div>
-        <Field
-          label="Adresse d'arrivee"
-          error={form.formState.errors.deliveryAddressLine1?.message}
-        >
-          <Input autoComplete="address-line1" {...form.register("deliveryAddressLine1")} />
-        </Field>
+        <SmartAddressField label="Adresse d’arrivée" countryCode={form.watch("deliveryCountryCode") || undefined} value={deliveryAddress} onTextChange={(value) => form.setValue("deliveryAddressLine1", value, { shouldDirty: true, shouldValidate: true })} onSelect={(address) => applyAddress("delivery", address)} />
         <Field
           label="Complement arrivee"
           error={form.formState.errors.deliveryAddressLine2?.message}
@@ -265,15 +271,13 @@ export function ShipmentForm() {
             {...form.register("packageDescription")}
           />
         </Field>
-        <Field
-          label="Photo du colis (chemin Storage signe)"
-          error={form.formState.errors.packagePhotoPath?.message}
-        >
-          <Input
-            placeholder="shipment-images/user-id/photo.webp"
-            {...form.register("packagePhotoPath")}
-          />
-        </Field>
+        <input type="hidden" {...form.register("packagePhotoPath")} />
+        <SecureUploadField
+          accept="image/*"
+          bucket="shipment-images"
+          label="Photo du colis (facultatif)"
+          onUploaded={(path) => form.setValue("packagePhotoPath", path, { shouldValidate: true })}
+        />
         <label className="flex items-start gap-3 text-sm font-semibold">
           <input type="checkbox" className="mt-1" {...form.register("fragile")} />
           Colis fragile
@@ -337,7 +341,7 @@ function ReviewPanel({ review }: { review: ReviewState }) {
       {isInternational ? (
         <div className="mt-4 rounded-lg border border-primary/30 bg-white p-4 shadow-line">
           <p className="text-sm font-black uppercase text-primary">
-            Envoi international detecte automatiquement
+            Envoi international
           </p>
           <p className="mt-2 text-sm font-semibold leading-6 text-black/65">
             Le parcours activera depot ou enlevement local, relais origine, collecte hub,
@@ -392,8 +396,8 @@ function ShipmentJourneyGuide({
           <p className="text-xs font-black uppercase text-black/45">Creation guidee</p>
           <h2 className="mt-1 text-xl font-black">
             {detectedInternational
-              ? "Envoi international detecte automatiquement"
-              : "Le type d'envoi sera detecte automatiquement"}
+              ? "Prépare ton envoi international"
+              : "Prépare ton envoi"}
           </h2>
         </div>
         <span className="rounded-md bg-secondary px-3 py-2 text-xs font-black uppercase text-primary">

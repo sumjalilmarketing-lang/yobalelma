@@ -114,7 +114,7 @@ export function RoleDashboard({
             key={action.href}
             href={action.href}
             label={action.label}
-            description={`Acceder a ${action.label.toLowerCase()} dans l'espace ${roleLabel.toLowerCase()}.`}
+            description="Accède à cette rubrique depuis ton espace Yobalelma."
             icon={ArrowUpRight}
             tone={tone}
           />
@@ -123,8 +123,8 @@ export function RoleDashboard({
 
       <section className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div>
-          <PremiumBadge tone={tone}>Statut de preparation</PremiumBadge>
-          <h3 className="mt-2 text-2xl font-black">Parcours operationnel</h3>
+          <PremiumBadge tone={tone}>Mes prochaines étapes</PremiumBadge>
+          <h3 className="mt-2 text-2xl font-black">Mon parcours Yobalelma</h3>
           <SignalTimeline scene={resolvedScene} items={checkpoints} className="mt-5" />
         </div>
         <div className="grid content-start gap-3">
@@ -135,7 +135,7 @@ export function RoleDashboard({
               value={metric.value}
               icon={BarChart3}
               tone={tone}
-              description="Indicateur de contexte pour ce role."
+              description="Information utile dans ton espace."
             />
           ))}
           <div className="rounded-lg border border-black/10 bg-accent p-5 shadow-line">

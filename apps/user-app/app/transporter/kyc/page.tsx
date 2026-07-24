@@ -3,7 +3,7 @@ import { UserSectionPage } from "@/apps/user-app/src/components/user-section-pag
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Livreur kyc | Yobalelma",
+  title: "Vérification d’identité livreur | Yobalelma",
 };
 
 export default function Page() {

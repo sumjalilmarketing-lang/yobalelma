@@ -1,0 +1,4 @@
+import {describe,expect,it} from "vitest";
+import {detectRelayAnomalies,forecastCapacity,locationUtilization,suggestBestLocation} from "../src/lib/optimizer";
+import {getRelayState} from "../src/lib/relay-store";
+describe("Relay intelligence",()=>{const state=getRelayState();it("projects capacity",()=>{const result=forecastCapacity(state);expect(result.capacity).toBeGreaterThan(result.occupied);expect(result.projectedUtilization).toBeGreaterThan(0)});it("detects operational anomalies",()=>{const findings=detectRelayAnomalies(state);expect(findings.some((item)=>item.type==="late")).toBe(true);expect(findings.some((item)=>item.type==="weight")).toBe(true)});it("suggests a compatible location",()=>{const result=suggestBestLocation(state.packages[14],state.locations);expect(result?.location.kind).toBe("oversize");expect(result?.confidence).toBeGreaterThan(50)});it("calculates occupancy",()=>expect(locationUtilization(state.locations[0])).toBe(67))});

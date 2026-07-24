@@ -5,7 +5,7 @@ import { requireRole } from "@/lib/auth/server";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Verification KYC | Yobalelma",
+  title: "Vérification d’identité | Yobalelma",
 };
 
 export default async function KycPage() {
@@ -16,9 +16,9 @@ export default async function KycPage() {
 
   return (
     <PageShell
-      eyebrow="KYC"
-      title="Verification d'identite"
-      description="Soumets les informations d'identite rattachees a ton compte Yobalelma."
+      eyebrow="Confiance"
+      title="Vérification d’identité"
+      description="Transmets les informations nécessaires pour sécuriser ton compte Yobalelma."
     >
       {state.status === "ready" ? (
         <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
@@ -46,8 +46,7 @@ function ConfigurationNotice() {
     <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
       <h2 className="text-2xl font-black">Connexion au service indisponible</h2>
       <p className="mt-3 max-w-2xl leading-7 text-black/60">
-        Ajoute les variables publiques Yobalelma dans l&apos;environnement pour activer
-        le depot KYC.
+        Ce service est momentanément indisponible. Réessaie dans quelques instants ou contacte l&apos;assistance Yobalelma.
       </p>
     </div>
   );

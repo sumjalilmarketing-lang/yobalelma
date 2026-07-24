@@ -16,4 +16,19 @@ test.describe("user-app mobile responsive", () => {
     const trackingOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
     expect(trackingOverflow).toBe(false);
   });
+
+  test("keeps the authentication copy readable on mobile", async ({ page }) => {
+    await page.goto("/auth/login");
+
+    await expect(page.getByRole("heading", { name: "Connexion sécurisée" })).toBeVisible();
+    await expect(page.getByText("Tes informations restent confidentielles.")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Se connecter" })).toBeVisible();
+
+    const metrics = await page.evaluate(() => ({
+      contentWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+    }));
+
+    expect(metrics.contentWidth).toBeLessThanOrEqual(metrics.viewportWidth + 1);
+  });
 });

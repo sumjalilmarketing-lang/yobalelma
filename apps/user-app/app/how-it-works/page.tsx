@@ -11,7 +11,7 @@ export default function Page() {
       title="Comment ca marche"
       description="Yobalelma organise l'envoi, l'enlevement, le relais, le voyage et le suivi dans un parcours clair."
       bullets={[
-        "Creation du colis avec detection automatique du trajet.",
+        "Création guidée du colis et de son trajet.",
         "Choix depot relais ou enlevement a domicile.",
         "Suivi public et prive avec evenements horodates."
 ]}

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { toUserFacingMessage } from "@/lib/presentation/user-facing-copy";
 
 type FormMessageProps = {
   message?: string;
@@ -10,6 +11,8 @@ export function FormMessage({ message, tone = "info" }: FormMessageProps) {
     return null;
   }
 
+  const visibleMessage = tone === "error" ? toUserFacingMessage(message) : message;
+
   return (
     <p
       className={cn(
@@ -19,7 +22,7 @@ export function FormMessage({ message, tone = "info" }: FormMessageProps) {
         tone === "info" && "border-black/10 bg-muted text-muted-foreground",
       )}
     >
-      {message}
+      {visibleMessage}
     </p>
   );
 }

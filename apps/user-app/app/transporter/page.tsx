@@ -52,14 +52,14 @@ export default async function Page() {
         },
         {
                 "href": "/transporter/kyc",
-                "label": "KYC",
+                "label": "Vérifier mon identité",
                 "variant": "secondary"
         }
 ]}
       checkpoints={[
-        "Role livreur externe.",
-        "KYC et vehicule requis.",
-        "Acceptation de mission transactionnelle."
+        "Coordonnées professionnelles à jour.",
+        "Identité et véhicule vérifiés avant activation.",
+        "Acceptation claire de chaque mission."
 ]}
     />
   );

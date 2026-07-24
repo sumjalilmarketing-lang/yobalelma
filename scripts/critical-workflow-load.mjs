@@ -1,0 +1,14 @@
+import { readFile } from "node:fs/promises";
+import { runCriticalLoad, validateLoadTarget, validateScenario } from "./lib/critical-load-runner.mjs";
+const required = ["LOAD_BASE_URL", "LOAD_SCENARIO_FILE", "LOAD_TARGET_CLASS"];
+for (const name of required) if (!process.env[name]) throw new Error(`Missing ${name}.`);
+const baseUrl = validateLoadTarget(process.env.LOAD_BASE_URL, process.env.LOAD_TARGET_CLASS);
+const scenario = validateScenario(JSON.parse(await readFile(process.env.LOAD_SCENARIO_FILE, "utf8")));
+const stages = (process.env.LOAD_STAGES ?? "100,500,1000").split(",").map(Number);
+if (stages.some((value) => !Number.isInteger(value) || value < 1 || value > 5000)) throw new Error("LOAD_STAGES must contain integers from 1 to 5000.");
+const concurrency = Number(process.env.LOAD_CONCURRENCY ?? 20);
+if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 250) throw new Error("LOAD_CONCURRENCY must be between 1 and 250.");
+const reports = [];
+for (const iterations of stages) reports.push(await runCriticalLoad({ baseUrl, concurrency, iterations, scenario, authorization: process.env.LOAD_AUTHORIZATION }));
+console.log(JSON.stringify({ executedAt: new Date().toISOString(), targetClass: "disposable-staging", scenario: scenario.name, reports }));
+if (reports.some((report) => report.errorRate > .01 || report.p95Ms > 2_000)) process.exitCode = 1;

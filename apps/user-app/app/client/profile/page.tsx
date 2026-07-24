@@ -1,11 +1,11 @@
-import { UserSectionPage } from "@/apps/user-app/src/components/user-section-page";
+import { UserProfilePage } from "@/apps/user-app/src/components/user-profile-page";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Client profile | Yobalelma",
+  title: "Profil client | Yobalelma",
 };
 
 export default function Page() {
-  return <UserSectionPage area="client" section="profile" />;
+  return <UserProfilePage role="client" />;
 }

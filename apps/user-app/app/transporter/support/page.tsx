@@ -1,4 +1,4 @@
-import { UserSectionPage } from "@/apps/user-app/src/components/user-section-page";
+import { UserSupportPage } from "@/apps/user-app/src/components/user-support-page";
 
 export const dynamic = "force-dynamic";
 
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <UserSectionPage area="transporter" section="support" />;
+  return <UserSupportPage role="local_transporter" />;
 }

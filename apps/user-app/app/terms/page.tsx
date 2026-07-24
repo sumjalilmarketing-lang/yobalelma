@@ -9,11 +9,11 @@ export default function Page() {
     <UserAppInfoPage
       eyebrow="Legal"
       title="Conditions d'utilisation"
-      description="Ces conditions MVP documentent les responsabilites de l'expediteur, du livreur et du voyageur."
+      description="Ces conditions précisent les responsabilités de l’expéditeur, du livreur et du voyageur."
       bullets={[
         "Identite exacte et contenu declare requis.",
         "Respect des regles douanieres et de transport.",
-        "Preuves et tracking utilises pour resoudre les litiges."
+        "Les preuves et le suivi permettent de résoudre les litiges."
 ]}
     />
   );

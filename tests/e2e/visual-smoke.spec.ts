@@ -31,7 +31,7 @@ const publicSurfaces = [
   },
   {
     path: "/auth/sign-in",
-    heading: "Connexion securisee",
+    heading: "Connexion sécurisée",
     text: ["Se connecter", "Creer un compte", "Ou recevoir un lien magique"],
   },
 ];
@@ -82,7 +82,7 @@ test("dashboard protection remains presentable", async ({ page }) => {
   await page.goto("/dashboard");
 
   if (page.url().includes("/auth/sign-in")) {
-    await expect(page.getByRole("heading", { name: "Connexion securisee" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Connexion sécurisée" })).toBeVisible();
     await expect(page.getByText("Se connecter").first()).toBeVisible();
   } else {
     await expect(page.getByRole("heading", { name: "Dashboard Yobalelma" })).toBeVisible();
