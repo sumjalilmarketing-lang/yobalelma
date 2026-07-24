@@ -6,12 +6,15 @@ if (!Number.isInteger(count) || count < 1 || count > 1_000_000) throw new Error(
 let previous = "0".repeat(64);
 const latencies = [];
 const started = performance.now();
+const cpuStarted = process.cpuUsage();
 for (let index = 1; index <= count; index += 1) {
   const itemStarted = performance.now();
   previous = createHash("sha256").update(`${randomUUID()}|parcel|${index}|parcel_in_transit|${previous}`).digest("hex");
   latencies.push(performance.now() - itemStarted);
 }
 const duration = performance.now() - started;
+const cpu = process.cpuUsage(cpuStarted);
+const memory = process.memoryUsage();
 latencies.sort((a, b) => a - b);
 const percentile = (value) => latencies[Math.min(latencies.length - 1, Math.floor(latencies.length * value))];
-process.stdout.write(`${JSON.stringify({ workload: "local_hash_chain_only", events: count, durationMs: Number(duration.toFixed(2)), throughputPerSecond: Number((count / (duration / 1000)).toFixed(2)), latencyMs: { p50: Number(percentile(.5).toFixed(4)), p75: Number(percentile(.75).toFixed(4)), p95: Number(percentile(.95).toFixed(4)), p99: Number(percentile(.99).toFixed(4)) }, finalHash: previous, limitations: "No network, PostgreSQL, RLS, storage, concurrent scans or Control Tower workers." }, null, 2)}\n`);
+process.stdout.write(`${JSON.stringify({ workload: "local_hash_chain_only", events: count, durationMs: Number(duration.toFixed(2)), throughputPerSecond: Number((count / (duration / 1000)).toFixed(2)), latencyMs: { p50: Number(percentile(.5).toFixed(4)), p75: Number(percentile(.75).toFixed(4)), p95: Number(percentile(.95).toFixed(4)), p99: Number(percentile(.99).toFixed(4)) }, cpuMs: { user: Number((cpu.user / 1000).toFixed(2)), system: Number((cpu.system / 1000).toFixed(2)), total: Number(((cpu.user + cpu.system) / 1000).toFixed(2)) }, memoryMb: { rss: Number((memory.rss / 1024 / 1024).toFixed(2)), heapUsed: Number((memory.heapUsed / 1024 / 1024).toFixed(2)) }, finalHash: previous, limitations: "No network, PostgreSQL, RLS, storage, concurrent scans or Control Tower workers." }, null, 2)}\n`);

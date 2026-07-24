@@ -37,7 +37,7 @@ if (checkOnly || errors.length) {
   const duration = performance.now() - started;
   latencies.sort((a, b) => a - b);
   const p = (ratio) => Number(latencies[Math.min(latencies.length - 1, Math.floor(latencies.length * ratio))].toFixed(2));
-  console.log(JSON.stringify({ mode: "postgres-preprod-rollback", projectRef, requests, concurrency, failures, durationMs: Number(duration.toFixed(2)), throughputPerSecond: Number((requests / (duration / 1000)).toFixed(2)), latencyMs: { p50: p(.5), p95: p(.95), p99: p(.99) }, persistentTestData: false }, null, 2));
+  console.log(JSON.stringify({ mode: "postgres-preprod-rollback", projectRef, requests, concurrency, failures, durationMs: Number(duration.toFixed(2)), throughputPerSecond: Number((requests / (duration / 1000)).toFixed(2)), latencyMs: { p50: p(.5), p75: p(.75), p95: p(.95), p99: p(.99) }, persistentTestData: false }, null, 2));
   if (failures) process.exitCode = 1;
 }
 

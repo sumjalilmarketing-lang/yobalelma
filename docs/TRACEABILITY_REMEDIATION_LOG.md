@@ -1,31 +1,43 @@
 # Journal de remédiation traçabilité
 
+Dernière mise à jour : 24 juillet 2026.
+
 ## Fermé
 
-- P1 — écritures de manifeste fragmentées : remplacées par `add_collection_manifest_item_traced`.
-- P1 — rangement relais direct : remplacé par `record_relay_storage_traced` idempotent.
-- P1 — mutations héritées sans passeport : triggers transactionnels Collection, Relay, Hub, livraison, douane, incidents et corrections.
-- P1 — changement de statut contournable : constraint trigger différé imposant le journal dans la transaction.
-- P1 — scellés non opérables : RPC avec preuve photo vérifiée et anomalie sur rupture inattendue.
-- P1 — PDF absent : export serveur, bucket privé, URL signée cinq minutes, journal d’accès et bouton Admin.
-- P1 sécurité détecté par audit — helper interne exécutable par `service_role` : droit retiré par la migration `20260722065000` et audit repassé au vert.
-- P2 — pagination PDF orpheline : section répétée à la coupure, rendu réinspecté.
-- P2 — test de contrat non portable Windows : résolution des chemins corrigée.
-- P1 de validation — relance locale après `20260722066000` : lint sans avertissement, TypeScript strict, 49 fichiers/275 tests et build racine verts.
-- P2 outillage — `.next-browser-smoke` ajouté aux exclusions Git et ESLint afin que les artefacts de smoke test ne polluent plus le lint global.
-- P1 — migration `20260722066000` paiements/notifications appliquée au projet Yobalelma ; zéro migration en attente.
-- P1 sécurité/cohérence — audits distants relancés le 24 juillet 2026 : traçabilité, RLS/RPC, 118 tables et 11 buckets verts.
+| Criticité | Défaut / cause | Correction | Test et validation | Régression |
+|---|---|---|---|---|
+| P1 | Écritures de manifeste fragmentées | RPC `add_collection_manifest_item_traced` | tests de contrat, audit distant | aucune détectée |
+| P1 | Rangement relais direct | RPC idempotente `record_relay_storage_traced` | tests et audit cohérence | aucune détectée |
+| P1 | Mutations héritées sans passeport | triggers transactionnels Collection, Relay, Hub, livraison, douane, incidents et corrections | 70/70 chaînes cohérentes | aucune détectée |
+| P1 | Changement de statut contournable | constraint trigger différé imposant le journal dans la transaction | audit transitions | aucune détectée |
+| P1 | Scellés non opérables | RPC, preuve photo vérifiée et anomalie sur rupture inattendue | tests de contrat | aucune détectée |
+| P1 | Export PDF absent | export serveur, bucket privé, URL signée, journal d'accès et action Admin | génération et tests PDF | aucune détectée |
+| P1 sécurité | Helper interne exécutable par `service_role` | droit retiré par migration | audit RLS/RPC vert | aucune exposition détectée |
+| P2 | Pagination PDF orpheline | en-tête de section répété à chaque coupure | test de non-régression et inspection visuelle des 4 pages | aucune détectée |
+| P2 | Test de contrat non portable Windows | résolution des chemins corrigée | suite Windows verte | aucune détectée |
+| P2 | Artefacts locaux polluant Git/lint | exclusions `.next-browser-smoke`, `tmp`, logs et verrou local Hub | audit index Git et lint | aucun artefact commité |
+| P1 validation | Validation technique devenue périmée après migration | relance complète | lint, TypeScript, 276 tests, six builds | aucune détectée |
+| P1 validation | Comptes pilotes non vérifiés | préparation sécurisée et vérification des comptes existants | 32 sessions réelles, refus d'auto-élévation | aucune détectée |
+| P1 validation | Interfaces multi-rôles non ouvertes | authentification navigateur sur les déploiements | 7 profils métier atteints | aucune détectée |
+| P2 mesure | Rapports de charge sans p75/CPU/mémoire | métriques ajoutées aux harnais | campagne locale 1 000 000 événements | aucune détectée |
 
 ## Ouvert
 
-- P1 de validation — recette authentifiée multi-rôles non exécutée faute de staging et de comptes dédiés.
-- P1 de validation — charge PostgreSQL préproduction non exécutée faute de projet staging autorisé.
-- P1 de validation — matériel réel QR/caméra/GPS/photo/signature non disponible.
-- P2 — validation juridique finale de rétention et exercice réel de restauration restent externes à cette passe.
+| Criticité | Problème | Cause / dépendance | Validation requise |
+|---|---|---|---|
+| P1 validation | Admin non validé après connexion | facteur MFA AAL2 absent | enrôler MFA et rejouer l'interface Admin |
+| P1 validation | Destinataire et chauffeur national non testés | identités distinctes absentes | créer/autoriser les comptes pilotes puis authentifier |
+| P1 validation | Parcours de possession complet non rejoué | mutation de l'environnement partagé non autorisée pour cette passe | campagne isolée avec preuves et rollback/nettoyage approuvé |
+| P1 validation | Charge PostgreSQL non exécutée | aucun contexte préproduction isolé autorisé ; production interdite | fournir un contexte sûr et mesurer les métriques DB |
+| P1 validation | Appareils réels non testés | matériel Android/iOS indisponible | exécuter et signer la checklist |
+| P1 validation | Preuves historiques non démontrées | `proof_count = 0` sur les 70 états audités | créer un colis pilote et vérifier les preuves de chaque transfert |
+| P2 externe | Rétention/restauration non signées | dépendances juridique et exploitation | avis juridique et exercice réel de restauration |
 
 ## Reprise exacte
 
-1. Préparer un environnement de recette isolé utilisant exclusivement le projet Yobalelma autorisé `rgcgtcycbiuhcaoaadbh`, avec sept comptes E2E dédiés et un colis de charge non productif.
-2. Exécuter la recette multi-rôles et les refus d’accès croisés.
-3. Exécuter la charge PostgreSQL contrôlée hors données de production.
-4. Signer la checklist sur appareils réels.
+1. Enrôler le MFA administrateur et fournir les deux identités manquantes.
+2. Autoriser un jeu de données pilote isolé dans le périmètre Yobalelma.
+3. Rejouer tous les transferts avec preuves et tentatives de double validation.
+4. Exécuter la charge PostgreSQL contrôlée hors production.
+5. Signer la checklist appareils et navigateurs.
+6. Relancer les audits et statuer sur le verdict A ou B.

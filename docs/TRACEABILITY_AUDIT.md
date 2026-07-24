@@ -3,49 +3,65 @@
 Date initiale : 22 juillet 2026.  
 Dernière validation : 24 juillet 2026.
 
-## Résultat vérifié
+## Résultat distant vérifié
 
-- 70 colis, 70 états de possession et 70 événements initiaux sur le projet Supabase Yobalelma.
-- Zéro colis sans détenteur, trou de séquence, lien de hash cassé, état incohérent ou double livraison confirmée.
-- Historique append-only, verrou par colis, transitions contrôlées, preuves obligatoires et idempotence actifs.
-- Contrôle à la demande `run_parcel_traceability_consistency_audit()` réservé au `service_role`.
-- Audit RLS/RPC vert : aucune table auditée sans RLS/politique, aucune fonction sensible exposée à `anon`.
+- Projet Supabase Yobalelma autorisé uniquement : `rgcgtcycbiuhcaoaadbh`.
+- 66 migrations appliquées et zéro migration en attente.
+- 118 tables et 11 buckets validés.
+- 70 colis, 70 états de possession et 70 événements initiaux.
+- Zéro colis sans détenteur, anomalie active, trou de séquence, lien de hash cassé, état incohérent ou double livraison confirmée.
+- Historique append-only, verrou par colis, transitions contrôlées, protections de preuves et idempotence actifs.
+- Audit RLS/RPC vert : aucune politique ou activation RLS manquante, aucune fonction sensible exposée à `anon`.
+- Contrôle `run_parcel_traceability_consistency_audit()` réservé au `service_role`.
 
-## Actions terrain auditées et recâblées
+## Actions auditées et recâblées
 
 | Domaine | Écriture autoritative |
 |---|---|
-| Création colis | initialisation automatique du passeport à l’insertion du colis |
+| Création colis | initialisation automatique du passeport à l'insertion du colis |
 | Collecte | mouvement terrain et ajout au manifeste atomique |
 | Relais | scans/statuts, rangement atomique, remise OTP/signature |
 | Hub | réception, inspection/anomalie, stockage, remise au voyageur avec deux preuves |
 | Livraison finale | preuve, tentative, sortie livraison et remise destinataire |
 | Douane | événements assainis reliés au passeport |
-| Incidents/corrections | événement append-only, correction liée, aucune réécriture de l’historique |
+| Incidents/corrections | événement append-only, correction liée, aucune réécriture de l'historique |
 | Scellés | application/rupture avec photo vérifiée et anomalie critique si rupture inattendue |
 | Statuts hérités | garde différée imposant un événement dans la même transaction |
 | Control Tower | événement assaini et outbox dans la transaction de traçabilité |
 
-Le pont paiements/notifications de `20260722066000_bridge_payment_notification_traceability.sql` est appliqué au projet Yobalelma. La vérification distante confirme zéro migration en attente.
+## Validation technique finale
 
-## Validation exécutée
+- ESLint : réussi, zéro avertissement.
+- TypeScript strict : réussi.
+- Vitest : 49 fichiers, 276/276 tests réussis.
+- Builds : racine 83 pages, User 56, Collection 14, Relay 14, Hub 23 et Admin 17.
+- PDF : défaut P2 de pagination orpheline corrigé, test de non-régression ajouté, rendu Poppler et inspection visuelle des quatre pages réussis.
+- Supabase : migrations, inventaire, sécurité RLS/RPC et cohérence de la chaîne réussis.
+- Un échec réseau transitoire groupé a été suivi de quatre relances séparées réussies ; aucune divergence fonctionnelle n'a été observée.
 
-- ESLint : vert, zéro avertissement.
-- TypeScript strict : vert.
-- Vitest : 49 fichiers, 275 tests verts.
-- Build racine : vert après l’ajout local de `20260722066000` (83 pages générées).
-- Builds indépendants User, Collection, Relay, Hub et Admin : verts lors du passage précédent.
-- PDF : génération multi-page, pagination corrigée, rendu Poppler et inspection visuelle de la première et dernière page.
-- Browser local : accueil, suivi mobile émulé et connexion bureau émulée, sans erreur console ni overflow horizontal.
-- Supabase : 118 tables, 11 buckets, audit sécurité et audit de cohérence verts après les 66 migrations appliquées.
+## Recette authentifiée réellement exécutée
 
-Le lint, le contrôle TypeScript, les 275 tests et le build racine ont été rejoués avec succès après l’ajout local de la migration `20260722066000` et de son assertion de contrat. Après application distante, les audits ont confirmé 70 colis cohérents, zéro anomalie ou rupture de chaîne, aucune exposition RLS/RPC dangereuse et zéro migration en attente.
+- Préparation du catalogue pilote : 32 comptes, mots de passe uniques conservés dans un fichier local ignoré par Git.
+- Vérification API réelle : 32/32 sessions mot de passe, 32 e-mails vérifiés, 28 adresses délivrables, zéro MFA AAL2.
+- Contrôle d'autorisation : auto-élévation de rôle refusée.
+- Interfaces déployées, authentification réelle et page métier atteinte sans overflow horizontal :
+  - client expéditeur ;
+  - voyageur ;
+  - livreur local ;
+  - agent Collection ;
+  - agent Relais ;
+  - agent Hub ;
+  - superviseur Hub.
+- Administrateur : mot de passe accepté, redirection MFA correcte, validation métier bloquée faute de facteur AAL2.
 
 ## Non exécuté
 
-- Recette authentifiée réelle des sept rôles : comptes E2E et URL staging absents.
-- Charge PostgreSQL préproduction : projet et colis staging absents ; production explicitement refusée.
-- QR/caméra/GPS/photo/signature sur matériel réel et navigateurs physiques.
-- Export PDF avec une session Admin réelle et contrôle croisé d’un colis tiers.
+- client destinataire distinct et chauffeur national distinct, absents du catalogue ;
+- parcours mutatif complet et vérification transfert par transfert ;
+- double validation réelle sur un même colis ;
+- export PDF Admin avec session AAL2 et contrôle d'un colis tiers ;
+- charge PostgreSQL préproduction et métriques base de données ;
+- QR, caméra, GPS, arrière-plan, photo, signature et reprise offline sur matériel réel ;
+- Edge et Safari réels.
 
-Ces absences ne sont pas transformées en succès.
+Les 70 colis audités ont `proof_count = 0`. Ce constat ne remet pas en cause la cohérence cryptographique mesurée, mais empêche de conclure que les preuves terrain historiques sont complètes. Aucun élément non exécuté n'est déclaré réussi.
