@@ -2,42 +2,41 @@
 
 Dernière mise à jour : 24 juillet 2026.
 
-## Fermé
+## Défauts fermés
 
-| Criticité | Défaut / cause | Correction | Test et validation | Régression |
+| Criticité | Cause | Correction | Test/validation | Régression |
 |---|---|---|---|---|
-| P1 | Écritures de manifeste fragmentées | RPC `add_collection_manifest_item_traced` | tests de contrat, audit distant | aucune détectée |
-| P1 | Rangement relais direct | RPC idempotente `record_relay_storage_traced` | tests et audit cohérence | aucune détectée |
-| P1 | Mutations héritées sans passeport | triggers transactionnels Collection, Relay, Hub, livraison, douane, incidents et corrections | 70/70 chaînes cohérentes | aucune détectée |
-| P1 | Changement de statut contournable | constraint trigger différé imposant le journal dans la transaction | audit transitions | aucune détectée |
-| P1 | Scellés non opérables | RPC, preuve photo vérifiée et anomalie sur rupture inattendue | tests de contrat | aucune détectée |
-| P1 | Export PDF absent | export serveur, bucket privé, URL signée, journal d'accès et action Admin | génération et tests PDF | aucune détectée |
-| P1 sécurité | Helper interne exécutable par `service_role` | droit retiré par migration | audit RLS/RPC vert | aucune exposition détectée |
-| P2 | Pagination PDF orpheline | en-tête de section répété à chaque coupure | test de non-régression et inspection visuelle des 4 pages | aucune détectée |
-| P2 | Test de contrat non portable Windows | résolution des chemins corrigée | suite Windows verte | aucune détectée |
-| P2 | Artefacts locaux polluant Git/lint | exclusions `.next-browser-smoke`, `tmp`, logs et verrou local Hub | audit index Git et lint | aucun artefact commité |
-| P1 validation | Validation technique devenue périmée après migration | relance complète | lint, TypeScript, 276 tests, six builds | aucune détectée |
-| P1 validation | Comptes pilotes non vérifiés | préparation sécurisée et vérification des comptes existants | 32 sessions réelles, refus d'auto-élévation | aucune détectée |
-| P1 validation | Interfaces multi-rôles non ouvertes | authentification navigateur sur les déploiements | 7 profils métier atteints | aucune détectée |
-| P2 mesure | Rapports de charge sans p75/CPU/mémoire | métriques ajoutées aux harnais | campagne locale 1 000 000 événements | aucune détectée |
+| P1 | transfert sensible finalisable par une seule RPC | registre de double validation et deux identités distinctes | 5 tests domaine + 5 tests SQL | aucune détectée |
+| P1 | preuve vérifiée comptée sans contrôler son type | contrôle des types exacts par étape | preuve manquante et étape complète testées | aucune détectée |
+| P1 | RPC générique contournant la double validation | transitions sensibles refusées, finalisation interne uniquement | contrat SQL | aucune détectée |
+| P1 sécurité | helpers créés exécutables par défaut par `service_role` | révocation ACL dédiée | audit RLS/RPC vert | aucune exposition résiduelle |
+| P1 sécurité | Admin sans facteur pouvait éviter AAL2 | middleware fail-closed et redirection enrôlement | tests source et build Admin | aucune détectée |
+| P1 exploitation | aucun chemin d'enrôlement MFA | page TOTP avec challenge/verify | build et rendu navigateur | activation réelle restante |
+| P1 exploitation | récupération MFA non définie | procédure hors bande à deux agents et invalidation des sessions | page rendue et test de contrat | exercice réel restant |
+| P2 | absence d'audit automatique des colis recette | `traceability-field-audit.mjs` | `--check` fail-closed | données recette requises |
+| P2 | profil PostgreSQL incomplet | percentiles, débit, octets, connexions, locks, deadlocks, requêtes lentes et EXPLAIN | `--check` fail-closed | environnement requis |
+| P2 | checklist matériel non signable | fiches Android/iOS/navigateurs et signatures | revue documentaire | campagne réelle restante |
+| P2 | pagination PDF orpheline | reprise d'en-tête et test PDF | rendu quatre pages | aucune détectée |
 
-## Ouvert
+## Problèmes ouverts
 
-| Criticité | Problème | Cause / dépendance | Validation requise |
+| Criticité | Problème | Dépendance | Clôture attendue |
 |---|---|---|---|
-| P1 validation | Admin non validé après connexion | facteur MFA AAL2 absent | enrôler MFA et rejouer l'interface Admin |
-| P1 validation | Destinataire et chauffeur national non testés | identités distinctes absentes | créer/autoriser les comptes pilotes puis authentifier |
-| P1 validation | Parcours de possession complet non rejoué | mutation de l'environnement partagé non autorisée pour cette passe | campagne isolée avec preuves et rollback/nettoyage approuvé |
-| P1 validation | Charge PostgreSQL non exécutée | aucun contexte préproduction isolé autorisé ; production interdite | fournir un contexte sûr et mesurer les métriques DB |
-| P1 validation | Appareils réels non testés | matériel Android/iOS indisponible | exécuter et signer la checklist |
-| P1 validation | Preuves historiques non démontrées | `proof_count = 0` sur les 70 états audités | créer un colis pilote et vérifier les preuves de chaque transfert |
-| P2 externe | Rétention/restauration non signées | dépendances juridique et exploitation | avis juridique et exercice réel de restauration |
+| P1 validation | `proof_count = 0` historique | colis recette et acteurs réels | preuves via APIs, audit vert |
+| P1 validation | double validation non exercée sur le terrain | deux comptes par transfert | parcours nominal et négatif signé |
+| P1 validation | MFA sensible non exercé | appareils TOTP et procédure sécurité | activation, invalidité, récupération, révocation |
+| P1 validation | charge PostgreSQL absente | préproduction autorisée | mesures et EXPLAIN avant/après |
+| P1 validation | Android/iOS non testés | appareils physiques | checklist signée |
+| P1 validation | Chrome/Edge/Safari non testés | postes/navigateurs réels | checklist signée |
+| P2 externe | rétention/restauration | juridique et exploitation | avis et exercice signés |
 
 ## Reprise exacte
 
-1. Enrôler le MFA administrateur et fournir les deux identités manquantes.
-2. Autoriser un jeu de données pilote isolé dans le périmètre Yobalelma.
-3. Rejouer tous les transferts avec preuves et tentatives de double validation.
-4. Exécuter la charge PostgreSQL contrôlée hors production.
-5. Signer la checklist appareils et navigateurs.
-6. Relancer les audits et statuer sur le verdict A ou B.
+1. Déployer les changements sur la préproduction autorisée.
+2. Enrôler les rôles sensibles et tester récupération/révocation.
+3. Créer le colis synthétique via User App.
+4. Exécuter les huit transferts et cas négatifs de `TRACEABILITY_FIELD_RECIPE.md`.
+5. Lancer `npm run audit:traceability-field`.
+6. Lancer la campagne PostgreSQL et les EXPLAIN.
+7. Signer les checklists matériel/navigateurs.
+8. Rejouer tous les audits avant de réévaluer le verdict.

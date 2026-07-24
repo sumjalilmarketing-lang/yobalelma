@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function MfaPage({ searchParams }: { searchParams: Promise<{ error?: string; next?: string }> }) {
   const params = await searchParams;
@@ -17,6 +18,7 @@ export default async function MfaPage({ searchParams }: { searchParams: Promise<
         {params.error ? <p role="alert" className="text-sm font-semibold text-destructive">Le code n’a pas pu être vérifié. Demandez un nouveau code et réessayez.</p> : null}
         <button className="h-12 rounded-xl bg-primary px-4 font-black text-primary-foreground" type="submit">Valider la connexion</button>
       </form>
+      <Link className="mt-5 block text-center text-sm font-bold text-primary underline" href="/auth/mfa/recovery">Code ou appareil indisponible</Link>
     </section>
   </main>;
 }

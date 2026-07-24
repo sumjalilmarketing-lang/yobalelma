@@ -3,7 +3,18 @@ nextEnv.loadEnvConfig(process.cwd(), false, { info: () => undefined, error: () =
 const productionRef = "rgcgtcycbiuhcaoaadbh";
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL || process.env.E2E_BASE_URL || "";
 const stagingRef = process.env.TRACEABILITY_STAGING_PROJECT_REF || "";
-const requiredRoles = ["CLIENT","COLLECTION","RELAY","HUB","TRAVELER","LOCAL_TRANSPORTER","ADMIN"];
+const requiredRoles = [
+  "CLIENT_SENDER",
+  "CLIENT_RECIPIENT",
+  "RELAY_ORIGIN",
+  "NATIONAL_DRIVER",
+  "HUB_ORIGIN",
+  "TRAVELER",
+  "HUB_DESTINATION",
+  "LAST_MILE_DRIVER",
+  "RELAY_DESTINATION",
+  "ADMIN",
+];
 const missing = [];
 if (!baseUrl) missing.push("PLAYWRIGHT_BASE_URL or E2E_BASE_URL");
 if (!stagingRef) missing.push("TRACEABILITY_STAGING_PROJECT_REF");

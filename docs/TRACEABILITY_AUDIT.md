@@ -1,67 +1,57 @@
 # Audit final de traçabilité
 
-Date initiale : 22 juillet 2026.  
 Dernière validation : 24 juillet 2026.
 
-## Résultat distant vérifié
+## État distant vérifié
 
-- Projet Supabase Yobalelma autorisé uniquement : `rgcgtcycbiuhcaoaadbh`.
-- 66 migrations appliquées et zéro migration en attente.
-- 118 tables et 11 buckets validés.
-- 70 colis, 70 états de possession et 70 événements initiaux.
-- Zéro colis sans détenteur, anomalie active, trou de séquence, lien de hash cassé, état incohérent ou double livraison confirmée.
-- Historique append-only, verrou par colis, transitions contrôlées, protections de preuves et idempotence actifs.
-- Audit RLS/RPC vert : aucune politique ou activation RLS manquante, aucune fonction sensible exposée à `anon`.
-- Contrôle `run_parcel_traceability_consistency_audit()` réservé au `service_role`.
+- projet unique : `https://rgcgtcycbiuhcaoaadbh.supabase.co` ;
+- 68 migrations, zéro attente ;
+- 119 tables et 11 buckets ;
+- 70 colis, 70 états et 70 événements historiques ;
+- `proof_count = 0` ;
+- zéro anomalie active, trou de séquence, lien cassé, état incohérent, détenteur absent ou double livraison ;
+- audit sécurité RLS/RPC réussi après correction des ACL internes.
 
-## Actions auditées et recâblées
+## Double validation appliquée
 
-| Domaine | Écriture autoritative |
-|---|---|
-| Création colis | initialisation automatique du passeport à l'insertion du colis |
-| Collecte | mouvement terrain et ajout au manifeste atomique |
-| Relais | scans/statuts, rangement atomique, remise OTP/signature |
-| Hub | réception, inspection/anomalie, stockage, remise au voyageur avec deux preuves |
-| Livraison finale | preuve, tentative, sortie livraison et remise destinataire |
-| Douane | événements assainis reliés au passeport |
-| Incidents/corrections | événement append-only, correction liée, aucune réécriture de l'historique |
-| Scellés | application/rupture avec photo vérifiée et anomalie critique si rupture inattendue |
-| Statuts hérités | garde différée imposant un événement dans la même transaction |
-| Control Tower | événement assaini et outbox dans la transaction de traçabilité |
+Les migrations `20260724090000_dual_custody_transfer_validation.sql` et `20260724091000_lock_dual_transfer_internals.sql` ajoutent :
 
-## Validation technique finale
+- un registre RLS de demandes de transfert ;
+- un remettant et un receveur obligatoirement distincts ;
+- un état `pending` après la première validation, sans changement de détenteur ;
+- confirmation ou refus par un acteur autorisé ;
+- expiration maximale de 60 minutes ;
+- refus des positions de réception distantes de plus de 2 km ;
+- clés d'idempotence de demande et décision ;
+- preuve exacte par étape, photo avec objet stocké et GPS avec coordonnées ;
+- attestation des preuves du remettant uniquement par le receveur ;
+- finalisation de l'événement et de la possession dans une transaction ;
+- blocage des transferts sensibles via l'ancienne RPC générique ;
+- helpers internes non exécutables directement, y compris par `service_role`.
 
-- ESLint : réussi, zéro avertissement.
-- TypeScript strict : réussi.
-- Vitest : 49 fichiers, 276/276 tests réussis.
-- Builds : racine 83 pages, User 56, Collection 14, Relay 14, Hub 23 et Admin 17.
-- PDF : défaut P2 de pagination orpheline corrigé, test de non-régression ajouté, rendu Poppler et inspection visuelle des quatre pages réussis.
-- Supabase : migrations, inventaire, sécurité RLS/RPC et cohérence de la chaîne réussis.
-- Un échec réseau transitoire groupé a été suivi de quatre relances séparées réussies ; aucune divergence fonctionnelle n'a été observée.
+Le comportement a été validé par 14 tests ciblés couvrant succès, première validation seule, refus, expiration, acteur incorrect, position incohérente, preuves manquantes, double clic/rejeu et audit complet.
 
-## Recette authentifiée réellement exécutée
+## MFA
 
-- Préparation du catalogue pilote : 32 comptes, mots de passe uniques conservés dans un fichier local ignoré par Git.
-- Vérification API réelle : 32/32 sessions mot de passe, 32 e-mails vérifiés, 28 adresses délivrables, zéro MFA AAL2.
-- Contrôle d'autorisation : auto-élévation de rôle refusée.
-- Interfaces déployées, authentification réelle et page métier atteinte sans overflow horizontal :
-  - client expéditeur ;
-  - voyageur ;
-  - livreur local ;
-  - agent Collection ;
-  - agent Relais ;
-  - agent Hub ;
-  - superviseur Hub.
-- Administrateur : mot de passe accepté, redirection MFA correcte, validation métier bloquée faute de facteur AAL2.
+- middleware Admin fail-closed : toute session protégée doit atteindre AAL2 ;
+- compte sans facteur redirigé vers l'enrôlement TOTP ;
+- code invalide n'accorde aucun accès ;
+- récupération documentée avec contrôle hors bande, deux agents, révocation du facteur et invalidation des sessions ;
+- rôles pilotes couverts par l'outil : `super_admin`, `admin`, `operations_manager`, `country_manager`, `finance_manager`, `security_manager`, `auditor`.
 
-## Non exécuté
+Les pages d'enrôlement et récupération ont été construites et rendues localement. Aucun facteur réel n'a été créé, révoqué ou récupéré durant cette passe.
 
-- client destinataire distinct et chauffeur national distinct, absents du catalogue ;
-- parcours mutatif complet et vérification transfert par transfert ;
-- double validation réelle sur un même colis ;
-- export PDF Admin avec session AAL2 et contrôle d'un colis tiers ;
-- charge PostgreSQL préproduction et métriques base de données ;
-- QR, caméra, GPS, arrière-plan, photo, signature et reprise offline sur matériel réel ;
-- Edge et Safari réels.
+## Validation logicielle
 
-Les 70 colis audités ont `proof_count = 0`. Ce constat ne remet pas en cause la cohérence cryptographique mesurée, mais empêche de conclure que les preuves terrain historiques sont complètes. Aucun élément non exécuté n'est déclaré réussi.
+- ESLint : réussi, zéro avertissement ;
+- TypeScript strict : réussi ;
+- Vitest : 51 fichiers, 289/289 tests ;
+- builds : racine 85, User 56, Collection 14, Relay 14, Hub 23, Admin 19 pages ;
+- navigateur intégré : écrans MFA localement lisibles, largeur document/viewport 1280/1280 ;
+- Supabase : migrations, inventaire, sécurité et cohérence réussis.
+
+## Audit terrain préparé, non exécuté
+
+`scripts/traceability-field-audit.mjs` vérifie automatiquement, pour les colis recette : chaîne complète, séquences, hashes, détenteur unique, preuves, double validation, absence de double livraison, Passeport, Digital Twin, Control Tower, notification, preuve finale et export PDF.
+
+Le contrôle `--check` retourne non prêt : aucune référence préproduction ni aucun colis recette ne sont fournis. Aucune preuve artificielle n'a été injectée et aucune donnée de production n'a été utilisée.

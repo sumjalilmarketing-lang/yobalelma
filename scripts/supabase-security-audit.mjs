@@ -13,6 +13,7 @@ const TABLES = [
   "parcel_seals",
   "parcel_traceability_anomalies",
   "parcel_passport_access_log",
+  "parcel_custody_transfer_requests",
   "airport_hubs",
   "hub_agent_profiles",
   "operations_profiles",
@@ -199,10 +200,16 @@ const FUNCTIONS = [
   "record_relay_storage_traced",
   "record_parcel_seal_action",
   "run_parcel_traceability_consistency_audit",
+  "request_parcel_custody_transfer",
+  "decide_parcel_custody_transfer",
+  "record_parcel_traceability_event_internal",
+  "assert_verified_traceability_proofs",
+  "assert_dual_transfer_proofs",
+  "traceability_distance_meters",
 ];
 const SERVICE_ONLY_FUNCTIONS = ["claim_secure_upload_scan", "complete_secure_upload_scan", "claim_notification_delivery", "complete_notification_delivery", "apply_verified_customs_event", "apply_verified_customs_duty", "apply_verified_customs_duty_payment", "claim_customs_outbox", "complete_customs_outbox", "replace_dispatch_recommendations", "purge_expired_operational_positions", "purge_expired_operational_tracking", "run_tracking_alert_sweep", "record_verified_geofence_event", "ingest_control_tower_events", "claim_control_tower_outbox", "purge_control_tower_history", "apply_control_tower_digital_twin", "refresh_control_tower_snapshot", "generate_control_tower_recommendations", "complete_control_tower_outbox", "process_control_tower_outbox_item", "run_parcel_traceability_consistency_audit"];
-const AUTHENTICATED_ONLY_FUNCTIONS = ["record_parcel_traceability_event", "register_parcel_traceability_proof", "log_parcel_passport_access", "add_collection_manifest_item_traced", "record_relay_storage_traced", "record_parcel_seal_action"];
-const INTERNAL_ONLY_FUNCTIONS = ["append_verified_operational_trace"];
+const AUTHENTICATED_ONLY_FUNCTIONS = ["record_parcel_traceability_event", "register_parcel_traceability_proof", "log_parcel_passport_access", "add_collection_manifest_item_traced", "record_relay_storage_traced", "record_parcel_seal_action", "request_parcel_custody_transfer", "decide_parcel_custody_transfer"];
+const INTERNAL_ONLY_FUNCTIONS = ["append_verified_operational_trace", "record_parcel_traceability_event_internal", "assert_verified_traceability_proofs", "assert_dual_transfer_proofs"];
 
 function redact(text) {
   return text

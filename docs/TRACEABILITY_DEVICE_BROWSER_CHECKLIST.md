@@ -1,67 +1,101 @@
-# Checklist appareils et navigateurs — traçabilité
+# Checklist signable appareils et navigateurs — traçabilité
 
-Date : 24 juillet 2026.
-Règle : aucun test matériel non exécuté n'est déclaré réussi.
+Date de préparation : 24 juillet 2026.
+Règle : une ligne reste « Non exécuté » tant que la preuve et la signature ne sont pas renseignées.
 
-## Contrôles déjà exécutés
+## Tests déjà exécutés sans matériel physique
 
-| Appareil | Compte | Rôle | Précondition | Action | Résultat attendu | Preuve à capturer | Statut |
-|---|---|---|---|---|---|---|---|
-| Navigateur intégré, bureau | pilote expéditeur | client expéditeur | déploiement accessible | connexion puis ouverture `/client` | espace client affiché, pas d'overflow | capture page et URL | Réussi |
-| Navigateur intégré, bureau | pilote voyageur | voyageur | déploiement accessible | connexion puis ouverture `/traveler` | espace voyageur affiché | capture page et URL | Réussi |
-| Navigateur intégré, bureau | pilote transporteur | livreur local | déploiement accessible | connexion puis ouverture `/transporter` | espace livreur affiché | capture page et URL | Réussi |
-| Navigateur intégré, bureau | pilote Collection | agent Collection | déploiement accessible | connexion puis ouverture `/collection` | espace Collection nominatif affiché | capture page et URL | Réussi |
-| Navigateur intégré, bureau | pilote Relais | agent Relais | déploiement accessible | connexion puis ouverture `/relay` | relais pilote affiché | capture page et URL | Réussi |
-| Navigateur intégré, bureau | pilote Hub | agent Hub | déploiement accessible | connexion puis ouverture `/hub` | centre opérationnel et rôle affichés | capture page et URL | Réussi |
-| Navigateur intégré, bureau | pilote superviseur | superviseur Hub | déploiement accessible | connexion puis ouverture `/hub` | identité superviseur affichée | capture page et URL | Réussi |
-| Navigateur intégré, bureau | pilote Admin | administrateur | mot de passe valide | connexion à `/command` | demande MFA avant accès métier | capture écran MFA | Partiel — MFA AAL2 absent |
+| Appareil | Version | Application | Rôle | Date | Testeur | Résultat | Capture/vidéo | Anomalie | Signature |
+|---|---|---|---|---|---|---|---|---|---|
+| Navigateur intégré bureau | moteur géré Codex | User App | client expéditeur | 24/07/2026 | Codex | Réussi | session et page `/client` observées | aucune observée | automatisé |
+| Navigateur intégré bureau | moteur géré Codex | User App | voyageur | 24/07/2026 | Codex | Réussi | session et page `/traveler` observées | aucune observée | automatisé |
+| Navigateur intégré bureau | moteur géré Codex | User App | livreur local | 24/07/2026 | Codex | Réussi | session et page `/transporter` observées | aucune observée | automatisé |
+| Navigateur intégré bureau | moteur géré Codex | Collection App | agent Collection | 24/07/2026 | Codex | Réussi | session et page `/collection` observées | aucune observée | automatisé |
+| Navigateur intégré bureau | moteur géré Codex | Relay App | agent Relais | 24/07/2026 | Codex | Réussi | session et page `/relay` observées | aucune observée | automatisé |
+| Navigateur intégré bureau | moteur géré Codex | Hub App | agent Hub | 24/07/2026 | Codex | Réussi | session et page `/hub` observées | aucune observée | automatisé |
+| Navigateur intégré bureau | moteur géré Codex | Hub App | superviseur Hub | 24/07/2026 | Codex | Réussi | session et rôle observés | aucune observée | automatisé |
+| Navigateur intégré bureau | moteur géré Codex | Admin App | administrateur | 24/07/2026 | Codex | Partiel | contrôle MFA observé | facteur AAL2 réel absent | non signé |
+| Navigateur intégré bureau | moteur géré Codex | Admin App locale | compte AAL1 simulé | 24/07/2026 | Codex | Réussi | page d'enrôlement rendue, largeur 1280/1280 | activation TOTP réelle non exécutée | automatisé |
+| Navigateur intégré bureau | moteur géré Codex | Admin App locale | récupération MFA | 24/07/2026 | Codex | Réussi | procédure de récupération rendue, largeur 1280/1280 | révocation réelle non exécutée | automatisé |
+
+## Fiche appareil
+
+| Champ | Valeur |
+|---|---|
+| Marque / modèle | |
+| Numéro d'actif ou identifiant anonymisé | |
+| Version Android/iOS | |
+| Version application/navigateur | |
+| Réseau/opérateur | |
+| Compte et rôle | |
+| Date/heure | |
+| Testeur | |
 
 ## Android physique
 
-Compte recommandé : compte pilote correspondant au rôle indiqué. Précondition commune : build pilote installé, colis synthétique autorisé, batterie > 30 %, horloge automatique.
-
-| Appareil | Compte | Rôle | Précondition | Action | Résultat attendu | Preuve à capturer | Statut |
+| Test | Application | Rôle | Action et résultat attendu | Résultat | Capture/vidéo | Anomalie | Signature |
 |---|---|---|---|---|---|---|---|
-| Android Chrome/app | agent Relais | agent Relais | caméra refusée | lancer un scan QR | explication et reprise possible après permission | vidéo + capture permission | Non exécuté |
-| Android Chrome/app | agent Relais | agent Relais | caméra autorisée | scanner QR valide, invalide, expiré puis rejoué | seul le QR valide passe ; replay refusé | vidéo + IDs événements | Non exécuté |
-| Android Chrome/app | chauffeur national | chauffeur national | GPS refusé puis autorisé | tenter un transfert | refus explicite puis position enregistrée | capture permission + coordonnées masquées | Non exécuté |
-| Android Chrome/app | chauffeur national | chauffeur national | app en arrière-plan | démarrer trajet, verrouiller 5 min, rouvrir | état conservé, reprise GPS conforme | vidéo + timestamps | Non exécuté |
-| Android Chrome/app | agent Collection | agent Collection | réseau faible simulé | créer/mettre à jour un colis | retour clair, aucun doublon | vidéo + journal réseau | Non exécuté |
-| Android Chrome/app | agent Collection | agent Collection | mode avion | scanner et synchroniser hors ligne | file locale visible, sync unique au retour | vidéo + événements avant/après | Non exécuté |
-| Android Chrome/app | agent Hub | agent Hub | caméra et stockage autorisés | charger une photo de preuve | upload unique, aperçu, hash/ID preuve | capture + ID preuve | Non exécuté |
-| Android Chrome/app | destinataire | client destinataire | OTP valide | signer puis confirmer réception | signature et événement atomiques | vidéo + passeport | Non exécuté |
-| Android Chrome/app | tout rôle terrain | rôle associé | formulaire en cours | fermer de force puis rouvrir | état sûr, aucune validation fantôme | vidéo + état serveur | Non exécuté |
+| Installation | app pilote | agent terrain | installer, ouvrir sans alerte inattendue | Non exécuté | | | |
+| Connexion | app pilote | rôle affecté | session ouverte, mauvais rôle refusé | Non exécuté | | | |
+| Caméra refusée | app pilote | relais | refus clair, lien vers réglages | Non exécuté | | | |
+| Caméra autorisée | app pilote | relais | prévisualisation et scan fonctionnels | Non exécuté | | | |
+| GPS refusé | app pilote | chauffeur | transfert bloqué avec motif | Non exécuté | | | |
+| GPS autorisé | app pilote | chauffeur | position/accuracy/timestamp enregistrés | Non exécuté | | | |
+| QR valide | app pilote | relais | une demande de transfert créée | Non exécuté | | | |
+| QR invalide/expiré/rejoué | app pilote | relais | refus sans changement de détenteur | Non exécuté | | | |
+| Photo | app pilote | hub | upload signé, aperçu et preuve liée | Non exécuté | | | |
+| Signature | app pilote | destinataire | signature liée à la remise | Non exécuté | | | |
+| OTP valide/invalide/expiré | app pilote | destinataire | seul le code valide confirme | Non exécuté | | | |
+| GPS en déplacement | app pilote | chauffeur | positions ordonnées et plausibles | Non exécuté | | | |
+| Arrière-plan | app pilote | chauffeur | reprise conforme après 5 minutes | Non exécuté | | | |
+| Écran verrouillé | app pilote | chauffeur | aucun transfert fantôme | Non exécuté | | | |
+| Réseau faible | app pilote | agent terrain | feedback clair, aucun doublon | Non exécuté | | | |
+| Mode avion | app pilote | agent terrain | opération mise en file offline | Non exécuté | | | |
+| Reprise réseau | app pilote | agent terrain | synchronisation unique/idempotente | Non exécuté | | | |
+| Batterie faible | app pilote | chauffeur | fonctionnement ou avertissement explicite | Non exécuté | | | |
+| Fermeture forcée/réouverture | app pilote | agent terrain | état sûr et file restaurée | Non exécuté | | | |
+| Notification push | app pilote | destinataire | notification reçue une fois | Non exécuté | | | |
+| Passeport Logistique | app pilote | client | événements et preuves actualisés | Non exécuté | | | |
 
-## iOS physique
+## iPhone physique
 
-Répéter chaque ligne Android sur iPhone Safari/app avec les permissions iOS correspondantes : caméra, localisation « lorsque l'app est active », arrière-plan si supporté, réseau dégradé, perte réseau, synchronisation, photo, signature, fermeture forcée et réouverture.
-
-| Appareil | Compte | Rôle | Précondition | Action | Résultat attendu | Preuve à capturer | Statut |
+| Test | Application | Rôle | Action et résultat attendu | Résultat | Capture/vidéo | Anomalie | Signature |
 |---|---|---|---|---|---|---|---|
-| iPhone Safari/app | agent Relais | agent Relais | appareil pilote et colis synthétique | QR/caméra/permissions | refus et succès gérés sans doublon | vidéo + événements | Non exécuté |
-| iPhone Safari/app | chauffeur national | chauffeur national | appareil pilote et trajet synthétique | GPS/arrière-plan/réseau faible | position et reprise conformes | vidéo + timestamps | Non exécuté |
-| iPhone Safari/app | agent Collection | agent Collection | mode avion | scan offline puis resynchronisation | synchronisation idempotente | vidéo + événements | Non exécuté |
-| iPhone Safari/app | agent Hub | agent Hub | photo autorisée | upload photo | preuve unique liée au transfert | capture + ID preuve | Non exécuté |
-| iPhone Safari/app | destinataire | client destinataire | OTP valide | signature, fermeture et réouverture | remise unique et état conservé | vidéo + passeport | Non exécuté |
+| Installation/connexion | app pilote/Safari | rôle affecté | installation et session conformes | Non exécuté | | | |
+| Caméra/QR | app pilote/Safari | relais | permissions iOS, scan, refus du replay | Non exécuté | | | |
+| Photos | app pilote/Safari | hub | permission limitée/complète gérée, upload signé | Non exécuté | | | |
+| Localisation active | app pilote/Safari | chauffeur | position et précision enregistrées | Non exécuté | | | |
+| Localisation arrière-plan | app pilote | chauffeur | comportement conforme aux droits iOS | Non exécuté | | | |
+| Notifications | app pilote | destinataire | permission, réception et ouverture | Non exécuté | | | |
+| Stockage local/offline | app pilote/Safari | agent terrain | file chiffrée et reprise idempotente | Non exécuté | | | |
+| Fermeture forcée/reprise | app pilote/Safari | agent terrain | aucune perte ni validation fantôme | Non exécuté | | | |
+| Économie d'énergie | app pilote | chauffeur | dégradation explicite, reprise correcte | Non exécuté | | | |
+| OTP/signature/Passeport | app pilote/Safari | destinataire | remise unique et preuves visibles | Non exécuté | | | |
 
-## Navigateurs bureau
+## Navigateurs réels
 
-| Appareil | Compte | Rôle | Précondition | Action | Résultat attendu | Preuve à capturer | Statut |
-|---|---|---|---|---|---|---|---|
-| Chrome physique | comptes pilotes | neuf rôles | environnement pilote | connexion, navigation, QR si caméra, PDF | écrans et autorisations conformes | captures + console | Non exécuté |
-| Edge physique | comptes pilotes | neuf rôles | environnement pilote | même parcours | comportement équivalent Chrome | captures + console | Non exécuté |
-| Safari macOS physique | comptes pilotes | neuf rôles | environnement pilote | même parcours | fonctionnement sans incompatibilité WebKit | captures + console | Non exécuté |
+Répéter chaque ligne pour Chrome, Edge et Safari.
 
-## Preuve obligatoire par transfert terrain
+| Navigateur/version | OS/appareil | Compte/rôle | Contrôle | Résultat attendu | Résultat | Capture | Console | Temps/mémoire | Signature |
+|---|---|---|---|---|---|---|---|---|---|
+| Chrome | | | authentification + MFA | accès conforme au rôle/AAL2 | Non exécuté | | | | |
+| Chrome | | | Control Tower + carte | données, zoom, permissions | Non exécuté | | | | |
+| Chrome | | | Passeport + preuves + PDF | affichage et téléchargement corrects | Non exécuté | | | | |
+| Chrome | | | responsive | aucun overflow/perte d'action | Non exécuté | | | | |
+| Edge | | | authentification + MFA | accès conforme au rôle/AAL2 | Non exécuté | | | | |
+| Edge | | | Control Tower + carte | données, zoom, permissions | Non exécuté | | | | |
+| Edge | | | Passeport + preuves + PDF | affichage et téléchargement corrects | Non exécuté | | | | |
+| Edge | | | responsive | aucun overflow/perte d'action | Non exécuté | | | | |
+| Safari | | | authentification + MFA | accès conforme au rôle/AAL2 | Non exécuté | | | | |
+| Safari | | | Control Tower + carte | données, zoom, permissions WebKit | Non exécuté | | | | |
+| Safari | | | Passeport + preuves + PDF | affichage et téléchargement corrects | Non exécuté | | | | |
+| Safari | | | responsive | aucun overflow/perte d'action | Non exécuté | | | | |
 
-Pour chaque étape Client → Relais → Chauffeur → Hub → Voyageur/transporteur → Hub destination → Chauffeur local → Relais/destinataire, capturer :
+## Signature de campagne
 
-1. détenteur avant et après ;
-2. preuve et identifiant QR/OTP ;
-3. position et timestamp ;
-4. identifiant de l'événement ;
-5. Passeport Logistique avant/après ;
-6. Digital Twin avant/après ;
-7. événement Control Tower ;
-8. notification reçue ;
-9. seconde tentative refusée avec motif.
+| Responsabilité | Nom | Date | Décision | Signature |
+|---|---|---|---|---|
+| Responsable recette | | | | |
+| Responsable opérations | | | | |
+| Responsable sécurité | | | | |
+| Product owner | | | | |

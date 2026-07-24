@@ -1,72 +1,72 @@
 # Rapport de performance traçabilité
 
-Date de campagne : 24 juillet 2026.
+Date : 24 juillet 2026.
 
-## Résultats réellement mesurés
+## Mesures réellement exécutées
 
-### Chaîne de hash locale
-
-Campagne sûre et non persistante de 1 000 000 événements :
+### Chaîne de hash locale — 1 000 000 événements
 
 | Mesure | Résultat |
 |---|---:|
 | Durée | 5 559,03 ms |
 | Débit | 179 887,55 événements/s |
-| p50 | 0,0045 ms |
-| p75 | 0,0051 ms |
-| p95 | 0,0066 ms |
-| p99 | 0,0166 ms |
-| CPU processus utilisateur / système / total | 3 532 / 234 / 3 766 ms |
-| Mémoire RSS / heap utilisée | 137,41 / 37,68 Mo |
+| p50 / p75 / p95 / p99 | 0,0045 / 0,0051 / 0,0066 / 0,0166 ms |
+| CPU utilisateur / système / total | 3 532 / 234 / 3 766 ms |
+| Mémoire RSS / heap | 137,41 / 37,68 Mo |
 | Taux d'erreur | 0 % |
 
-Cette mesure couvre uniquement la génération et le chaînage SHA-256 en processus local. Elle ne couvre pas PostgreSQL, RLS, réseau, stockage, scans concurrents, GPS, offline ou workers.
-
-### Projection Control Tower locale
-
-Campagne sûre et non persistante de 1 000 000 événements :
+### Projection Control Tower locale — 1 000 000 événements
 
 | Mesure | Résultat |
 |---|---:|
 | Durée | 1 245,91 ms |
 | Débit | 802 626 événements/s |
-| CPU processus utilisateur / système / total | 860 / 15 / 875 ms |
-| Mémoire RSS / heap utilisée | 203,20 / 108,18 Mo |
-| Événements CI / critiques | 200 000 / 201 |
-| Événements SN / critiques | 800 000 / 803 |
+| CPU utilisateur / système / total | 860 / 15 / 875 ms |
+| Mémoire RSS / heap | 203,20 / 108,18 Mo |
 | Taux d'erreur | 0 % |
 
-Cette campagne mesure la création, le tri et l'agrégation locale. Elle ne mesure pas la latence réelle de publication ou de consommation des événements.
+Ces résultats sont algorithmiques et non persistants. Ils ne représentent pas PostgreSQL ou le réseau.
 
-## Charge PostgreSQL préproduction
+## Harnais préproduction préparés
 
-Le harnais `scripts/traceability-postgres-preprod-load.mjs` :
+### Écritures concurrentes
 
-- refuse explicitement le projet de production Yobalelma `rgcgtcycbiuhcaoaadbh` ;
-- exige un contexte isolé et un colis synthétique ;
-- utilise des transactions annulées afin de ne pas persister les données ;
-- mesure débit, erreurs, p50, p75, p95 et p99.
+`scripts/traceability-postgres-preprod-load.mjs` exécute des appels concurrents annulés par transaction et mesure p50, p75, p95, p99, débit et erreurs.
 
-Le contrôle `--check` a été exécuté et retourne `ready: false` : `TRACEABILITY_STAGING_PROJECT_REF` et `TRACEABILITY_STAGING_SHIPMENT_ID` sont absents. Les règles du dépôt interdisent tout autre projet Supabase et aucune branche/base isolée autorisée du projet Yobalelma n'est fournie. Aucune charge n'a été envoyée à la production.
+### Profil et EXPLAIN
 
-## Métriques non mesurées
+`scripts/traceability-postgres-preprod-profile.mjs` mesure :
 
-| Mesure demandée | Statut |
-|---|---|
-| CPU et mémoire PostgreSQL | non mesurées |
-| Connexions PostgreSQL | non mesurées |
-| Locks et deadlocks | non mesurés |
-| Requêtes lentes | non mesurées |
-| Latence RPC | non mesurée |
-| Latence événements Control Tower | non mesurée |
-| Créations/scans/transferts/GPS/offline/recherches/Passeports concurrents | non exécutés contre PostgreSQL |
+- lecture du Passeport et des preuves ;
+- recherche par colis/tracking ;
+- lecture de possession ;
+- p50, p75, p95, p99, débit, erreurs et taille moyenne des résultats ;
+- connexions, locks en attente et deadlocks ;
+- requêtes lentes via `pg_stat_statements` lorsqu'il est disponible ;
+- `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)` des requêtes critiques.
 
-## Seuils de la prochaine campagne
+Le scénario complet demande en plus de mesurer les RPC de demande/décision, la synchronisation offline et la génération PDF depuis les applications.
 
-- arrêter immédiatement si le taux d'erreur dépasse 1 % ;
-- arrêter si p95 dépasse 2 secondes durablement ;
-- arrêter en cas de deadlock, saturation de connexions ou verrou prolongé ;
-- utiliser uniquement des données synthétiques et un contexte explicitement autorisé ;
-- conserver les métriques avant, pendant et après la campagne.
+## État d'exécution
 
-Les résultats locaux sont des contrôles algorithmiques, pas une preuve de capacité préproduction.
+Les trois contrôles de préparation (`field-audit`, `postgres-profile`, `postgres-load`) retournent `ready: false`. Les paramètres de préproduction et les colis synthétiques sont absents. Le projet de production `rgcgtcycbiuhcaoaadbh` est explicitement refusé par les harnais.
+
+Par conséquent, aucune mesure réelle n'est revendiquée pour :
+
+- RPC, écritures, recherches ou possessions PostgreSQL ;
+- synchronisations offline concurrentes ;
+- génération PDF applicative ;
+- connexions, locks, deadlocks et requêtes lentes en charge ;
+- CPU/mémoire du serveur PostgreSQL ;
+- latence Control Tower réelle.
+
+## Seuils d'arrêt
+
+- erreur > 1 % ;
+- p95 > 2 secondes durablement ;
+- deadlock ou verrou prolongé ;
+- saturation de connexions ;
+- hausse anormale CPU/mémoire ;
+- toute écriture non synthétique ou non annulée.
+
+Aucune charge dangereuse n'a été envoyée à la production.

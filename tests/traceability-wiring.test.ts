@@ -47,4 +47,16 @@ describe("traceability blocker closure", () => {
     expect(migration).toContain("proof_type='seal_photo' and verification_status='verified'");
     expect(migration).toContain("'unexpected_seal_break','critical'");
   });
+
+  it("exposes distinct authenticated APIs for giver request and receiver decision", () => {
+    const request = read("app/api/traceability/transfers/request/route.ts");
+    const decision = read("app/api/traceability/transfers/decision/route.ts");
+    expect(request).toContain('rpc("request_parcel_custody_transfer"');
+    expect(request).toContain("sameOrigin(request)");
+    expect(request).toContain("Le détenteur reste inchangé");
+    expect(request).toContain("user.id !== parsed.data.giverActorId");
+    expect(decision).toContain('rpc("decide_parcel_custody_transfer"');
+    expect(decision).toContain("sameOrigin(request)");
+    expect(decision).toContain("Transfert refusé sans changement de détenteur");
+  });
 });

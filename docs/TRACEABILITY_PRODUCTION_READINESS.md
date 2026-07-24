@@ -6,41 +6,45 @@ Dernière validation : 24 juillet 2026.
 
 **B.**
 
-**TRAÇABILITÉ PARTIELLEMENT VALIDÉE**  
+**TRAÇABILITÉ TECHNIQUE VALIDÉE**
 **VALIDATIONS TERRAIN RESTANTES**
 
-Le verdict A est interdit à cette date : la chaîne complète de possession n'a pas été rejouée avec les neuf profils demandés, la charge PostgreSQL préproduction n'a pas pu être exécutée dans un environnement isolé autorisé, et aucun appareil physique Android ou iOS n'était accessible.
+Le verdict A est interdit : aucune recette complète n'a produit de preuves réelles sur un colis de démonstration, aucun facteur MFA sensible n'a été réellement enrôlé et testé de bout en bout, aucune campagne PostgreSQL préproduction autorisée n'a été exécutée, et les essais Android/iOS/Chrome/Edge/Safari réels ne sont pas signés.
 
-## Acquis vérifiés
+## Validations réellement exécutées
 
-- 66 migrations appliquées, zéro migration en attente ;
-- 70/70 colis cohérents, zéro trou de séquence, lien de hash cassé, double livraison ou rupture de chaîne ;
-- audit RLS/RPC vert, 118 tables et 11 buckets validés ;
-- historique append-only, verrou par colis, transitions contrôlées et idempotence actifs ;
-- export PDF serveur, stockage privé, URL signée et pagination contrôlée visuellement sur les quatre pages ;
-- ESLint sans avertissement, TypeScript strict, 49 fichiers et 276/276 tests verts ;
-- six builds verts : racine 83 pages, User 56, Collection 14, Relay 14, Hub 23 et Admin 17 ;
-- 32 comptes pilotes authentifiés par mot de passe contre Supabase, 32 sessions valides, 32 e-mails vérifiés et refus d'auto-élévation de rôle vérifié ;
-- sept profils authentifiés dans les interfaces déployées : client expéditeur, voyageur, livreur local, agent Collection, agent Relais, agent Hub et superviseur Hub ;
-- aucun secret, fichier `.env`, token, mot de passe, donnée personnelle réelle ou artefact local inclus dans les commits ;
-- branche courante committée et poussée sur GitHub.
+- 68 migrations appliquées, zéro migration en attente ;
+- 119 tables et 11 buckets contrôlés ;
+- 70/70 colis historiques cohérents, zéro trou de séquence, hash cassé, double livraison, anomalie active ou détenteur absent ;
+- audit RLS/RPC vert : aucune fonction attendue absente, aucune exposition dangereuse `anon`, `authenticated`, `service_role` ou helper interne ;
+- double validation transactionnelle appliquée : demande du remettant, décision distincte du receveur, expiration, refus, position maximale de 2 km, idempotence et finalisation atomique ;
+- API générique interdite pour les transferts sensibles afin d'empêcher le contournement ;
+- types exacts de preuves exigés pour chaque étape terrain ; seules les preuves du remettant peuvent être attestées par le receveur ;
+- MFA Admin passé en fail-closed AAL2, avec pages d'enrôlement TOTP et récupération contrôlée ;
+- lint sans avertissement, TypeScript strict, 51 fichiers et 289/289 tests réussis ;
+- six builds réussis : racine 85 pages, User 56, Collection 14, Relay 14, Hub 23 et Admin 19 ;
+- pages MFA d'enrôlement et récupération rendues dans le navigateur intégré, sans overflow ;
+- scénario terrain, audit automatique, profil PostgreSQL/EXPLAIN et checklists signables ajoutés ;
+- campagne locale non persistante d'un million d'événements réalisée précédemment.
 
-## Limites qui maintiennent B
+## Tests non exécutés
 
-- le profil administrateur atteint correctement le contrôle MFA, mais aucun facteur AAL2 n'est enrôlé : l'interface Admin n'est donc pas validée ;
-- aucun compte distinct « client destinataire » ni « chauffeur national » n'est présent dans le catalogue pilote ;
-- le parcours mutatif complet Client → Relais → Chauffeur → Hub → Voyageur/transporteur → Hub destination → Chauffeur local → Relais/destinataire n'a pas été exécuté sur l'environnement partagé ;
-- les 70 états audités ne contiennent aucune preuve historique (`proof_count = 0`) : les mécanismes existent, mais la présence de preuves terrain réelles n'est pas démontrée ;
-- la charge PostgreSQL contrôlée n'a pas été lancée : le harnais protège le projet de production et les paramètres d'un contexte isolé autorisé sont absents ;
-- les métriques PostgreSQL (CPU, mémoire, connexions, locks, deadlocks, requêtes lentes, latence RPC et événements) ne sont donc pas mesurées ;
-- Android, iOS, Edge et Safari sur matériel réel ne sont pas testés ;
-- la validation juridique de rétention et l'exercice de restauration restent externes.
+- création d'un colis recette via User App et parcours des huit transferts ;
+- création réelle de QR, OTP, photo, GPS et signature via les applications terrain ;
+- passage de `proof_count` au-dessus de zéro sur un colis recette ;
+- confirmation/refus/expiration/rejeu de la nouvelle double validation avec deux comptes réels ;
+- enrôlement, code invalide, révocation, récupération et session expirée MFA sur comptes sensibles ;
+- mesures PostgreSQL réelles et `EXPLAIN ANALYZE` en préproduction ;
+- appareils Android/iOS et Chrome/Edge/Safari réels.
 
-## Conditions restantes pour A
+## Risques résiduels
 
-1. Enrôler un facteur MFA AAL2 pour l'administrateur pilote.
-2. Fournir des identités distinctes de destinataire et chauffeur national.
-3. Exécuter le parcours complet avec preuves, QR/OTP, GPS, notifications, Passeport Logistique, Digital Twin, Control Tower et refus de double validation.
-4. Exécuter la campagne PostgreSQL dans un contexte isolé explicitement autorisé sans charge dangereuse sur la production.
-5. Signer la checklist sur appareils physiques Android et iOS ainsi que Chrome, Edge et Safari disponibles.
-6. Capturer les preuves et confirmer l'absence de P0/P1 après ces campagnes.
+- `proof_count = 0` demeure sur les 70 colis historiques ;
+- la migration de double validation est appliquée mais n'a pas encore été exercée par un parcours terrain réel ;
+- les nouvelles pages MFA sont construites et contrôlées localement mais pas déployées ni utilisées pour enrôler les rôles sensibles ;
+- aucune latence PostgreSQL, lock, deadlock, connexion, requête lente, CPU ou mémoire serveur n'est mesurée ;
+- aucun procès-verbal matériel n'est signé.
+
+## Conditions pour A
+
+Exécuter et signer [la recette terrain](./TRACEABILITY_FIELD_RECIPE.md), l'audit automatique sans échec, l'enrôlement/récupération MFA des rôles sensibles, la campagne PostgreSQL autorisée et [la checklist appareils/navigateurs](./TRACEABILITY_DEVICE_BROWSER_CHECKLIST.md).

@@ -19,6 +19,7 @@ const TABLES = [
   "parcel_seals",
   "parcel_traceability_anomalies",
   "parcel_passport_access_log",
+  "parcel_custody_transfer_requests",
   "profiles",
   "parcel_requests",
   "trips",

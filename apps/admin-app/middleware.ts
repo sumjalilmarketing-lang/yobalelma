@@ -38,12 +38,8 @@ async function resolveAccess(request: NextRequest) {
   } });
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return null;
-  const [factors, assurance] = await Promise.all([
-    supabase.auth.mfa.listFactors(),
-    supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
-  ]);
-  const hasVerifiedFactor = (factors.data?.totp ?? []).some((factor) => factor.status === "verified");
-  return { response, requiresMfa: hasVerifiedFactor && assurance.data?.currentLevel !== "aal2" };
+  const assurance = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  return { response, requiresMfa: assurance.data?.currentLevel !== "aal2" };
 }
 
 export const config = { matcher: ["/command/:path*", "/api/admin/:path*"] };

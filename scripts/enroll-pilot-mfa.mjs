@@ -12,7 +12,7 @@ const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT
 if (url !== "https://rgcgtcycbiuhcaoaadbh.supabase.co" || !key) throw new Error("Yobalelma public credentials are required.");
 const filePath = path.join(root, ".pilot-access", "credentials.json");
 const bundle = JSON.parse(await readFile(filePath, "utf8"));
-const protectedRoles = new Set(["super_admin", "admin", "country_manager", "security_manager", "auditor"]);
+const protectedRoles = new Set(["super_admin", "admin", "operations_manager", "country_manager", "finance_manager", "security_manager", "auditor"]);
 const results = [];
 
 for (const account of bundle.accounts.filter((item) => item.application === "admin" && protectedRoles.has(item.role))) {

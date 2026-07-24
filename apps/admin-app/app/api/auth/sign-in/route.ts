@@ -17,12 +17,10 @@ export async function POST(request: NextRequest) {
     if (error) throw error;
     const factors = await supabase.auth.mfa.listFactors();
     if (factors.error) throw factors.error;
-    if ((factors.data.totp ?? []).some((factor) => factor.status === "verified")) {
-      const mfaUrl = new URL("/auth/mfa", requestOrigin(request));
-      mfaUrl.searchParams.set("next", returnTo);
-      return NextResponse.redirect(mfaUrl, { status: 303 });
-    }
-    return NextResponse.redirect(new URL(returnTo, requestOrigin(request)), { status: 303 });
+    const hasVerifiedFactor = (factors.data.totp ?? []).some((factor) => factor.status === "verified");
+    const mfaUrl = new URL(hasVerifiedFactor ? "/auth/mfa" : "/auth/mfa/enroll", requestOrigin(request));
+    mfaUrl.searchParams.set("next", returnTo);
+    return NextResponse.redirect(mfaUrl, { status: 303 });
   } catch {
     const url = new URL("/auth/sign-in", requestOrigin(request));
     url.searchParams.set("error", "Les informations de connexion sont incorrectes ou l’accès n’est pas autorisé.");

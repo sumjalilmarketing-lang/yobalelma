@@ -95,3 +95,40 @@ export const parcelSealActionSchema = z.object({
 }).superRefine((value, context) => {
   if (value.action === "break" && !value.reason) context.addIssue({ code: "custom", path: ["reason"], message: "Le motif de rupture est obligatoire." });
 });
+
+export const traceabilityTransferRequestSchema = z.object({
+  parcelId: z.string().uuid(),
+  stageAfter: z.enum(custodyStages),
+  previousCustodianId: z.string().trim().min(1).max(160),
+  newCustodianType: z.string().trim().min(1).max(80),
+  newCustodianId: z.string().trim().min(1).max(160),
+  giverActorId: z.string().uuid(),
+  receiverActorId: z.string().uuid(),
+  missionId: optionalUuid,
+  vehicleId: optionalUuid,
+  newLocationId: z.string().trim().min(1).max(160),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  locationAccuracy: z.number().nonnegative().max(5_000).optional(),
+  proofIds: z.array(z.string().uuid()).min(1).max(20),
+  recordedByRole: z.string().trim().min(1).max(80),
+  applicationSource: z.enum(["user-app", "collection-app", "relay-app", "hub-app", "admin-app", "partner-api", "offline-sync"]),
+  deviceId: z.string().trim().min(1).max(160),
+  expiresAt: z.string().datetime({ offset: true }),
+  requestIdempotencyKey: z.string().trim().min(12).max(200),
+  metadata: z.record(z.string(), z.unknown()).default({}),
+}).superRefine((value, context) => {
+  if (value.giverActorId === value.receiverActorId) context.addIssue({ code: "custom", path: ["receiverActorId"], message: "Le receveur doit être distinct du remettant." });
+  if (value.previousCustodianId === value.newCustodianId) context.addIssue({ code: "custom", path: ["newCustodianId"], message: "Le nouveau détenteur doit être distinct." });
+});
+
+export const traceabilityTransferDecisionSchema = z.object({
+  transferId: z.string().uuid(),
+  decision: z.enum(["confirm", "reject"]),
+  decisionIdempotencyKey: z.string().trim().min(12).max(200),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  rejectionReason: z.string().trim().min(5).max(500).optional(),
+}).superRefine((value, context) => {
+  if (value.decision === "reject" && !value.rejectionReason) context.addIssue({ code: "custom", path: ["rejectionReason"], message: "Le motif de refus est obligatoire." });
+});
